@@ -6,6 +6,16 @@
   -->
 
 <resources>
+
+    <!--  tabLayout样式  -->
+    <style name="MyTabLayout" parent="Widget.Design.TabLayout">
+        <!-- 设置文字下面的横线的高度，设置为 0dp 表示不显示，不设置会在下方显示一条横线，可以删除看看效果 -->
+        <item name="tabIndicatorHeight">0dp</item>
+        <!--去掉水波纹-->
+        <item name="tabBackground">@color/white</item>
+        <item name="tabRippleColor">@color/white</item>
+    </style>
+
     <attr name="normalTextColor" format="color|reference"/>
     <attr name="focusTextColor" format="color|reference"/>
     <attr name="pressedTextColor" format="color|reference"/>
@@ -103,6 +113,7 @@
     </declare-styleable>
 
     <attr name="isSelected" format="boolean"/>
+    <attr name="avatarIcon" format="color|reference"/>
 
     <!--  自定义选择按钮  -->
     <declare-styleable name="CustomSelectButton">
@@ -130,9 +141,24 @@
     <!--  自定义头像选择按钮  -->
     <declare-styleable name="CustomAvatar">
         <attr name="isSelected"/>
-        <attr name="avatarIcon" format="color|reference"/>
+        <attr name="avatarIcon"/>
         <attr name="selectedIcon" format="color|reference"/>
         <attr name="selectedIconSize" format="dimension"/>
+    </declare-styleable>
+
+    <!--  自定义我的信息  -->
+    <declare-styleable name="CustomMyInfo">
+        <attr name="avatarIcon" />
+        <attr name="nickNameContent" format="string" />
+        <attr name="idContent" format="string" />
+    </declare-styleable>
+
+    <!--  自定义入口 item  -->
+    <declare-styleable name="CustomEnterItem">
+        <attr name="itemIcon" format="color|reference"/>
+        <attr name="itemDes" format="string" />
+        <attr name="itemEnterIcon" format="color|reference" />
+
     </declare-styleable>
 
 </resources>

@@ -7,7 +7,7 @@
     tools:context=".authorize.register.RegisterNicknameFragment">
 
     <TextView
-        android:id="@+id/titleTv"
+        android:id="@+id/desTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/input_base_info"
@@ -29,7 +29,7 @@
         app:isSelected="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/avatarWomanIv"
-        app:layout_constraintTop_toBottomOf="@id/titleTv"
+        app:layout_constraintTop_toBottomOf="@id/desTv"
         android:layout_marginTop="@dimen/dp_20"
         android:layout_marginEnd="@dimen/dp_15"
         app:layout_constraintHorizontal_chainStyle="packed"/>
@@ -44,7 +44,7 @@
         app:isSelected="false"
         app:layout_constraintStart_toEndOf="@id/avatarManIv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleTv"
+        app:layout_constraintTop_toBottomOf="@id/desTv"
         android:layout_marginTop="@dimen/dp_20"
         android:layout_marginStart="@dimen/dp_15"
         app:layout_constraintHorizontal_chainStyle="packed"/>

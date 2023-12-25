@@ -24,7 +24,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/titleTv"
+        android:id="@+id/desTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/textColor_333333"

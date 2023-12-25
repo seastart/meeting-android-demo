@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/avatarIv"
+        android:layout_width="@dimen/dp_64"
+        android:layout_height="@dimen/dp_64"
+        android:src="@mipmap/avatar_man"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/nickNameTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="橘子果酱"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintStart_toEndOf="@id/avatarIv"
+        app:layout_constraintTop_toTopOf="@id/avatarIv"
+        app:layout_constraintBottom_toTopOf="@id/idTv"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_2"
+        app:layout_constraintVertical_chainStyle="packed"/>
+    
+    <TextView
+        android:id="@+id/idTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID:9860484598"
+        android:textColor="@color/white_99ffffff"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintStart_toStartOf="@id/nickNameTv"
+        app:layout_constraintTop_toBottomOf="@id/nickNameTv"
+        app:layout_constraintBottom_toBottomOf="@id/avatarIv"
+        android:layout_marginTop="@dimen/dp_2"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

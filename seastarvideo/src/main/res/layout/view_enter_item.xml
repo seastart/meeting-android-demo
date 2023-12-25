@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iconIv"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        android:src="@mipmap/privacy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    
+    <TextView
+        android:id="@+id/desTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_16"
+        android:textColor="@color/textColor_333333"
+        app:layout_constraintStart_toEndOf="@id/iconIv"
+        app:layout_constraintTop_toTopOf="@id/iconIv"
+        app:layout_constraintBottom_toBottomOf="@id/iconIv"
+        android:layout_marginStart="@dimen/dp_12"/>
+
+    <ImageView
+        android:id="@+id/enterIconIv"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:src="@mipmap/arrow_enter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iconIv"
+        app:layout_constraintBottom_toBottomOf="@id/iconIv"/>
+    
+</androidx.constraintlayout.widget.ConstraintLayout>

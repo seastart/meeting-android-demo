@@ -36,9 +36,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dp_44</item>
         <item name="stateRadius">@dimen/dp_4</item>
-        <item name="normalBackgroundColor">@color/editBg_gray</item>
-        <item name="focusBackgroundColor">@color/editBg_gray</item>
-        <item name="pressedBackgroundColor">@color/editBg_gray</item>
+        <item name="normalBackgroundColor">@color/gray_f7f8fa</item>
+        <item name="focusBackgroundColor">@color/gray_f7f8fa</item>
+        <item name="pressedBackgroundColor">@color/gray_f7f8fa</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>

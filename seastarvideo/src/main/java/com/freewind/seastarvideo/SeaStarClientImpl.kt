@@ -3,7 +3,7 @@ package com.freewind.seastarvideo
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import com.freewind.seastarvideo.activity.LoginActivity
+import com.freewind.seastarvideo.activity.HomeActivity
 import com.freewind.seastarvideo.utils.LogUtil
 import com.tencent.mmkv.MMKV
 
@@ -24,6 +24,6 @@ class SeaStarClientImpl: SeaStarClient {
     }
 
     override fun SSC_StartHomeActivity(context: Context) {
-        context.startActivity(Intent(context, LoginActivity::class.java))
+        context.startActivity(Intent(context, HomeActivity::class.java))
     }
 }

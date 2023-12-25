@@ -3,6 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="chinese_app_name">海星音视频</string>
+
     <string name="hello_SeaStarVideo">Hello!\n欢迎使用海星音视频</string>
     <string name="login_with_pwd">密码登录</string>
     <string name="login_with_code">验证码登录</string>
@@ -25,4 +27,14 @@
     <string name="select_avatar">请选择头像</string>
     <string name="input_nickname">请输入您的昵称</string>
     <string name="sure">确定</string>
+
+    <string name="enterprise_service">企业服务</string>
+    <string name="room_title_meeting">多人音视频房间</string>
+    <string name="room_des_meeting">适用于视频会议</string>
+    <string name="mine">我的</string>
+    <string name="id_format">ID:%s</string>
+    <string name="privacy">隐私</string>
+    <string name="statement">免责声明</string>
+    <string name="about_me">关于我们</string>
+    <string name="logout">退出登录</string>
 </resources>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_f7f8fa"
+    tools:context=".home.mine.MineFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topbarCl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/transparent"
+        android:translationZ="@dimen/dp_5">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mine"
+            android:textSize="@dimen/sp_17"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_222"
+        android:src="@color/light_blue_99afe1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.freewind.seastarvideo.ui.CustomMyInfo
+        android:id="@+id/myInfoCmi"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        app:avatarIcon="@mipmap/avatar_woman"
+        app:nickNameContent="橘子果酱"
+        app:idContent="9860484598"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topbarCl"
+        android:layout_marginTop="@dimen/dp_16_5"
+        android:layout_marginStart="@dimen/dp_16"/>
+
+    <LinearLayout
+        android:id="@+id/groupEnterLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_white_radius_8"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myInfoCmi"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16">
+
+        <com.freewind.seastarvideo.ui.CustomEnterItem
+            android:id="@+id/privacyCei"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            app:itemIcon="@mipmap/privacy"
+            app:itemDes="@string/privacy"
+            app:itemEnterIcon="@mipmap/arrow_enter"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingEnd="@dimen/dp_12"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/black_1A000000"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_12"/>
+
+        <com.freewind.seastarvideo.ui.CustomEnterItem
+            android:id="@+id/statementCei"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            app:itemIcon="@mipmap/statement"
+            app:itemDes="@string/statement"
+            app:itemEnterIcon="@mipmap/arrow_enter"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingEnd="@dimen/dp_12"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/black_1A000000"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_12"/>
+
+        <com.freewind.seastarvideo.ui.CustomEnterItem
+            android:id="@+id/aboutMeCei"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            app:itemIcon="@mipmap/about_me"
+            app:itemDes="@string/about_me"
+            app:itemEnterIcon="@mipmap/arrow_enter"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingEnd="@dimen/dp_12"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_white_radius_8"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/groupEnterLl"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16">
+
+        <com.freewind.seastarvideo.ui.CustomEnterItem
+            android:id="@+id/logoutCei"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            app:itemIcon="@mipmap/logout"
+            app:itemDes="@string/logout"
+            app:itemEnterIcon="@mipmap/arrow_enter"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingEnd="@dimen/dp_12"/>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

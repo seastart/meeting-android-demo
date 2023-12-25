@@ -66,7 +66,7 @@ class CustomTopBar(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
         val rootView = LayoutInflater.from(context).inflate(R.layout.view_top_bar, this, true)
         topBarCl = rootView.findViewById(R.id.topBarCl)
         exitIv = rootView.findViewById(R.id.exitIv)
-        titleTv = rootView.findViewById(R.id.titleTv)
+        titleTv = rootView.findViewById(R.id.desTv)
 
         val a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomTopBar)
         titleContent = a.getString(R.styleable.CustomTopBar_titleContent).toString()
@@ -95,6 +95,8 @@ class CustomTopBar(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
                 }
             }
         }
+
+        a.recycle()
     }
 
     /**
