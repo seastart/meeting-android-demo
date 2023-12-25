@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/dp_20"
+    android:paddingEnd="@dimen/dp_20"
+    android:orientation="vertical"
+    tools:context=".authorize.register.RegisterInfoFragment">
+
+    <com.freewind.seastarvideo.ui.StateEditText
+        android:id="@+id/phoneNumSet"
+        style="@style/edit"
+        android:hint="@string/input_phone_number"
+        android:inputType="phone"
+        android:layout_marginTop="@dimen/dp_20"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20">
+
+        <com.freewind.seastarvideo.ui.StateEditText
+            android:id="@+id/codeSet"
+            style="@style/edit"
+            android:hint="@string/input_phone_code"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.freewind.seastarvideo.ui.AuthCodeStateTextView
+            android:id="@+id/getCodeStv"
+            android:layout_width="@dimen/dp_104"
+            android:layout_height="@dimen/dp_34"
+            android:text="@string/get_code"
+            android:textColor="@color/dominant_tone_blue"
+            android:textSize="@dimen/sp_14"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            app:normalBackgroundColor="@color/white"
+            app:focusBackgroundColor="@color/light_gray"
+            app:pressedBackgroundColor="@color/light_gray"
+            app:unableBackgroundColor="@color/white"
+            app:unableTextColor="@color/textColor_999999"
+            app:stateRadius="@dimen/dp_4"
+            app:countDownTime="60"
+            app:countDownTip="@string/count_down_tip"
+            app:layout_constraintEnd_toEndOf="@id/codeSet"
+            app:layout_constraintTop_toTopOf="@id/codeSet"
+            app:layout_constraintBottom_toBottomOf="@id/codeSet"
+            android:layout_marginEnd="@dimen/dp_5"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20">
+
+        <com.freewind.seastarvideo.ui.StateEditText
+            android:id="@+id/pwdSet"
+            style="@style/edit"
+            android:hint="@string/input_password"
+            android:inputType="textPassword"
+            android:paddingEnd="@dimen/dp_56"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/pwdIv"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_44"
+            android:src="@drawable/selector_mipmap_pwd_visible"
+            android:scaleType="center"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="@id/pwdSet"
+            app:layout_constraintTop_toTopOf="@id/pwdSet"
+            app:layout_constraintBottom_toBottomOf="@id/pwdSet"
+            android:layout_marginEnd="@dimen/dp_12"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20">
+
+        <com.freewind.seastarvideo.ui.StateEditText
+            android:id="@+id/pwdVerifySet"
+            style="@style/edit"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:paddingEnd="@dimen/dp_56"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/pwdVisibleIv"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_44"
+            android:src="@drawable/selector_mipmap_pwd_visible"
+            android:scaleType="center"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="@id/pwdVerifySet"
+            app:layout_constraintTop_toTopOf="@id/pwdVerifySet"
+            app:layout_constraintBottom_toBottomOf="@id/pwdVerifySet"
+            android:layout_marginEnd="@dimen/dp_12"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.freewind.seastarvideo.ui.StateTextView
+        android:id="@+id/registerStv"
+        style="@style/bigBtn"
+        android:text="@string/register"
+        android:layout_marginTop="@dimen/dp_20"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_12">
+
+        <CheckBox
+            android:id="@+id/selectCb"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:checked="false"
+            android:button="@drawable/selector_mipmap_checkbox"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/protocolTipTv"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_clause"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintStart_toEndOf="@id/selectCb"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/selectCb"
+            app:layout_constraintBottom_toBottomOf="@id/selectCb"
+            android:layout_marginStart="@dimen/dp_8"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

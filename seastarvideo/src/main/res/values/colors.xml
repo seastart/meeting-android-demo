@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_gray">#D3D3D3</color>
+
+    <color name="CornflowerBlue">#FF6495ED</color>
+
+    <color name="dominant_tone_blue">#FF0039B3</color>
+    <color name="light_blue_99afe1">#FF99AFE1</color>
+
+    <color name="textColor_333333">#FF333333</color>
+    <color name="textColor_666666">#FF666666</color>
+    <color name="textColor_999999">#999999</color>
+
+    <color name="editBg_gray">#F7F8FA</color>
+</resources>

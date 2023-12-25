@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.freewind.seastarvideo.ui.StateEditText
+        android:id="@+id/pwdPhoneSet"
+        style="@style/edit"
+        android:hint="@string/input_phone_number"
+        android:inputType="phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.freewind.seastarvideo.ui.StateEditText
+        android:id="@+id/pwdSet"
+        style="@style/edit"
+        android:hint="@string/input_password"
+        android:inputType="textPassword"
+        android:paddingEnd="@dimen/dp_56"
+        app:layout_constraintStart_toStartOf="@id/pwdPhoneSet"
+        app:layout_constraintTop_toBottomOf="@id/pwdPhoneSet"
+        android:layout_marginTop="@dimen/dp_16"/>
+
+    <ImageView
+        android:id="@+id/pwdVisibleIv"
+        android:layout_width="@dimen/dp_44"
+        android:layout_height="@dimen/dp_44"
+        android:src="@drawable/selector_mipmap_pwd_visible"
+        android:scaleType="center"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="@id/pwdSet"
+        app:layout_constraintTop_toTopOf="@id/pwdSet"
+        app:layout_constraintBottom_toBottomOf="@id/pwdSet"
+        android:layout_marginEnd="@dimen/dp_12"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

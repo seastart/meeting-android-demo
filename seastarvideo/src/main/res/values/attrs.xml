@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://company.zaoing.com
+  -->
+
+<resources>
+    <attr name="normalTextColor" format="color|reference"/>
+    <attr name="focusTextColor" format="color|reference"/>
+    <attr name="pressedTextColor" format="color|reference"/>
+    <attr name="unableTextColor" format="color|reference"/>
+
+    <!--stroke width and color, dash width, dash gap-->
+    <attr name="strokeDashWidth" format="dimension|reference"/>
+    <attr name="strokeDashGap" format="dimension|reference"/>
+    <attr name="normalStrokeWidth" format="dimension|reference"/>
+    <attr name="focusStrokeWidth" format="dimension|reference"/>
+    <attr name="pressedStrokeWidth" format="dimension|reference"/>
+    <attr name="unableStrokeWidth" format="dimension|reference"/>
+    <attr name="normalStrokeColor" format="color|reference"/>
+    <attr name="focusStrokeColor" format="color|reference"/>
+    <attr name="pressedStrokeColor" format="color|reference"/>
+    <attr name="unableStrokeColor" format="color|reference"/>
+
+    <!--background color-->
+    <attr name="normalBackgroundColor" format="color|reference"/>
+    <attr name="focusBackgroundColor" format="color|reference"/>
+    <attr name="pressedBackgroundColor" format="color|reference"/>
+    <attr name="unableBackgroundColor" format="color|reference"/>
+    <attr name="stateRadius" format="dimension|reference"/>
+    <attr name="stateRound" format="boolean|reference"/>
+
+    <!--animation duration-->
+    <attr name="animationDuration" format="integer|reference"/>
+
+    <declare-styleable name="StateTextView">
+        <!--text color-->
+        <attr name="normalTextColor"/>
+        <attr name="focusTextColor"/>
+        <attr name="pressedTextColor"/>
+        <attr name="unableTextColor"/>
+
+        <!--stroke width and color, dash width, dash gap-->
+        <attr name="strokeDashWidth"/>
+        <attr name="strokeDashGap"/>
+        <attr name="normalStrokeWidth"/>
+        <attr name="focusStrokeWidth"/>
+        <attr name="pressedStrokeWidth"/>
+        <attr name="unableStrokeWidth"/>
+        <attr name="normalStrokeColor"/>
+        <attr name="focusStrokeColor"/>
+        <attr name="pressedStrokeColor"/>
+        <attr name="unableStrokeColor"/>
+
+        <!--background color-->
+        <attr name="normalBackgroundColor"/>
+        <attr name="focusBackgroundColor"/>
+        <attr name="pressedBackgroundColor"/>
+        <attr name="unableBackgroundColor"/>
+
+        <!--background radius-->
+        <attr name="stateRadius"/>
+        <attr name="stateRound"/>
+
+        <!--animation duration-->
+        <attr name="animationDuration"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="StateEditText">
+        <!--text color-->
+        <attr name="normalTextColor"/>
+        <attr name="focusTextColor"/>
+        <attr name="pressedTextColor"/>
+        <attr name="unableTextColor"/>
+
+        <!--stroke width and color, dash width, dash gap-->
+        <attr name="strokeDashWidth"/>
+        <attr name="strokeDashGap"/>
+        <attr name="normalStrokeWidth"/>
+        <attr name="focusStrokeWidth"/>
+        <attr name="pressedStrokeWidth"/>
+        <attr name="unableStrokeWidth"/>
+        <attr name="normalStrokeColor"/>
+        <attr name="focusStrokeColor"/>
+        <attr name="pressedStrokeColor"/>
+        <attr name="unableStrokeColor"/>
+
+        <!--background color-->
+        <attr name="normalBackgroundColor"/>
+        <attr name="focusBackgroundColor"/>
+        <attr name="pressedBackgroundColor"/>
+        <attr name="unableBackgroundColor"/>
+
+        <!--background radius-->
+        <attr name="stateRadius"/>
+        <attr name="stateRound"/>
+
+        <!--animation duration-->
+        <attr name="animationDuration"/>
+
+    </declare-styleable>
+
+    <attr name="isSelected" format="boolean"/>
+
+    <!--  自定义选择按钮  -->
+    <declare-styleable name="CustomSelectButton">
+        <attr name="isSelected"/>
+        <attr name="textContent" format="string"/>
+        <attr name="textColorNormal" format="color|reference"/>
+        <attr name="textColorSelected" format="color|reference"/>
+        <attr name="backgroundRes" format="color|reference"/>
+    </declare-styleable>
+
+    <!--  自定义验证码获取按钮  -->
+    <declare-styleable name="AuthCodeStateTextView">
+        <attr name="countDownTime" format="integer"/>
+        <!--  一定要带上 %s，用于拼接时间 -->
+        <attr name="countDownTip" format="string"/>
+    </declare-styleable>
+
+    <!--  自定义顶部栏  -->
+    <declare-styleable name="CustomTopBar">
+        <attr name="titleContent" format="string"/>
+        <attr name="isShowExitArrow" format="boolean"/>
+        <attr name="isShowTitle" format="boolean"/>
+    </declare-styleable>
+
+    <!--  自定义头像选择按钮  -->
+    <declare-styleable name="CustomAvatar">
+        <attr name="isSelected"/>
+        <attr name="avatarIcon" format="color|reference"/>
+        <attr name="selectedIcon" format="color|reference"/>
+        <attr name="selectedIconSize" format="dimension"/>
+    </declare-styleable>
+
+</resources>

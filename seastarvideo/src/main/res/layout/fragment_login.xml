@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".authorize.login.LoginFragment"
+    android:background="@color/white">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_247"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@color/CornflowerBlue"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_24"
+        android:textColor="@color/textColor_333333"
+        android:textStyle="bold"
+        android:text="@string/hello_SeaStarVideo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_80"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_177">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_55"
+            android:orientation="horizontal">
+
+            <com.freewind.seastarvideo.ui.CustomSelectButton
+                android:id="@+id/pwdLoginCsb"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/dp_m_12"
+                app:isSelected="true"
+                app:textContent="@string/login_with_pwd"
+                app:textColorNormal="@color/textColor_666666"
+                app:textColorSelected="@color/dominant_tone_blue"
+                app:backgroundRes="@drawable/selector_bg_login_type_left"/>
+
+            <com.freewind.seastarvideo.ui.CustomSelectButton
+                android:id="@+id/codeLoginCsb"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/dp_m_12"
+                app:isSelected="false"
+                app:textContent="@string/login_with_code"
+                app:textColorNormal="@color/textColor_666666"
+                app:textColorSelected="@color/dominant_tone_blue"
+                app:backgroundRes="@drawable/selector_bg_login_type_right"/>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16">
+
+            <FrameLayout
+                android:id="@+id/loginEditFl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/dp_30">
+
+                <include
+                    android:id="@+id/pwdLoginInclude"
+                    layout="@layout/include_pwd_login_edit" />
+
+                <include
+                    android:id="@+id/codeLoginInclude"
+                    layout="@layout/include_code_login_edit"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <CheckBox
+                android:id="@+id/selectCb"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:checked="false"
+                android:button="@drawable/selector_mipmap_checkbox"
+                android:background="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/loginEditFl"
+                android:layout_marginTop="@dimen/dp_22"/>
+
+            <TextView
+                android:id="@+id/protocolTipTv"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm_clause"
+                android:textSize="@dimen/sp_13"
+                app:layout_constraintStart_toEndOf="@id/selectCb"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/selectCb"
+                app:layout_constraintBottom_toBottomOf="@id/selectCb"
+                android:layout_marginStart="@dimen/dp_8"/>
+
+            <com.freewind.seastarvideo.ui.StateTextView
+                android:id="@+id/loginStv"
+                style="@style/bigBtn"
+                android:text="@string/login"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/selectCb"
+                android:layout_marginTop="@dimen/dp_16"/>
+
+            <com.freewind.seastarvideo.ui.StateTextView
+                android:id="@+id/registerStv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/newcomer_register"
+                android:textSize="@dimen/sp_16"
+                android:textColor="@color/dominant_tone_blue"
+                app:pressedTextColor="@color/light_blue_99afe1"
+                app:layout_constraintStart_toStartOf="@id/loginStv"
+                app:layout_constraintEnd_toEndOf="@id/loginStv"
+                app:layout_constraintTop_toBottomOf="@id/loginStv"
+                android:layout_marginTop="@dimen/dp_12"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/versionTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/version"
+        android:textSize="@dimen/sp_12"
+        android:textColor="@color/textColor_999999"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/dp_16"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

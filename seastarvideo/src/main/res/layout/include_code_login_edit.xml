@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.freewind.seastarvideo.ui.StateEditText
+        android:id="@+id/codePhoneSet"
+        style="@style/edit"
+        android:hint="@string/input_phone_number"
+        android:inputType="phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.freewind.seastarvideo.ui.StateEditText
+        android:id="@+id/codeSet"
+        style="@style/edit"
+        android:hint="@string/input_code"
+        android:paddingEnd="@dimen/dp_125"
+        app:layout_constraintStart_toStartOf="@id/codePhoneSet"
+        app:layout_constraintTop_toBottomOf="@id/codePhoneSet"
+        android:layout_marginTop="@dimen/dp_16"/>
+    
+    <com.freewind.seastarvideo.ui.AuthCodeStateTextView
+        android:id="@+id/getCodeStv"
+        android:layout_width="@dimen/dp_104"
+        android:layout_height="@dimen/dp_34"
+        android:text="@string/get_code"
+        android:textColor="@color/dominant_tone_blue"
+        android:textSize="@dimen/sp_14"
+        android:gravity="center"
+        app:normalBackgroundColor="@color/white"
+        app:focusBackgroundColor="@color/light_gray"
+        app:pressedBackgroundColor="@color/light_gray"
+        app:unableBackgroundColor="@color/white"
+        app:unableTextColor="@color/textColor_999999"
+        app:stateRadius="@dimen/dp_4"
+        app:countDownTime="60"
+        app:countDownTip="@string/count_down_tip"
+        app:layout_constraintEnd_toEndOf="@id/codeSet"
+        app:layout_constraintTop_toTopOf="@id/codeSet"
+        app:layout_constraintBottom_toBottomOf="@id/codeSet"
+        android:layout_marginEnd="@dimen/dp_5"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
