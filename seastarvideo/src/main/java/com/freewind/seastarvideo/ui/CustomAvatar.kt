@@ -77,6 +77,7 @@ class CustomAvatar(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
         selectedIv.layoutParams = params
         isSelected = selected
         updateSelectState(isSelected)
+        a.recycle()
     }
 
     override fun setSelected(selected: Boolean) {

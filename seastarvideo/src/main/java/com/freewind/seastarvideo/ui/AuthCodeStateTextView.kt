@@ -43,6 +43,7 @@ class AuthCodeStateTextView(context: Context, attrs: AttributeSet?, defStyleAttr
         countDownTip = a.getString(R.styleable.AuthCodeStateTextView_countDownTip).toString()
         originalText = text.toString()
         countdownHandler = CountdownHandler(Looper.getMainLooper(), this)
+        a.recycle()
     }
 
     /**
