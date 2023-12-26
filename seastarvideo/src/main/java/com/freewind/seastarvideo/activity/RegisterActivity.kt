@@ -95,6 +95,7 @@ class RegisterActivity : BaseActivity() {
     /**
      * 切换到 注册信息页
      */
+    @Synchronized
     private fun showRegisterInfoPage() {
         if (switchFragment(registerInfoFragment)) {
             typeRegisterValue = REGISTER_INFO
@@ -108,6 +109,7 @@ class RegisterActivity : BaseActivity() {
     /**
      * 切换到 注册昵称页
      */
+    @Synchronized
     private fun showRegisterNicknamePage() {
         if (switchFragment(registerNicknameFragment)) {
             typeRegisterValue = REGISTER_NICKNAME

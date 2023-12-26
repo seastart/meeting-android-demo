@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".preMeetingRoom.CreateMeetingRoomFragment">
+
+    <com.freewind.seastarvideo.ui.CustomTopBar
+        android:id="@+id/topBarCtb"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        app:titleContent="@string/create_meeting_room"
+        app:isShowTitle="true"
+        app:isShowExitArrow="true"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/contentContainerLl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        android:orientation="vertical"
+        android:background="@color/gray_f7f8fa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBarCtb"
+        app:layout_constraintBottom_toTopOf="@id/btnContainerCl">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/dp_10">
+
+            <com.freewind.seastarvideo.ui.CustomKeyValueText
+                android:id="@+id/roomIdCkvt"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                app:keyContent="@string/room_id"
+                app:endValueTextIcon="@mipmap/icon_copy"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/gray_f7f8fa"
+                android:paddingStart="@dimen/dp_16"
+                android:paddingEnd="@dimen/dp_0"/>
+
+            <com.freewind.seastarvideo.ui.CustomKeyValueText
+                android:id="@+id/nicknameCkvt"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                app:keyContent="@string/user_nickname"
+                app:valueContent="@string/def_nickname" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/dp_10">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/switch_mic"
+                    android:textSize="@dimen/sp_16"
+                    android:textColor="@color/textColor_333333"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/switchMicSb"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginStart="@dimen/dp_16"/>
+
+                <com.freewind.seastarvideo.ui.SwitchButton
+                    android:id="@+id/switchMicSb"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_30"
+                    app:sb_checked_color="@color/dominant_tone_blue"
+                    app:sb_show_indicator="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="@dimen/dp_16"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/switch_camera"
+                    android:textSize="@dimen/sp_16"
+                    android:textColor="@color/textColor_333333"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/switchCameraSb"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginStart="@dimen/dp_16"/>
+
+                <com.freewind.seastarvideo.ui.SwitchButton
+                    android:id="@+id/switchCameraSb"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_30"
+                    app:sb_checked_color="@color/dominant_tone_blue"
+                    app:sb_show_indicator="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="@dimen/dp_16"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btnContainerCl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/white">
+
+        <com.freewind.seastarvideo.ui.StateTextView
+            android:id="@+id/createRoomStv"
+            style="@style/bigBtn"
+            android:text="@string/create_meeting_room"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

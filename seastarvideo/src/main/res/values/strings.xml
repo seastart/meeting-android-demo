@@ -37,4 +37,14 @@
     <string name="statement">免责声明</string>
     <string name="about_me">关于我们</string>
     <string name="logout">退出登录</string>
+
+    <string name="def_nickname">默认用户</string>
+    <string name="create_meeting_room">创建房间</string>
+    <string name="join_meeting_room">加入房间</string>
+    <string name="room_id">房间ID</string>
+    <string name="input_room_id">请输入房间ID</string>
+    <string name="user_nickname">用户昵称</string>
+    <string name="switch_mic">开启麦克风</string>
+    <string name="switch_camera">开启摄像头</string>
+
 </resources>

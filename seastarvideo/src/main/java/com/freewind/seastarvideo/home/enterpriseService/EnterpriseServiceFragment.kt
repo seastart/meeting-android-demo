@@ -9,17 +9,18 @@
 
 package com.freewind.seastarvideo.home.enterpriseService
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.QuickAdapterHelper
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.activity.PreMeetingRoomActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentEnterpriseServiceBinding
 import com.freewind.seastarvideo.ui.LinearDividerItemDecoration
@@ -93,7 +94,15 @@ class EnterpriseServiceFragment : BaseFragment() {
         mRoomTypesAdapter!!.submitList(data)
         mRoomTypesAdapter!!.setOnItemClickListener { adapterClick, view, position ->
             // 点击 item 进入对应类型的房间
-            Toast.makeText(context, "点击了一下会议类型的房间", Toast.LENGTH_SHORT).show()
+            val roomtype = adapterClick.getItem(position)?.roomType
+            roomtype?.let {
+                when(it) {
+                    RoomTypeBean.RoomTypeEnum.ROOM_TYPE_MEETING -> {
+                        startActivity(Intent(requireContext(), PreMeetingRoomActivity::class.java))
+                    }
+                }
+            }
+
         }
 
         helper = QuickAdapterHelper.Builder(mRoomTypesAdapter!!).build()

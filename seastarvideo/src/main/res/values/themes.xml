@@ -63,4 +63,18 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
+
+    <style name="bigBtn_white">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_44</item>
+        <item name="stateRadius">@dimen/dp_4</item>
+        <item name="normalBackgroundColor">@color/white</item>
+        <item name="pressedBackgroundColor">@color/light_d3d3d3</item>
+        <item name="focusBackgroundColor">@color/light_d3d3d3</item>
+        <item name="android:textColor">@color/dominant_tone_blue</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
 </resources>

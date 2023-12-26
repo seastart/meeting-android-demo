@@ -17,8 +17,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnFocusChangeListener
+import androidx.core.content.res.ResourcesCompat
 import com.freewind.seastarvideo.R
-import com.freewind.seastarvideo.utils.LogUtil
 
 /**
  * @author: wiatt
@@ -41,7 +41,7 @@ class ClearEditText(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
 
         mClearDrawable = compoundDrawables[2]
         if (mClearDrawable == null) {
-            mClearDrawable = resources.getDrawable(R.mipmap.icon_clean, null)
+            mClearDrawable = ResourcesCompat.getDrawable(resources, R.mipmap.icon_clean, null)
         }
         mClearDrawable!!.setBounds(0, 0,
             mClearDrawable!!.intrinsicWidth,
@@ -72,7 +72,6 @@ class ClearEditText(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
             && this.compoundDrawables[2] != null
             && event.x > (this.width - this.totalPaddingRight).toFloat()
             && event.x < (this.width - this.paddingRight).toFloat()) {
-            LogUtil.i("怎么走进这里了")
             this.editableText.clear()
         }
 
