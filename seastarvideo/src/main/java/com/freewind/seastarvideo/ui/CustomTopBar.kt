@@ -34,10 +34,15 @@ class CustomTopBar(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
     private var titleTv: TextView
 
     // 标题内容
-    var titleContent: String = ""
+    var titleContent: String? = ""
         set(value) {
             field = value
-            titleTv.text = value
+            if (value.isNullOrEmpty()) {
+                titleTv.text = ""
+            } else {
+                titleTv.text = value
+            }
+
         }
     // 是否显示左侧退出箭头
     var isShowExitArrow: Boolean = true
@@ -69,21 +74,11 @@ class CustomTopBar(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
         titleTv = rootView.findViewById(R.id.desTv)
 
         val a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomTopBar)
-        titleContent = a.getString(R.styleable.CustomTopBar_titleContent).toString()
+        titleContent = a.getString(R.styleable.CustomTopBar_titleContent).toString().takeIf {
+            it != "null"
+        }
         isShowExitArrow = a.getBoolean(R.styleable.CustomTopBar_isShowExitArrow, true)
         isShowTitle = a.getBoolean(R.styleable.CustomTopBar_isShowTitle, true)
-
-        titleTv.text = titleContent
-        if (isShowTitle) {
-            titleTv.visibility = VISIBLE
-        } else {
-            titleTv.visibility = GONE
-        }
-        if (isShowExitArrow) {
-            exitIv.visibility = VISIBLE
-        } else {
-            exitIv.visibility = GONE
-        }
 
         setOnClickNoRepeat(titleTv, exitIv) {
             when(it) {

@@ -37,10 +37,14 @@ class CustomSelectButton(context: Context, attrs: AttributeSet?, defStyleAttr: I
 
     private var selected: Boolean = false
     // 文本内容
-    var textContent: String = ""
+    var textContent: String? = ""
         set(value) {
             field = value
-            textTv.text = value
+            if (value.isNullOrEmpty()) {
+                textTv.text = ""
+            } else {
+                textTv.text = value
+            }
         }
     // 正常状态下文本颜色
     var textColorNormal: Int = 0
@@ -95,7 +99,9 @@ class CustomSelectButton(context: Context, attrs: AttributeSet?, defStyleAttr: I
 
         val a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomSelectButton)
         selected = a.getBoolean(R.styleable.CustomSelectButton_isSelected, false)
-        textContent = a.getString(R.styleable.CustomSelectButton_textContent).toString()
+        textContent = a.getString(R.styleable.CustomSelectButton_textContent).toString().takeIf {
+            it != "null"
+        }
         textColorNormal = a.getColor(R.styleable.CustomSelectButton_textColorNormal, blackColor)
         textColorSelected = a.getColor(R.styleable.CustomSelectButton_textColorSelected, blackColor)
         backgroundRes = a.getResourceId(R.styleable.CustomSelectButton_backgroundRes, 0)
@@ -103,10 +109,7 @@ class CustomSelectButton(context: Context, attrs: AttributeSet?, defStyleAttr: I
         LogUtil.i("customSelectButton_init, isSelected = $isSelected, selected = $selected")
 
         isSelected = selected
-        if (backgroundRes != 0) {
-            selectBtnCl.background = AppCompatResources.getDrawable(context, backgroundRes)
-        }
-        textTv.text = textContent
+
         updateSelectState(isSelected)
         a.recycle()
     }

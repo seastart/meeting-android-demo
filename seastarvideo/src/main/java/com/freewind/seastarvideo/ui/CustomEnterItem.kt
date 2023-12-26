@@ -39,10 +39,14 @@ class CustomEnterItem(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
                 iconIv.setImageResource(value)
             }
         }
-    var itemDes: String = ""
+    var itemDes: String? = ""
         set(value) {
             field = value
-            desTv.text = value
+            if (value.isNullOrEmpty()) {
+                desTv.text = ""
+            } else {
+                desTv.text = value
+            }
         }
     var itemEnterIcon: Int = 0
         set(value) {
@@ -63,7 +67,9 @@ class CustomEnterItem(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
 
         val a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomEnterItem)
         itemIcon = a.getResourceId(R.styleable.CustomEnterItem_itemIcon, 0)
-        itemDes = a.getString(R.styleable.CustomEnterItem_itemDes).toString()
+        itemDes = a.getString(R.styleable.CustomEnterItem_itemDes).toString().takeIf {
+            it != "null"
+        }
         itemEnterIcon = a.getResourceId(R.styleable.CustomEnterItem_itemEnterIcon, 0)
         a.recycle()
     }

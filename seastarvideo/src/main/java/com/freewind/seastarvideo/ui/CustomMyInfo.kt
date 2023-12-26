@@ -39,16 +39,21 @@ class CustomMyInfo(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
                 avatarIv.setImageResource(avatarIcon)
             }
         }
-    var nickNameContent: String = ""
+    var nickNameContent: String? = ""
         set(value) {
             field = value
-            nickNameTv.text = value
+            if (value.isNullOrEmpty()) {
+                nickNameTv.text = ""
+            } else {
+                nickNameTv.text = value
+            }
         }
-    var idContent: String = ""
+    var idContent: String? = ""
         set(value) {
             field = value
-            val id = String.format(resources.getString(R.string.id_format), value)
-            LogUtil.i("idContent = $value, id = $id")
+            val tmpValue = value ?: ""
+            val id = String.format(resources.getString(R.string.id_format), tmpValue)
+            LogUtil.i("idContent = $tmpValue, id = $id")
             idTv.text = id
         }
 
@@ -60,8 +65,12 @@ class CustomMyInfo(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
 
         val a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomMyInfo)
         avatarIcon = a.getResourceId(R.styleable.CustomMyInfo_avatarIcon, 0)
-        nickNameContent = a.getString(R.styleable.CustomMyInfo_nickNameContent).toString()
-        idContent = a.getString(R.styleable.CustomMyInfo_idContent).toString()
+        nickNameContent = a.getString(R.styleable.CustomMyInfo_nickNameContent).toString().takeIf {
+            it != "null"
+        }
+        idContent = a.getString(R.styleable.CustomMyInfo_idContent).toString().takeIf {
+            it != "null"
+        }
         a.recycle()
     }
 }
