@@ -34,7 +34,7 @@ class PreMeetingRoomActivity : BaseActivity() {
     // fragment 任务栈，当前正在显示的fragment保存在顶部
     private var fragmentStack: Stack<BaseFragment> = Stack()
     // 标识：当前正在展示哪个 fragment
-    private lateinit var typePmrValue: String
+    private lateinit var fragmentType: String
 
     private val pmrFragment: PreMeetingRoomFragment by lazy {
         PreMeetingRoomFragment.newInstance()
@@ -74,7 +74,7 @@ class PreMeetingRoomActivity : BaseActivity() {
     @Synchronized
     private fun showPreMeetingRoomFragment() {
         if (switchFragment(pmrFragment)) {
-            typePmrValue = PRE_MEETING_ROOM_PRE
+            fragmentType = PRE_MEETING_ROOM_PRE
             fragmentStack.push(pmrFragment)
         }
     }
@@ -89,7 +89,7 @@ class PreMeetingRoomActivity : BaseActivity() {
             jmrFragment = JoinMeetingRoomFragment.newInstance("橘子果酱")
         }
         if (switchFragment(jmrFragment)) {
-            typePmrValue = PRE_MEETING_ROOM_JOIN
+            fragmentType = PRE_MEETING_ROOM_JOIN
             fragmentStack.push(jmrFragment)
         }
     }
@@ -104,7 +104,7 @@ class PreMeetingRoomActivity : BaseActivity() {
             cmrFragment = CreateMeetingRoomFragment.newInstance("橘子果酱")
         }
         if (switchFragment(cmrFragment)) {
-            typePmrValue = PRE_MEETING_ROOM_CREATE
+            fragmentType = PRE_MEETING_ROOM_CREATE
             fragmentStack.push(cmrFragment)
         }
     }

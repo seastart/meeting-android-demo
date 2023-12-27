@@ -34,8 +34,8 @@
     <string name="mine">我的</string>
     <string name="id_format">ID:%s</string>
     <string name="privacy">隐私</string>
-    <string name="statement">免责声明</string>
-    <string name="about_me">关于我们</string>
+    <string name="disclaimer">免责声明</string>
+    <string name="about_us">关于我们</string>
     <string name="logout">退出登录</string>
 
     <string name="def_nickname">默认用户</string>
@@ -47,4 +47,11 @@
     <string name="switch_mic">开启麦克风</string>
     <string name="switch_camera">开启摄像头</string>
 
+    <string name="personal_information_collection_list">个人信息收集清单</string>
+    <string name="third_party_information_sharing_list">第三方信息共享清单</string>
+    <string name="user_agreement_1">用户协议</string>
+    <string name="privacy_policy_1">隐私协议</string>
+
+    <string name="sdk_version">SDK版本</string>
+    <string name="app_version">应用版本</string>
 </resources>

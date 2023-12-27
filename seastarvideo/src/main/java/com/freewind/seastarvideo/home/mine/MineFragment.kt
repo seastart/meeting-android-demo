@@ -14,6 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.freewind.seastarvideo.activity.AboutUsActivity
+import com.freewind.seastarvideo.activity.PrivacyActivity
+import com.freewind.seastarvideo.activity.RegisterActivity
+import com.freewind.seastarvideo.activity.WebActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMineBinding
 import com.freewind.seastarvideo.utils.OtherUiManager
@@ -52,19 +56,19 @@ class MineFragment : BaseFragment() {
 
     private fun initListener() {
         binding.myInfoCmi.setOnClickListener {
-            // 跳转到个人信息页面
+            RegisterActivity.startRegisterNicknamePage(requireContext())
         }
         binding.privacyCei.setOnClickListener {
-            // 跳转到隐私页面
+            PrivacyActivity.startPrivacyListPage(requireContext())
         }
         binding.statementCei.setOnClickListener {
-            // 跳转到免责声明页面
+            WebActivity.startDisclaimerWebPage(requireContext())
         }
-        binding.aboutMeCei.setOnClickListener {
-            // 跳转到我的页面
+        binding.aboutUsCei.setOnClickListener {
+            AboutUsActivity.startAboutUsPage(requireContext())
         }
         binding.logoutCei.setOnClickListener {
-            // 跳转到登录页面
+            // 退出登录，并跳转到首页
         }
     }
 

@@ -92,8 +92,8 @@
             android:id="@+id/statementCei"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50"
-            app:itemIcon="@mipmap/statement"
-            app:itemDes="@string/statement"
+            app:itemIcon="@mipmap/disclaimer"
+            app:itemDes="@string/disclaimer"
             app:itemEnterIcon="@mipmap/arrow_enter"
             android:paddingStart="@dimen/dp_12"
             android:paddingEnd="@dimen/dp_12"/>
@@ -106,11 +106,11 @@
             android:layout_marginEnd="@dimen/dp_12"/>
 
         <com.freewind.seastarvideo.ui.CustomEnterItem
-            android:id="@+id/aboutMeCei"
+            android:id="@+id/aboutUsCei"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50"
             app:itemIcon="@mipmap/about_me"
-            app:itemDes="@string/about_me"
+            app:itemDes="@string/about_us"
             app:itemEnterIcon="@mipmap/arrow_enter"
             android:paddingStart="@dimen/dp_12"
             android:paddingEnd="@dimen/dp_12"/>

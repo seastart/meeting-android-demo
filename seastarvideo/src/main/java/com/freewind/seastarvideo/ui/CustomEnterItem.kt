@@ -37,6 +37,9 @@ class CustomEnterItem(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
             field = value
             if (value != 0) {
                 iconIv.setImageResource(value)
+                iconIv.visibility = View.VISIBLE
+            } else {
+                iconIv.visibility = View.GONE
             }
         }
     var itemDes: String? = ""

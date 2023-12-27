@@ -38,6 +38,14 @@ class CustomKeyValueText(context: Context, attrs: AttributeSet?, defStyleAttr: I
     private val keyTextTv: TextView
     private val valueTextTv: TextView
 
+    // 标识：样式 1
+    private var STYLE_TYPE_ONE = 1
+    // 标识：样式 2
+    private var STYLE_TYPE_TWO = 2
+
+    // 样式类型
+    var styleType: Int = 1
+        private set
     var keyContent: String? = ""
         set(value) {
             field = value
@@ -66,11 +74,21 @@ class CustomKeyValueText(context: Context, attrs: AttributeSet?, defStyleAttr: I
     var listener: OnCustomKeyValueTextListener? = null
 
     init {
-        val rootView = LayoutInflater.from(context).inflate(R.layout.view_key_value_text, this, true)
-        keyTextTv = rootView.findViewById(R.id.keyTextTv)
-        valueTextTv = rootView.findViewById(R.id.valueTextTv)
+
 
         val a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomKeyValueText)
+
+        styleType = a.getInt(R.styleable.CustomKeyValueText_style_type, STYLE_TYPE_ONE)
+        if (styleType == STYLE_TYPE_TWO) {
+            val rootView = LayoutInflater.from(context).inflate(R.layout.view_key_value_text_2, this, true)
+            keyTextTv = rootView.findViewById(R.id.keyTextTv)
+            valueTextTv = rootView.findViewById(R.id.valueTextTv)
+        } else {
+            val rootView = LayoutInflater.from(context).inflate(R.layout.view_key_value_text, this, true)
+            keyTextTv = rootView.findViewById(R.id.keyTextTv)
+            valueTextTv = rootView.findViewById(R.id.valueTextTv)
+        }
+
         keyContent = a.getString(R.styleable.CustomKeyValueText_keyContent).toString().takeIf {
             it != "null"
         }

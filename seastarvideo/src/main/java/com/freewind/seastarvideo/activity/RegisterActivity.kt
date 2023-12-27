@@ -9,6 +9,8 @@
 
 package com.freewind.seastarvideo.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.freewind.seastarvideo.R
@@ -30,10 +32,9 @@ class RegisterActivity : BaseActivity() {
     private lateinit var binding: ActivityRegisterBinding
 
     private var currentFragment: Fragment? = null
-
     // fragment 任务栈，当前正在显示的fragment保存在顶部
     private var fragmentStack: Stack<BaseFragment> = Stack()
-    private lateinit var typeRegisterValue: String
+    private lateinit var fragmentType: String
 
     private val registerInfoFragment: RegisterInfoFragment by lazy {
         RegisterInfoFragment.newInstance()
@@ -49,11 +50,15 @@ class RegisterActivity : BaseActivity() {
         OtherUiManager.instance.adaptTopHeight(binding.topBarCtb)
         OtherUiManager.instance.adaptBottomHeight(binding.registerRl)
         setContentView(rootView)
-
         EventBus.getDefault().register(this)
+        fragmentType = intent.getStringExtra(REGISTER_KEY) ?: REGISTER_INFO
 
         initListener()
-        showRegisterInfoPage()
+        if (fragmentType == REGISTER_NICKNAME) {
+            showRegisterNicknamePage()
+        } else {
+            showRegisterInfoPage()
+        }
     }
 
     override fun onDestroy() {
@@ -98,7 +103,7 @@ class RegisterActivity : BaseActivity() {
     @Synchronized
     private fun showRegisterInfoPage() {
         if (switchFragment(registerInfoFragment)) {
-            typeRegisterValue = REGISTER_INFO
+            fragmentType = REGISTER_INFO
             binding.topBarCtb.titleContent = resources.getString(R.string.register)
             binding.topBarCtb.isShowTitle = true
             binding.topBarCtb.isShowExitArrow = true
@@ -112,7 +117,7 @@ class RegisterActivity : BaseActivity() {
     @Synchronized
     private fun showRegisterNicknamePage() {
         if (switchFragment(registerNicknameFragment)) {
-            typeRegisterValue = REGISTER_NICKNAME
+            fragmentType = REGISTER_NICKNAME
             binding.topBarCtb.isShowTitle = false
             binding.topBarCtb.isShowExitArrow = true
             fragmentStack.push(registerNicknameFragment)
@@ -163,9 +168,28 @@ class RegisterActivity : BaseActivity() {
     }
 
     companion object {
+        const val REGISTER_KEY = "register_key"
         // 注册信息页
-        const val REGISTER_INFO = "register_INFO"
+        const val REGISTER_INFO = "register_info"
         // 注册昵称页
         const val REGISTER_NICKNAME = "register_nickname"
+
+        /**
+         * 启动注册信息页面
+         */
+        fun startRegisterInfoPage(context: Context) {
+            val intent = Intent(context, RegisterActivity::class.java)
+            intent.putExtra(REGISTER_KEY, REGISTER_INFO)
+            context.startActivity(intent)
+        }
+
+        /**
+         * 启动注册昵称页面
+         */
+        fun startRegisterNicknamePage(context: Context) {
+            val intent = Intent(context, RegisterActivity::class.java)
+            intent.putExtra(REGISTER_KEY, REGISTER_NICKNAME)
+            context.startActivity(intent)
+        }
     }
 }

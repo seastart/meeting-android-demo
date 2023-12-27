@@ -1,6 +1,5 @@
 package com.freewind.seastarvideo.authorize.login
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -71,7 +70,7 @@ class LoginFragment : BaseFragment() {
                     // 请求登录接口
                 }
                 binding.registerStv -> {
-                    startActivity(Intent(context, RegisterActivity::class.java))
+                    RegisterActivity.startRegisterInfoPage(requireContext())
                 }
             }
         }

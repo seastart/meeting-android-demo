@@ -17,7 +17,7 @@
         android:id="@+id/exitIv"
         android:layout_width="@dimen/dp_44"
         android:layout_height="@dimen/dp_44"
-        android:src="@mipmap/exit_arrow"
+        android:src="@mipmap/arrow_exit"
         android:scaleType="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
