@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.activity.MeetingRoomActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentJoinMeetingRoomBinding
 import com.freewind.seastarvideo.ui.CustomTopBar
@@ -98,6 +99,7 @@ class JoinMeetingRoomFragment : BaseFragment() {
         val isCheckedMic = binding.switchMicSb.isChecked
         val isCheckedCamera = binding.switchCameraSb.isChecked
         // todo 请求加入房间的接口
+        MeetingRoomActivity.startMeetingRoomPage(requireContext(), nickname, roomId)
         Toast.makeText(requireContext(), "加入房间数据获取完整", Toast.LENGTH_SHORT).show()
     }
 

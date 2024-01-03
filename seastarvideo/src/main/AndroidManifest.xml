@@ -1,36 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <!--  网络权限  -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-<!--    &lt;!&ndash;  获取wifi状态权限  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
-<!--    &lt;!&ndash;  读取外部存储器  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
-<!--    &lt;!&ndash;  写入外部存储器  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
-<!--    &lt;!&ndash;  写入多媒体存储器  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE"-->
-<!--        tools:ignore="ProtectedPermissions" />-->
-<!--    &lt;!&ndash;  存储器管理权限，级别很高的特殊权限  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"-->
-<!--        tools:ignore="ScopedStorage" />-->
-<!--    &lt;!&ndash;  录音权限  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.RECORD_AUDIO" />-->
-<!--    &lt;!&ndash;  照相机权限  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
-<!--    &lt;!&ndash;  震动权限  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.VIBRATE" />-->
-<!--    &lt;!&ndash; Android 13版本适配，细化存储权限 &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />-->
-<!--    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />-->
-<!--    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />-->
-<!--    &lt;!&ndash;  发送通知的权限  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>-->
-<!--    &lt;!&ndash;  请求安装应用的权限  &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>-->
-
+    <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -72,6 +44,9 @@
             android:exported="false" />
         <activity
             android:name=".activity.WebActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.MeetingRoomActivity"
             android:exported="false" />
     </application>
 

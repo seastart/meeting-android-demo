@@ -1,6 +1,7 @@
 package com.freewind.seastarvideo.base
 
 import androidx.lifecycle.ViewModel
+import java.io.Serializable
 
 /**
  * @author: wiatt
@@ -8,7 +9,7 @@ import androidx.lifecycle.ViewModel
  * @description:
  */
 abstract class BaseViewModel<M: BaseModel<CONTRACT_VM, *>,
-        CONTRACT_VM: BaseContract.IViewModel>: ViewModel() {
+        CONTRACT_VM: BaseContract.IViewModel>: ViewModel(), Serializable {
 
     protected var mModel: M = getModel()
 

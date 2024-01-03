@@ -39,6 +39,7 @@
     <string name="logout">退出登录</string>
 
     <string name="def_nickname">默认用户</string>
+    <string name="def_room_id">000 000 000</string>
     <string name="create_meeting_room">创建房间</string>
     <string name="join_meeting_room">加入房间</string>
     <string name="room_id">房间ID</string>
@@ -54,4 +55,11 @@
 
     <string name="sdk_version">SDK版本</string>
     <string name="app_version">应用版本</string>
+
+    <string name="leave_room">离开房间</string>
+    <string name="close_audio">静音</string>
+    <string name="close_video">关闭视频</string>
+    <string name="share_screen">共享屏幕</string>
+    <string name="member_list">参会成员</string>
+    <string name="chat">聊天</string>
 </resources>
