@@ -70,7 +70,7 @@
         app:layout_constraintVertical_chainStyle="packed"/>
 
     <TextView
-        android:id="@+id/liveRoomTv"
+        android:id="@+id/leaveRoomTv"
         android:layout_width="@dimen/dp_70"
         android:layout_height="@dimen/dp_27"
         android:text="@string/leave_room"

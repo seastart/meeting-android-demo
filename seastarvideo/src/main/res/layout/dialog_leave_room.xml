@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_320"
+    android:layout_height="@dimen/dp_163"
+    android:layout_gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_bg_white_radius_4">
+
+    <TextView
+        android:id="@+id/titleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sure_leave_room"
+        android:textColor="@color/textColor_000000"
+        android:textSize="@dimen/sp_17"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/transverseLineV"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"/>
+
+    <View
+        android:id="@+id/transverseLineV"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/black_1A000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dp_56"/>
+
+    <com.freewind.seastarvideo.ui.StateTextView
+        android:id="@+id/cancelStv"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:text="@string/think_again"
+        android:textSize="@dimen/sp_17"
+        app:stateBottomLeftRadius="@dimen/dp_4"
+        android:textColor="@color/black_181818"
+        app:normalBackgroundColor="@color/white"
+        app:pressedBackgroundColor="@color/black_1A000000"
+        app:focusBackgroundColor="@color/black_1A000000"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalLineV"
+        app:layout_constraintTop_toBottomOf="@id/transverseLineV"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    
+    <View
+        android:id="@+id/verticalLineV"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="@dimen/dp_0"
+        android:background="@color/black_1A000000"
+        app:layout_constraintStart_toEndOf="@id/cancelStv"
+        app:layout_constraintEnd_toStartOf="@id/goStv"
+        app:layout_constraintTop_toBottomOf="@id/transverseLineV"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.freewind.seastarvideo.ui.StateTextView
+        android:id="@+id/goStv"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:text="@string/sure"
+        android:textSize="@dimen/sp_17"
+        android:textColor="@color/dominant_tone_blue"
+        android:gravity="center"
+        app:stateBottomRightRadius="@dimen/dp_12"
+        app:normalBackgroundColor="@color/white"
+        app:pressedBackgroundColor="@color/black_1A000000"
+        app:focusBackgroundColor="@color/black_1A000000"
+        app:layout_constraintStart_toEndOf="@id/verticalLineV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transverseLineV"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

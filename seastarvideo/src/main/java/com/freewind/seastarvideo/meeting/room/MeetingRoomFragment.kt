@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMeetingRoomBinding
+import com.freewind.seastarvideo.ui.DialogManager
 import com.freewind.seastarvideo.utils.OtherUiManager
 import org.greenrobot.eventbus.EventBus
 
@@ -109,10 +110,10 @@ class MeetingRoomFragment : BaseFragment() {
     private fun initListener() {
         setOnClickNoRepeat(
             binding.topBarI.toggleCameraIv, binding.topBarI.switchSpeakerIv,
-            binding.topBarI.reportIv, binding.topBarI.liveRoomTv,
+            binding.topBarI.reportIv, binding.topBarI.leaveRoomTv,
             binding.bottomToolbarI.micBigCl, binding.bottomToolbarI.cameraBigCl,
             binding.bottomToolbarI.screenCl, binding.bottomToolbarI.memberCl,
-            binding.bottomToolbarI.chatCl) {
+            binding.bottomToolbarI.chatCl) { it ->
             when(it) {
                 binding.topBarI.toggleCameraIv -> {
                     Toast.makeText(requireContext(), "切换摄像头方向", Toast.LENGTH_SHORT).show()
@@ -123,18 +124,32 @@ class MeetingRoomFragment : BaseFragment() {
                 binding.topBarI.reportIv -> {
                     Toast.makeText(requireContext(), "点击投诉按钮", Toast.LENGTH_SHORT).show()
                 }
-                binding.topBarI.liveRoomTv -> {
-                    viewModel.liveRoom()
-                    EventBus.getDefault().post(MeetingRoomEventBean.goBackPageEvent())
+                binding.topBarI.leaveRoomTv -> {
+                    DialogManager.instance.showLeaveRoomDialog(requireContext()) {
+                        viewModel.liveRoom()
+                        EventBus.getDefault().post(MeetingRoomEventBean.goBackPageEvent())
+                    }
                 }
                 binding.bottomToolbarI.micBigCl -> {
-                    viewModel.switchMyMicStatus()
+                    DialogManager.instance.showRequestMicPermissionDialog(requireContext()) {
+                        Toast.makeText(requireContext(), "跳转到麦克风权限授予页面", Toast.LENGTH_SHORT).show()
+                        viewModel.switchMyMicStatus()
+                    }
                 }
                 binding.bottomToolbarI.cameraBigCl -> {
-                    viewModel.switchMyCameraStatus()
+                    DialogManager.instance.showRequestOpenCameraDialog(requireContext(), "主持人xxx请求开启视频") {
+                        Toast.makeText(requireContext(), "同意开启视频", Toast.LENGTH_SHORT).show()
+                        viewModel.switchMyCameraStatus()
+                    }
                 }
                 binding.bottomToolbarI.screenCl -> {
-                    Toast.makeText(requireContext(), "点击屏幕共享按钮", Toast.LENGTH_SHORT).show()
+                    DialogManager.instance.showShareScreenDialog(requireContext()) { shareType ->
+                        if (shareType == DialogManager.FLAG_SHARE_TYPE_SCREEN) {
+                            Toast.makeText(requireContext(), "开始共享屏幕", Toast.LENGTH_SHORT).show()
+                        } else if (shareType == DialogManager.FLAG_SHARE_TYPE_WHITE_BOARD) {
+                            Toast.makeText(requireContext(), "开始共享白板", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
                 binding.bottomToolbarI.memberCl -> {
                     Toast.makeText(requireContext(), "点击成员列表按钮", Toast.LENGTH_SHORT).show()

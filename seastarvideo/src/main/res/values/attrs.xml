@@ -39,6 +39,10 @@
     <attr name="pressedBackgroundColor" format="color|reference"/>
     <attr name="unableBackgroundColor" format="color|reference"/>
     <attr name="stateRadius" format="dimension|reference"/>
+    <attr name="stateTopLeftRadius" format="dimension|reference"/>
+    <attr name="stateTopRightRadius" format="dimension|reference"/>
+    <attr name="stateBottomLeftRadius" format="dimension|reference"/>
+    <attr name="stateBottomRightRadius" format="dimension|reference"/>
     <attr name="stateRound" format="boolean|reference"/>
 
     <!--animation duration-->
@@ -71,6 +75,11 @@
 
         <!--background radius-->
         <attr name="stateRadius"/>
+        <attr name="stateTopLeftRadius"/>
+        <attr name="stateTopRightRadius"/>
+        <attr name="stateBottomLeftRadius"/>
+        <attr name="stateBottomRightRadius"/>
+
         <attr name="stateRound"/>
 
         <!--animation duration-->

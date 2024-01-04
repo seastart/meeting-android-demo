@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_176"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white_fff9fafb">
+
+    <com.freewind.seastarvideo.ui.StateTextView
+        android:id="@+id/shareScreenStv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        android:text="@string/share_screen"
+        android:textColor="@color/textColor_333333"
+        android:textSize="@dimen/sp_16"
+        android:gravity="center"
+        app:normalBackgroundColor="@color/white"
+        app:pressedBackgroundColor="@color/black_1A000000"
+        app:focusBackgroundColor="@color/black_1A000000" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/white_FFe2e4ea"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_20"/>
+    
+    <com.freewind.seastarvideo.ui.StateTextView
+        android:id="@+id/whiteBoardStv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        android:text="@string/shared_whiteboard"
+        android:textColor="@color/textColor_333333"
+        android:textSize="@dimen/sp_16"
+        android:gravity="center"
+        app:normalBackgroundColor="@color/white"
+        app:pressedBackgroundColor="@color/black_1A000000"
+        app:focusBackgroundColor="@color/black_1A000000" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_10"
+        android:background="@color/white_fff9fafb"/>
+
+    <com.freewind.seastarvideo.ui.StateTextView
+        android:id="@+id/cancelStv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        android:text="@string/cancel"
+        android:textColor="@color/textColor_333333"
+        android:textSize="@dimen/sp_16"
+        android:gravity="center"
+        app:normalBackgroundColor="@color/white"
+        app:pressedBackgroundColor="@color/black_1A000000"
+        app:focusBackgroundColor="@color/black_1A000000" />
+    
+</LinearLayout>

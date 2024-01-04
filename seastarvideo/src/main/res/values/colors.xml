@@ -6,10 +6,14 @@
     <color name="balck_99000000">#99000000</color>
     <color name="black_363b41">#FF363B41</color>
     <color name="black_1a1c22">#FF1A1C22</color>
+    <color name="black_181818">#FF181818</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_fff9fafb">#FFF9FAFB</color>
     <color name="white_99ffffff">#99FFFFFF</color>
+    <color name="white_FFe2e4ea">#FFE2E4EA</color>
 
     <color name="red_ff4b51">#FFFF4B51</color>
+    <color name="red_fb4848">#FFFB4848</color>
 
     <color name="light_d3d3d3">#D3D3D3</color>
     <color name="gray_f7f8fa">#F7F8FA</color>
@@ -18,6 +22,7 @@
     <color name="dominant_tone_blue">#FF0039B3</color>
     <color name="light_blue_99afe1">#FF99AFE1</color>
 
+    <color name="textColor_000000">#FF000000</color>
     <color name="textColor_333333">#FF333333</color>
     <color name="textColor_666666">#FF666666</color>
     <color name="textColor_999999">#999999</color>

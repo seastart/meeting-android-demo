@@ -62,4 +62,23 @@
     <string name="share_screen">共享屏幕</string>
     <string name="member_list">参会成员</string>
     <string name="chat">聊天</string>
+    <string name="unable_use_mic">无法使用麦克风</string>
+    <string name="method_grant_permissions">请在设备的“设置-隐私-麦克风”中允许SRTC访问您的麦克风</string>
+    <string name="shared_whiteboard">共享白板</string>
+    <string name="sure_leave_room">您确定离开房间吗？</string>
+    <string name="all_member_close_mic">所有以及新加入的成员将被静音</string>
+    <string name="enable_self_open_mic">允许成员自我解除静音</string>
+    <string name="all_member_open_mic">您确定解除全体静音吗</string>
+    <string name="all_member_close_camera">所有以及新加入的成员将被禁画</string>
+    <string name="enable_self_open_camera">允许成员自我开启视频</string>
+    <string name="all_member_open_camera">您确定解除全体禁画吗</string>
+    <string name="cancel">取消</string>
+    <string name="go_to_setting">前往设置</string>
+    <string name="keep_close_mic">保持静音</string>
+    <string name="open_mic">解除静音</string>
+    <string name="keep_close_camera">保持关闭</string>
+    <string name="open_camera">开启视频</string>
+    <string name="think_again">再想想</string>
+    <string name="all_member_close_mic_1">全体静音</string>
+    <string name="all_member_close_camera_1">全体禁画</string>
 </resources>

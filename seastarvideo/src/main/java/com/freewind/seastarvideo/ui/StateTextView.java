@@ -35,6 +35,10 @@ public class StateTextView extends AppCompatTextView {
 
     //radius
     private float mRadius = 0;
+    private float mTopLeftRadius = 0;
+    private float mTopRightRadius = 0;
+    private float mBottomLeftRadius = 0;
+    private float mBottomRightRadius = 0;
     private boolean mRound;
 
     //stroke
@@ -131,11 +135,30 @@ public class StateTextView extends AppCompatTextView {
 
         //set radius
         mRadius = a.getDimensionPixelSize(R.styleable.StateTextView_stateRadius, 0);
+        if (mRadius != 0) {
+            mNormalBackground.setCornerRadius(mRadius);
+            mFocusBackground.setCornerRadius(mRadius);
+            mPressedBackground.setCornerRadius(mRadius);
+            mUnableBackground.setCornerRadius(mRadius);
+        } else {
+            mTopLeftRadius = a.getDimensionPixelSize(R.styleable.StateTextView_stateTopLeftRadius, 0);
+            mTopRightRadius = a.getDimensionPixelSize(R.styleable.StateTextView_stateTopRightRadius, 0);
+            mBottomLeftRadius = a.getDimensionPixelSize(R.styleable.StateTextView_stateBottomLeftRadius, 0);
+            mBottomRightRadius = a.getDimensionPixelSize(R.styleable.StateTextView_stateBottomRightRadius, 0);
+            float[] radii = {mTopLeftRadius, mTopLeftRadius,
+                    mTopRightRadius, mTopRightRadius,
+                    mBottomRightRadius, mBottomRightRadius,
+                    mBottomLeftRadius, mBottomLeftRadius
+            };
+            mNormalBackground.setCornerRadii(radii);
+            mFocusBackground.setCornerRadii(radii);
+            mPressedBackground.setCornerRadii(radii);
+            mUnableBackground.setCornerRadii(radii);
+        }
+
+
         mRound = a.getBoolean(R.styleable.StateTextView_stateRound, false);
-        mNormalBackground.setCornerRadius(mRadius);
-        mFocusBackground.setCornerRadius(mRadius);
-        mPressedBackground.setCornerRadius(mRadius);
-        mUnableBackground.setCornerRadius(mRadius);
+
 
         //set stroke
         mStrokeDashWidth = a.getDimensionPixelSize(R.styleable.StateTextView_strokeDashWidth, 0);
@@ -251,6 +274,21 @@ public class StateTextView extends AppCompatTextView {
         mFocusBackground.setCornerRadius(mRadius);
         mPressedBackground.setCornerRadius(mRadius);
         mUnableBackground.setCornerRadius(mRadius);
+    }
+
+    public void setRadii(@FloatRange(from = 0) float mTopLeftRadius, @FloatRange(from = 0) float mTopRightRadius,
+                         @FloatRange(from = 0) float mBottomLeftRadius, @FloatRange(from = 0) float mBottomRightRadius) {
+        if (mRadius == 0) {
+            float[] radii = {mTopLeftRadius, mTopLeftRadius,
+                    mTopRightRadius, mTopRightRadius,
+                    mBottomRightRadius, mBottomRightRadius,
+                    mBottomLeftRadius, mBottomLeftRadius
+            };
+            mNormalBackground.setCornerRadii(radii);
+            mFocusBackground.setCornerRadii(radii);
+            mPressedBackground.setCornerRadii(radii);
+            mUnableBackground.setCornerRadii(radii);
+        }
     }
 
     public void setRound(boolean round){
