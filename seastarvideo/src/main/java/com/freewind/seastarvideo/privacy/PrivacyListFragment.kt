@@ -43,7 +43,7 @@ class PrivacyListFragment : BaseFragment() {
     ): View {
         _binding = FragmentPrivacyListBinding.inflate(inflater, container, false)
         val rootView = binding.root
-        OtherUiManager.instance.adaptTopHeight(binding.topBarCtb)
+        OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
 
         initListener()
 

@@ -16,17 +16,24 @@
     android:background="@color/gray_f7f8fa"
     tools:context=".meeting.member.MemberListFragment">
 
-    <com.freewind.seastarvideo.ui.CustomTopBar
-        android:id="@+id/topBarCtb"
+    <FrameLayout
+        android:id="@+id/topBarFl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
-        app:isShowExitArrow="true"
-        app:isShowTitle="true"
-        app:titleContent="@string/member_list"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.freewind.seastarvideo.ui.CustomTopBar
+            android:id="@+id/topBarCtb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            app:isShowExitArrow="true"
+            app:isShowTitle="true"
+            app:titleContent="@string/member_list" />
+
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/membersRv"
@@ -34,7 +41,7 @@
         android:layout_height="@dimen/dp_0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBarCtb"
+        app:layout_constraintTop_toBottomOf="@id/topBarFl"
         app:layout_constraintBottom_toTopOf="@id/allOptCl"
         android:layout_marginTop="@dimen/dp_10"/>
 

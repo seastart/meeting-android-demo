@@ -15,21 +15,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".home.enterpriseService.EnterpriseServiceFragment">
 
-    <com.freewind.seastarvideo.ui.CustomTopBar
-        android:id="@+id/topBarCtb"
+    <FrameLayout
+        android:id="@+id/topBarFl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
-        android:background="@color/white"
-        app:titleContent="@string/chinese_app_name"
-        app:isShowTitle="true"
-        app:isShowExitArrow="false"/>
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <com.freewind.seastarvideo.ui.CustomTopBar
+            android:id="@+id/topBarCtb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            app:titleContent="@string/chinese_app_name"
+            app:isShowTitle="true"
+            app:isShowExitArrow="false"/>
+
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/roomListRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray_f7f8fa"
-        android:layout_below="@id/topBarCtb"
+        android:layout_below="@id/topBarFl"
         android:paddingTop="@dimen/dp_10"
         android:paddingStart="@dimen/dp_16"
         android:paddingEnd="@dimen/dp_16"/>

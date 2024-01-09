@@ -17,16 +17,23 @@
     android:background="@color/gray_f7f8fa"
     tools:context=".aboutUs.AboutUsFragment">
 
-    <com.freewind.seastarvideo.ui.CustomTopBar
-        android:id="@+id/topBarCtb"
+    <FrameLayout
+        android:id="@+id/topBarFl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
-        app:titleContent="@string/about_us"
-        app:isShowTitle="true"
-        app:isShowExitArrow="true"
-        android:background="@color/transparent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.freewind.seastarvideo.ui.CustomTopBar
+            android:id="@+id/topBarCtb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            app:titleContent="@string/about_us"
+            app:isShowTitle="true"
+            app:isShowExitArrow="true"
+            android:background="@color/transparent" />
+
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/logoIv"
@@ -35,7 +42,7 @@
         android:src="@mipmap/icon_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBarCtb"
+        app:layout_constraintTop_toBottomOf="@id/topBarFl"
         android:layout_marginTop="@dimen/dp_31"/>
 
     <LinearLayout

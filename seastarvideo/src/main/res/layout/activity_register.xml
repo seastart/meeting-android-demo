@@ -17,16 +17,23 @@
     android:layout_height="match_parent"
     tools:context=".activity.RegisterActivity">
 
-    <com.freewind.seastarvideo.ui.CustomTopBar
-        android:id="@+id/topBarCtb"
+    <FrameLayout
+        android:id="@+id/topBarFl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
-        app:titleContent="@string/register"/>
+        android:layout_height="wrap_content">
+
+        <com.freewind.seastarvideo.ui.CustomTopBar
+            android:id="@+id/topBarCtb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            app:titleContent="@string/register"/>
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/contentFl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/topBarCtb" />
+        android:layout_below="@id/topBarFl" />
 
 </RelativeLayout>

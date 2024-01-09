@@ -47,7 +47,7 @@ class RegisterActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         val rootView = binding.root
-        OtherUiManager.instance.adaptTopHeight(binding.topBarCtb)
+        OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
         OtherUiManager.instance.adaptBottomHeight(binding.registerRl)
         setContentView(rootView)
         EventBus.getDefault().register(this)

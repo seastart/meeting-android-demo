@@ -17,27 +17,34 @@
     android:background="@color/gray_f7f8fa"
     tools:context=".home.mine.MineFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topbarCl"
+    <FrameLayout
+        android:id="@+id/topBarFl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/transparent"
         android:translationZ="@dimen/dp_5">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mine"
-            android:textSize="@dimen/sp_17"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topBarCl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mine"
+                android:textSize="@dimen/sp_17"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
 
     <ImageView
         android:layout_width="match_parent"
@@ -54,7 +61,7 @@
         app:nickNameContent="橘子果酱"
         app:idContent="9860484598"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topbarCl"
+        app:layout_constraintTop_toBottomOf="@id/topBarFl"
         android:layout_marginTop="@dimen/dp_16_5"
         android:layout_marginStart="@dimen/dp_16"/>
 

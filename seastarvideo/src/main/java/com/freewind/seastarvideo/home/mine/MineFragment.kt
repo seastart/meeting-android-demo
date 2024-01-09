@@ -44,7 +44,7 @@ class MineFragment : BaseFragment() {
     ): View {
         _binding = FragmentMineBinding.inflate(inflater, container, false)
         val rootView = binding.root
-        OtherUiManager.instance.adaptTopHeight(binding.topbarCl)
+        OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
         initData()
         initListener()
         return rootView

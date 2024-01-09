@@ -12,7 +12,6 @@ package com.freewind.seastarvideo.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -68,11 +67,7 @@ class OtherUiManager {
                         WindowInsetsCompat.Type.displayCutout())
 
             //为需要偏移的view设置padding
-            val params: ViewGroup.MarginLayoutParams = moveView.layoutParams as ViewGroup.MarginLayoutParams
-            params.topMargin = systemWindow.top
-            moveView.layoutParams = params
-
-//            moveView.setPadding(0,systemWindow.top,0, 0)
+            view.setPadding(0,systemWindow.top,0, 0)
 
             insets
         }
@@ -89,11 +84,7 @@ class OtherUiManager {
                     WindowInsetsCompat.Type.displayCutout())
 
             //为需要偏移的view设置padding
-            val params: ViewGroup.MarginLayoutParams = moveView.layoutParams as ViewGroup.MarginLayoutParams
-            params.bottomMargin = systemWindow.bottom
-            moveView.layoutParams = params
-
-//            moveView.setPadding(0,0,0,systemWindow.bottom)
+            moveView.setPadding(0,0,0,systemWindow.bottom)
 
             insets
         }
@@ -110,12 +101,7 @@ class OtherUiManager {
                         WindowInsetsCompat.Type.displayCutout())
 
             //为需要偏移的view设置padding
-            val params: ViewGroup.MarginLayoutParams = moveView.layoutParams as ViewGroup.MarginLayoutParams
-            params.topMargin = systemWindow.top
-            params.bottomMargin = systemWindow.bottom
-            moveView.layoutParams = params
-
-//            moveView.setPadding(0,systemWindow.top,0, systemWindow.bottom)
+            moveView.setPadding(0,systemWindow.top,0, systemWindow.bottom)
 
             insets
         }

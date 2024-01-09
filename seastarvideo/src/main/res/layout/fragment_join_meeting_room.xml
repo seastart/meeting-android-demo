@@ -15,16 +15,23 @@
     android:layout_height="match_parent"
     tools:context=".preMeetingRoom.JoinMeetingRoomFragment">
 
-    <com.freewind.seastarvideo.ui.CustomTopBar
-        android:id="@+id/topBarCtb"
+    <FrameLayout
+        android:id="@+id/topBarFl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
-        app:titleContent="@string/join_meeting_room"
-        app:isShowTitle="true"
-        app:isShowExitArrow="true"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.freewind.seastarvideo.ui.CustomTopBar
+            android:id="@+id/topBarCtb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            app:titleContent="@string/join_meeting_room"
+            app:isShowTitle="true"
+            app:isShowExitArrow="true" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/contentContainerLl"
@@ -33,7 +40,7 @@
         android:orientation="vertical"
         android:background="@color/gray_f7f8fa"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBarCtb"
+        app:layout_constraintTop_toBottomOf="@id/topBarFl"
         app:layout_constraintBottom_toTopOf="@id/btnContainerCl">
 
         <LinearLayout

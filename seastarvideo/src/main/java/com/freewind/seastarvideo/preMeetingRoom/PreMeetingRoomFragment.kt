@@ -43,7 +43,7 @@ class PreMeetingRoomFragment : BaseFragment() {
     ): View {
         _binding = FragmentPreMeetingRoomBinding.inflate(inflater, container, false)
         val rootView = binding.root
-        OtherUiManager.instance.adaptTopHeight(binding.topBarCtb)
+        OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
 
         initListener()
 

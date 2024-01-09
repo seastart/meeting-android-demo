@@ -50,7 +50,7 @@ class MemberListFragment : BaseFragment() {
     ): View {
         _binding = FragmentMemberListBinding.inflate(inflater, container, false)
         val rootView = binding.root
-        OtherUiManager.instance.adaptTopHeight(binding.topBarCtb)
+        OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
 
         initView()
         initLiveData()

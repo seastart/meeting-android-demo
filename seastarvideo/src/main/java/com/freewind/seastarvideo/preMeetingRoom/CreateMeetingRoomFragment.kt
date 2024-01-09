@@ -53,7 +53,7 @@ class CreateMeetingRoomFragment : BaseFragment() {
     ): View {
         _binding = FragmentCreateMeetingRoomBinding.inflate(inflater, container, false)
         val rootView = binding.root
-        OtherUiManager.instance.adaptTopHeight(binding.topBarCtb)
+        OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
 
         initView()
         initListener()

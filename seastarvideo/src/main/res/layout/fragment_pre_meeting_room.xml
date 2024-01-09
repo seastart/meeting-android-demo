@@ -16,16 +16,23 @@
     android:background="@color/gray_f7f8fa"
     tools:context=".preMeetingRoom.PreMeetingRoomFragment">
 
-    <com.freewind.seastarvideo.ui.CustomTopBar
-        android:id="@+id/topBarCtb"
+    <FrameLayout
+        android:id="@+id/topBarFl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
+        android:layout_height="wrap_content"
         android:background="@color/transparent"
-        app:titleContent="@string/room_title_meeting"
-        app:isShowTitle="true"
-        app:isShowExitArrow="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.freewind.seastarvideo.ui.CustomTopBar
+            android:id="@+id/topBarCtb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            app:titleContent="@string/room_title_meeting"
+            app:isShowTitle="true"
+            app:isShowExitArrow="true" />
+
+    </FrameLayout>
 
     <ImageView
         android:layout_width="match_parent"
@@ -33,7 +40,7 @@
         android:src="@mipmap/image_meeting_room"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBarCtb"
+        app:layout_constraintTop_toBottomOf="@id/topBarFl"
         android:layout_marginStart="@dimen/dp_32"
         android:layout_marginEnd="@dimen/dp_32"
         android:layout_marginTop="@dimen/dp_20"/>

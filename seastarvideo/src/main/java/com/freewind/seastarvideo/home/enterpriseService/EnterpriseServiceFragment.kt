@@ -51,7 +51,7 @@ class EnterpriseServiceFragment : BaseFragment() {
     ): View {
         _binding = FragmentEnterpriseServiceBinding.inflate(inflater, container, false)
         val rootView = binding.root
-        OtherUiManager.instance.adaptTopHeight(binding.topBarCtb)
+        OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
         // 目前这个数据是写死的，以后可能会成为变动的
         val roomTypes = initData()
         initRoomTypeRv(roomTypes)
