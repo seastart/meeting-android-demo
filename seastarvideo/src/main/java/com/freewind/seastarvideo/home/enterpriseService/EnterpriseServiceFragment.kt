@@ -42,7 +42,7 @@ class EnterpriseServiceFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[EnterpriseServiceViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[EnterpriseServiceViewModel::class.java]
     }
 
     override fun onCreateView(

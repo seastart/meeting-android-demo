@@ -34,7 +34,7 @@ class AboutUsFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[AboutUsViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[AboutUsViewModel::class.java]
 
     }
 

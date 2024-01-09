@@ -34,7 +34,7 @@ class PreMeetingRoomFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[PreMeetingRoomViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[PreMeetingRoomViewModel::class.java]
     }
 
     override fun onCreateView(

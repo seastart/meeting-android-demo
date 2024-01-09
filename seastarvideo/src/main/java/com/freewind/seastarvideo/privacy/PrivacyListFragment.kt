@@ -34,7 +34,7 @@ class PrivacyListFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[PrivacyViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[PrivacyViewModel::class.java]
     }
 
     override fun onCreateView(

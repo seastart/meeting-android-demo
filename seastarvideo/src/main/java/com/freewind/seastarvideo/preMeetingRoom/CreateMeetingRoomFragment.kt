@@ -44,7 +44,7 @@ class CreateMeetingRoomFragment : BaseFragment() {
         arguments?.let {
             nickname = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
         }
-        viewModel = ViewModelProvider(this)[PreMeetingRoomViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[PreMeetingRoomViewModel::class.java]
     }
 
     override fun onCreateView(

@@ -31,7 +31,7 @@ class RegisterNicknameFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[RegisterViewModel::class.java]
     }
 
     override fun onCreateView(

@@ -35,7 +35,7 @@ class MineFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[MineViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[MineViewModel::class.java]
     }
 
     override fun onCreateView(

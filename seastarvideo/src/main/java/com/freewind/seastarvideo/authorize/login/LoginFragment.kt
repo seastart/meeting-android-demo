@@ -39,7 +39,7 @@ class LoginFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
     }
 
     override fun onCreateView(
