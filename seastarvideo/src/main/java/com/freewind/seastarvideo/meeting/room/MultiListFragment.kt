@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMultiListBinding
@@ -25,11 +26,9 @@ import com.freewind.seastarvideo.utils.LogUtil
  * todo 功能遇阻，暂不使用
  */
 class MultiListFragment : BaseFragment() {
-
-    private val ARG_VIEWMODEL = "viewModel"
     private val ARG_INDEX = "index"
 
-    private var viewModel: MeetingRoomViewModel? = null
+    private lateinit var viewModel: MeetingRoomViewModel
     private var mIndex: Int = 0
 
     private var _binding: FragmentMultiListBinding? = null
@@ -43,9 +42,9 @@ class MultiListFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            viewModel = it.getSerializable(ARG_VIEWMODEL) as MeetingRoomViewModel
             mIndex = it.getInt(ARG_INDEX, 0)
         }
+        viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -61,24 +60,22 @@ class MultiListFragment : BaseFragment() {
     }
 
     private fun initView() {
-        viewModel?.let {
-            val startItemIndex = mIndex * 4
-            LogUtil.i("MultiListFragment_initView, mIndex = $mIndex, ", "wiatt")
-            LogUtil.i("MultiListFragment_initView, startItemIndex = $startItemIndex, ", "wiatt")
-            LogUtil.i("MultiListFragment_initView, it.memberList.size = ${it.memberList.size}", "wiatt")
-            for (i in 0 until 4) {
-                val itemIndex = startItemIndex + i
-                if (itemIndex < it.memberList.size) {
-                    val memberInfo = it.memberList[itemIndex]
-                    LogUtil.i("MultiListFragment_initView, memberInfo = $memberInfo", "wiatt")
-                    switchFragment(
-                        MultiItemFragment.newInstance(
-                            memberInfo.nickName,
-                            memberInfo.micStatus,
-                            memberInfo.cameraStatus),
-                        itemIndex % 4
-                    )
-                }
+        val startItemIndex = mIndex * 4
+        LogUtil.i("MultiListFragment_initView, mIndex = $mIndex, ", "wiatt")
+        LogUtil.i("MultiListFragment_initView, startItemIndex = $startItemIndex, ", "wiatt")
+        LogUtil.i("MultiListFragment_initView, it.memberList.size = ${viewModel.memberList.size}", "wiatt")
+        for (i in 0 until 4) {
+            val itemIndex = startItemIndex + i
+            if (itemIndex < viewModel.memberList.size) {
+                val memberInfo = viewModel.memberList[itemIndex]
+                LogUtil.i("MultiListFragment_initView, memberInfo = $memberInfo", "wiatt")
+                switchFragment(
+                    MultiItemFragment.newInstance(
+                        memberInfo.nickName,
+                        memberInfo.micStatus,
+                        memberInfo.cameraStatus),
+                    itemIndex % 4
+                )
             }
         }
     }
@@ -177,10 +174,9 @@ class MultiListFragment : BaseFragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(viewModelParam: MeetingRoomViewModel?, indexParam: Int) =
+        fun newInstance(indexParam: Int) =
             MultiListFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(ARG_VIEWMODEL, viewModelParam)
                     putInt(ARG_INDEX, indexParam)
                 }
             }

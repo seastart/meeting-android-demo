@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMultiMixBinding
@@ -25,9 +26,7 @@ import com.freewind.seastarvideo.utils.LogUtil
  */
 class MultiMixFragment : BaseFragment() {
 
-    private val ARG_VIEWMODEL = "viewModel"
-
-    private var viewModel: MeetingRoomViewModel? = null
+    private lateinit var viewModel: MeetingRoomViewModel
 
     private var _binding: FragmentMultiMixBinding? = null
     private val binding get() = _binding!!
@@ -36,9 +35,7 @@ class MultiMixFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            viewModel = it.getSerializable(ARG_VIEWMODEL) as MeetingRoomViewModel
-        }
+        viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -63,9 +60,9 @@ class MultiMixFragment : BaseFragment() {
 //            )
         }
         binding.btnRemove.setOnClickListener {
-            viewModel?.memberList?.let {
-                it.removeAt(2)
-                memberMultiAdapter.updateItemCount((it.size / 4) + 1)
+            viewModel.memberList.apply {
+                this.removeAt(2)
+                memberMultiAdapter.updateItemCount((this.size / 4) + 1)
                 memberMultiAdapter.notifyItemChanged(0)
             }
         }
@@ -82,21 +79,14 @@ class MultiMixFragment : BaseFragment() {
 //        }
 
         binding.memberMultiVp.offscreenPageLimit = 1
-        memberMultiAdapter = MemberMultiStatePageAdapter(childFragmentManager, lifecycle, viewModel!!)
-        viewModel?.memberList?.let {
-            memberMultiAdapter.updateItemCount((it.size / 4) + 1)
-        }
+        memberMultiAdapter = MemberMultiStatePageAdapter(childFragmentManager, lifecycle, viewModel)
+        memberMultiAdapter.updateItemCount((viewModel.memberList.size / 4) + 1)
         binding.memberMultiVp.adapter = memberMultiAdapter
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance(viewModelParam: MeetingRoomViewModel) =
-            MultiMixFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(ARG_VIEWMODEL, viewModelParam)
-                }
-            }
+        fun newInstance() = MultiMixFragment()
     }
 }

@@ -67,7 +67,7 @@ class MeetingRoomViewModel():
         this.roomId = roomId
         myMicStatus = false
         myCameraStatus = false
-        memberList.add(MemberInfo(nickName, myMicStatus, myCameraStatus))
+        memberList.add(MemberInfo("10001", nickName, MemberInfo.MEMBER_ROLE_NORMAL, myMicStatus, myCameraStatus))
 //        memberList.add(MemberInfo("成员一", false, false))
 //        memberList.add(MemberInfo("成员二", true, false))
 //        memberList.add(MemberInfo("成员三", false, true))

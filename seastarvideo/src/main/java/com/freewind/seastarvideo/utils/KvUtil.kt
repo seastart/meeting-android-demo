@@ -127,4 +127,13 @@ object  KvUtil{
     fun clearAll() {
         mv?.clearAll()
     }
+
+    // 房间视频状态
+    val MEETING_ROOM_VIDEO_STATUS = "meetingRoomVideoStatus"
+    // 房间音频状态
+    val MEETING_ROOM_AUDIO_STATUS = "meetingRoomAudioStatus"
+    // 是否允许成员自行解除视频状态
+    val MEETING_ROOM_ENABLE_SELF_OPEN_VIDEO = "meetingRoomEnableSelfOpenVideo"
+    // 是否允许成员自行解除音频状态
+    val MEETING_ROOM_ENABLE_SELF_OPEN_AUDIO = "meetingRoomEnableSelfOpenAudio"
 }

@@ -17,6 +17,7 @@
 
     <color name="light_d3d3d3">#D3D3D3</color>
     <color name="gray_f7f8fa">#F7F8FA</color>
+    <color name="gray_c5cad5">#FFC5CAD5</color>
     <color name="CornflowerBlue">#FF6495ED</color>
 
     <color name="dominant_tone_blue">#FF0039B3</color>

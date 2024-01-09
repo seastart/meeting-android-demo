@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.activity.MemberActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMeetingRoomBinding
 import com.freewind.seastarvideo.ui.DialogManager
@@ -54,7 +55,7 @@ class MeetingRoomFragment : BaseFragment() {
             nickName = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
             roomId = it.getString(ARG_ROOM_ID, resources.getString(R.string.def_room_id))
         }
-        viewModel = ViewModelProvider(this)[MeetingRoomViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
         viewModel.updateInitialValue(nickName, roomId)
     }
 
@@ -152,6 +153,7 @@ class MeetingRoomFragment : BaseFragment() {
                     }
                 }
                 binding.bottomToolbarI.memberCl -> {
+                    MemberActivity.startMemberListPage(requireContext())
                     Toast.makeText(requireContext(), "点击成员列表按钮", Toast.LENGTH_SHORT).show()
                 }
                 binding.bottomToolbarI.chatCl -> {
@@ -168,7 +170,7 @@ class MeetingRoomFragment : BaseFragment() {
     private fun showSoloVideoPage() {
         if (soloVideoFragment == null) {
             // 获取准确的用户昵称和当前麦克风是否开启
-            soloVideoFragment = SoloVideoFragment.newInstance(viewModel)
+            soloVideoFragment = SoloVideoFragment.newInstance()
         }
         switchFragment(soloVideoFragment)
     }
@@ -180,7 +182,7 @@ class MeetingRoomFragment : BaseFragment() {
     private fun showSoloAvatarPage() {
         if (soloAvatarFragment == null) {
             // 获取准确的用户昵称和当前麦克风是否开启
-            soloAvatarFragment = SoloAvatarFragment.newInstance(viewModel)
+            soloAvatarFragment = SoloAvatarFragment.newInstance()
         }
         switchFragment(soloAvatarFragment)
     }
@@ -191,7 +193,7 @@ class MeetingRoomFragment : BaseFragment() {
     @Synchronized
     private fun showMultiMixPage() {
         if (multiMixFragment == null) {
-            multiMixFragment = MultiMixFragment.newInstance(viewModel)
+            multiMixFragment = MultiMixFragment.newInstance()
         }
         switchFragment(multiMixFragment)
     }

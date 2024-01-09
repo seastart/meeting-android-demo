@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <shape android:shape="rectangle">
+            <stroke android:width="@dimen/dp_1"
+                android:color="@color/gray_c5cad5"/>
+            <corners android:radius="@dimen/dp_5" />
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <stroke android:width="@dimen/dp_1"
+                android:color="@color/red_ff4b51"/>
+            <corners android:radius="@dimen/dp_5" />
+        </shape>
+    </item>
+<!--    <item android:state_selected="true" android:drawable="@mipmap/select_white_left"/>-->
+<!--    <item android:state_selected="false" android:drawable="@mipmap/select_blue_left"/>-->
+</selector>

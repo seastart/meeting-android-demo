@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentSoloAvatarBinding
 
@@ -22,18 +23,14 @@ import com.freewind.seastarvideo.databinding.FragmentSoloAvatarBinding
  */
 class SoloAvatarFragment : BaseFragment() {
 
-    private val ARG_VIEWMODEL = "viewModel"
-
-    private var viewModel: MeetingRoomViewModel? = null
+    private lateinit var viewModel: MeetingRoomViewModel
 
     private var _binding: FragmentSoloAvatarBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            viewModel = it.getSerializable(ARG_VIEWMODEL) as MeetingRoomViewModel
-        }
+        viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -50,29 +47,21 @@ class SoloAvatarFragment : BaseFragment() {
     }
 
     private fun initLiveData() {
-        viewModel?.let { viewModel ->
-            viewModel.myNickNameLiveData.observe(viewLifecycleOwner) {
-                binding.nickNameTv.text = it
-            }
-            viewModel.myMicStatusLiveData.observe(viewLifecycleOwner) {
-                binding.micSmallIv.isSelected = it
-            }
+        viewModel.myNickNameLiveData.observe(viewLifecycleOwner) {
+            binding.nickNameTv.text = it
+        }
+        viewModel.myMicStatusLiveData.observe(viewLifecycleOwner) {
+            binding.micSmallIv.isSelected = it
         }
     }
 
     private fun initView() {
-        viewModel?.getMyNickName()
-        viewModel?.getMyMicStatus()
+        viewModel.getMyNickName()
+        viewModel.getMyMicStatus()
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance(viewModelParam: MeetingRoomViewModel) =
-            SoloAvatarFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(ARG_VIEWMODEL, viewModelParam)
-                }
-            }
+        fun newInstance() = SoloAvatarFragment()
     }
 }

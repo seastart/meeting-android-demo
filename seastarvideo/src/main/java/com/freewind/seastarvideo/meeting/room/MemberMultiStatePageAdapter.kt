@@ -47,7 +47,7 @@ class MemberMultiStatePageAdapter(
     override fun createFragment(position: Int): Fragment {
         LogUtil.i("MemberMultiStatePageAdapter_createFragment, position = $position", "wiatt")
 //        return fragments[position]
-        return MultiListFragment.newInstance(viewModel, position)
+        return MultiListFragment.newInstance(position)
     }
 
 //    // 按照此方法重写 getItemId、containsItem 函数，数据源中fragment的hashcode 一对一 增删时注意保持一致

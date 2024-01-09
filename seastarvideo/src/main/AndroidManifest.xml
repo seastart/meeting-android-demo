@@ -48,6 +48,9 @@
         <activity
             android:name=".activity.MeetingRoomActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.MemberActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

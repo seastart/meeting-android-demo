@@ -80,5 +80,11 @@
     <string name="open_camera">开启视频</string>
     <string name="think_again">再想想</string>
     <string name="all_member_close_mic_1">全体静音</string>
+    <string name="all_member_open_mic_1">解除全体静音</string>
     <string name="all_member_close_camera_1">全体禁画</string>
+    <string name="all_member_open_camera_1">解除全体禁画</string>
+    <string name="me_parenthesis">（我）</string>
+    <string name="compere_parenthesis">（主持人）</string>
+    <string name="creator_parenthesis">（创建者）</string>
+    <string name="remove_someone_member">您确定要移出%s吗</string>
 </resources>

@@ -193,4 +193,10 @@
         <attr name="endEditIcon" format="color|reference"/>
     </declare-styleable>
 
+    <declare-styleable name="SelectTextView">
+        <!--  未选中文本内容   -->
+        <attr name="unselectedContent" format="string"/>
+        <!--  选中文本内容  -->
+        <attr name="selectedContent" format="string"/>
+    </declare-styleable>
 </resources>
