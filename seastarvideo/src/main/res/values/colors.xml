@@ -27,4 +27,6 @@
     <color name="textColor_333333">#FF333333</color>
     <color name="textColor_666666">#FF666666</color>
     <color name="textColor_999999">#999999</color>
+    <color name="textColor_c2bdbd">#FFC2BDBD</color>
+
 </resources>

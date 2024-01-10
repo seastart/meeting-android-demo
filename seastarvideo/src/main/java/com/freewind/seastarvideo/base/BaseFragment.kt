@@ -63,6 +63,16 @@ abstract class BaseFragment: Fragment() {
         }
     }
 
+    /**
+     * 显示软键盘
+     */
+    fun showSoftInput() {
+        EnvArgument.instance.app?.let {
+            val inputManager = it.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
     // 隐藏软键盘
     fun hideSoftInput() {
         EnvArgument.instance.app?.let {

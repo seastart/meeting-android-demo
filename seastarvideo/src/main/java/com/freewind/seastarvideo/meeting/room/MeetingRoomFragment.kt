@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.activity.ChatActivity
 import com.freewind.seastarvideo.activity.MemberActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMeetingRoomBinding
@@ -157,6 +158,7 @@ class MeetingRoomFragment : BaseFragment() {
                     Toast.makeText(requireContext(), "点击成员列表按钮", Toast.LENGTH_SHORT).show()
                 }
                 binding.bottomToolbarI.chatCl -> {
+                    ChatActivity.startChatPage(requireContext())
                     Toast.makeText(requireContext(), "点击聊天按钮", Toast.LENGTH_SHORT).show()
                 }
             }

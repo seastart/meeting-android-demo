@@ -87,4 +87,7 @@
     <string name="compere_parenthesis">（主持人）</string>
     <string name="creator_parenthesis">（创建者）</string>
     <string name="remove_someone_member">您确定要移出%s吗</string>
+
+    <string name="say_something">聊点什么&#8230;</string>
+    <string name="send">发送</string>
 </resources>

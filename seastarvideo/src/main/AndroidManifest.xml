@@ -51,6 +51,12 @@
         <activity
             android:name=".activity.MemberActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.ChatActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateVisible|stateHidden"/>
+
     </application>
 
 </manifest>

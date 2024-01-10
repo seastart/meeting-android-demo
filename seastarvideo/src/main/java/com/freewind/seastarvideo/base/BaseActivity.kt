@@ -9,6 +9,7 @@
 
 package com.freewind.seastarvideo.base
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -63,6 +64,14 @@ abstract class BaseActivity : AppCompatActivity() {
             lastClickTime = currentTime
             action.invoke(it)
         }
+    }
+
+    /**
+     * 显示软键盘
+     */
+    fun showSoftInput(context: Context, view: View) {
+        val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 
     // 隐藏软键盘
