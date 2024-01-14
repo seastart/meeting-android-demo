@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMultiMixBinding
 import com.freewind.seastarvideo.utils.LogUtil
@@ -22,7 +21,6 @@ import com.freewind.seastarvideo.utils.LogUtil
 /**
  * @author: wiatt
  * @description: 会议房间中，多人混合页面
- * todo 功能遇阻，暂不使用
  */
 class MultiMixFragment : BaseFragment() {
 
@@ -45,43 +43,74 @@ class MultiMixFragment : BaseFragment() {
         _binding = FragmentMultiMixBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
+        initLiveData()
         initListener()
         initPage()
 
         return rootView
     }
 
-    var testNum = 0
-    private fun initListener() {
-        binding.btnAdd.setOnClickListener {
-//            testNum++
-//            memberMultiAdapter.insertFragment(
-//                MultiListFragment.newInstance(viewModel, testNum)
-//            )
+    private fun initLiveData() {
+        viewModel.memberListAddLiveData.observe(viewLifecycleOwner) { position ->
+            val totalPage = calculatePageNum()
+            if (totalPage > memberMultiAdapter.itemCount) {
+                for (index in memberMultiAdapter.itemCount until totalPage) {
+                    memberMultiAdapter.insertFragment(MultiListFragment.newInstance(index))
+                }
+            }
         }
-        binding.btnRemove.setOnClickListener {
-            viewModel.memberList.apply {
-                this.removeAt(2)
-                memberMultiAdapter.updateItemCount((this.size / 4) + 1)
-                memberMultiAdapter.notifyItemChanged(0)
+        viewModel.memberListRemoveLiveData.observe(viewLifecycleOwner) { position ->
+            if (viewModel.memberList.size == 0) {
+                return@observe
+            }
+
+            val totalPage = calculatePageNum()
+            val targetPageIndex = position / 4
+            val targetItemIndex = position % 4
+            LogUtil.i("memberListRemoveLiveData, totalPage = $totalPage, targetPageIndex = $targetPageIndex, targetItemIndex = $targetItemIndex", "wiatt")
+            memberMultiAdapter.updateMultiListPage(targetPageIndex, targetItemIndex)
+            if (totalPage < memberMultiAdapter.itemCount) {
+                memberMultiAdapter.removeFragment(memberMultiAdapter.itemCount - 1)
             }
         }
     }
 
+    private fun initListener() {
+        binding.btnAddMuch.setOnClickListener {
+            viewModel.addMoreMember()
+        }
+        binding.btnAdd.setOnClickListener {
+            viewModel.addOneMember()
+        }
+        binding.btnRemove.setOnClickListener {
+            val removeNum = binding.removeNumEt.text.toString().toInt()
+            viewModel.removeOneMember(removeNum)
+        }
+    }
+
     private fun initPage() {
-//        LogUtil.i("MultiMixFragment_initPage", "wiatt")
-//        val fragmentList = mutableListOf<MultiListFragment>()
-//        viewModel?.memberList?.let {
-//            val totalPage = (it.size / 4) + 1
-//            for (index in 0 until totalPage) {
-//                fragmentList.add(MultiListFragment.newInstance(viewModel, index))
-//            }
-//        }
+        val fragments = mutableListOf<MultiListFragment>()
+        val totalPage = calculatePageNum()
+        for (index in 0 until totalPage) {
+            fragments.add(MultiListFragment.newInstance(index))
+        }
 
         binding.memberMultiVp.offscreenPageLimit = 1
-        memberMultiAdapter = MemberMultiStatePageAdapter(childFragmentManager, lifecycle, viewModel)
-        memberMultiAdapter.updateItemCount((viewModel.memberList.size / 4) + 1)
+        binding.memberMultiVp.isSaveEnabled = false
+        memberMultiAdapter = MemberMultiStatePageAdapter(childFragmentManager, lifecycle, fragments, viewModel)
         binding.memberMultiVp.adapter = memberMultiAdapter
+    }
+
+    /**
+     * 计算当前总页数
+     */
+    private fun calculatePageNum(): Int {
+        val addOne = if (viewModel.memberList.size % 4 == 0) {
+            0
+        } else {
+            1
+        }
+        return viewModel.memberList.size / 4 + addOne
     }
 
     companion object {

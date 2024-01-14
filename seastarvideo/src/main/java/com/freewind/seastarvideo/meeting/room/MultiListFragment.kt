@@ -10,7 +10,6 @@
 package com.freewind.seastarvideo.meeting.room
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,32 +17,38 @@ import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMultiListBinding
+import com.freewind.seastarvideo.meeting.MemberInfo
 import com.freewind.seastarvideo.utils.LogUtil
 
 /**
  * @author: wiatt
  * @description: 多成员页面，四个成员的列表页
- * todo 功能遇阻，暂不使用
  */
 class MultiListFragment : BaseFragment() {
     private val ARG_INDEX = "index"
 
     private lateinit var viewModel: MeetingRoomViewModel
-    private var mIndex: Int = 0
 
     private var _binding: FragmentMultiListBinding? = null
     private val binding get() = _binding!!
 
-    private var curZeroFragment: Fragment? = null
-    private var curOneFragment: Fragment? = null
-    private var curTwoFragment: Fragment? = null
-    private var curThreeFragment: Fragment? = null
+    private var curZeroFragment: MultiItemFragment? = null
+    private var curOneFragment: MultiItemFragment? = null
+    private var curTwoFragment: MultiItemFragment? = null
+    private var curThreeFragment: MultiItemFragment? = null
+
+    private var mIndex: Int = 0
+
+    private var isCreate: Boolean = false
+    var isShow: Boolean = false
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             mIndex = it.getInt(ARG_INDEX, 0)
         }
+        LogUtil.i("test，onCreate--mIndex = $mIndex", "wiatt")
         viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
     }
 
@@ -53,118 +58,193 @@ class MultiListFragment : BaseFragment() {
     ): View {
         _binding = FragmentMultiListBinding.inflate(inflater, container, false)
         val rootView = binding.root
+        isCreate = true
 
+        binding.flagTv.text = "测试Flag，当前页：$mIndex"
+        initLiveData()
         initView()
-
+        LogUtil.i("test，onCreateView--mIndex = $mIndex", "wiatt")
         return rootView
     }
 
-    private fun initView() {
-        val startItemIndex = mIndex * 4
-        LogUtil.i("MultiListFragment_initView, mIndex = $mIndex, ", "wiatt")
-        LogUtil.i("MultiListFragment_initView, startItemIndex = $startItemIndex, ", "wiatt")
-        LogUtil.i("MultiListFragment_initView, it.memberList.size = ${viewModel.memberList.size}", "wiatt")
-        for (i in 0 until 4) {
-            val itemIndex = startItemIndex + i
-            if (itemIndex < viewModel.memberList.size) {
-                val memberInfo = viewModel.memberList[itemIndex]
-                LogUtil.i("MultiListFragment_initView, memberInfo = $memberInfo", "wiatt")
-                switchFragment(
-                    MultiItemFragment.newInstance(
-                        memberInfo.nickName,
-                        memberInfo.micStatus,
-                        memberInfo.cameraStatus),
-                    itemIndex % 4
-                )
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        isShow = true
+
+        LogUtil.i("test，onResume--mIndex = $mIndex", "wiatt")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isShow = false
+        LogUtil.i("test，onPause--mIndex = $mIndex", "wiatt")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LogUtil.i("MultiListFragment_onDestroy", "wiatt")
+        LogUtil.i("test，onDestroy--mIndex = $mIndex", "wiatt")
+        isCreate = false
+
+    }
+
+    private fun initLiveData() {
+        viewModel.memberListAddLiveData.observe(viewLifecycleOwner) { position ->
+            LogUtil.i("memberListAddLiveData, position = $position", "wiatt")
+            addOneItem(position)
+        }
+    }
+
+    private fun initView() {
+        LogUtil.i("fragments.size = ${childFragmentManager.fragments.size}", "wiatt")
+        childFragmentManager.fragments.forEach {
+            removeFragment(it)
+        }
+        val startMemberIndex = mIndex * totalItemCount
+        LogUtil.i("MultiListFragment_initView, mIndex = $mIndex, startMemberIndex = $startMemberIndex", "wiatt")
+        for (i in 0 until totalItemCount) {
+            val memberIndex = startMemberIndex + i
+            if (memberIndex < viewModel.memberList.size) {
+                val memberInfo = viewModel.memberList[memberIndex]
+                LogUtil.i("MultiListFragment_initView, itemIndex = $memberIndex, memberInfo = $memberInfo", "wiatt")
+                switchFragment(memberInfo, i)
+            }
+        }
+    }
+
+    /**
+     * 更新当前页所处的索引
+     */
+    fun updatePageIndex(index: Int) {
+        mIndex = index
+        arguments?.putInt(ARG_INDEX, index)
+        if (isCreate) {
+            LogUtil.i("test，updatePageIndex--mIndex = $mIndex", "wiatt")
+            binding.flagTv.text = "测试Flag，当前页：$mIndex"
+        }
+    }
+
+    /**
+     * 更新页面项
+     */
+    fun updatePageItems(startItemIndex: Int) {
+        if (!isCreate) {
+            return
+        }
+        val startMemberIndex = mIndex * totalItemCount
+        for (index in startItemIndex until totalItemCount) {
+            val memberIndex = startMemberIndex + index
+            switchFragment(null, index)
+            if (memberIndex < viewModel.memberList.size) {
+                val memberInfo = viewModel.memberList[memberIndex]
+                LogUtil.i("MultiListFragment_updatePageItems, itemIndex = $memberIndex, memberInfo = $memberInfo", "wiatt")
+                switchFragment(memberInfo, index)
+            }
+        }
+    }
+
+    /**
+     * 新增一个成员
+     */
+    private fun addOneItem(position: Int) {
+        if (!isCreate) {
+            return
+        }
+        val startMemberIndex = mIndex * totalItemCount
+        if (position >= startMemberIndex && position < startMemberIndex + totalItemCount) {
+            if (position < viewModel.memberList.size) {
+                val memberInfo = viewModel.memberList[position]
+                LogUtil.i("MultiListFragment_updatePageItems, position = $position, memberInfo = $memberInfo", "wiatt")
+                switchFragment(memberInfo, position % totalItemCount)
+            }
+        }
     }
 
     /**
      * 用于切换Fragment
      * 当不显示fragment时，nextFragment为空
+     * 该函数必须根据 totalItemCount 的值而改变
      */
-    private fun switchFragment(nextFragment: Fragment?, itemIndex: Int): Boolean{
+    private fun switchFragment(memberInfo: MemberInfo?, itemIndex: Int): Boolean{
         when(itemIndex) {
             0 -> {
-                if(nextFragment == curZeroFragment) {
-                    return false
-                }
-
-                if (curZeroFragment != null && curZeroFragment!!.isAdded) {
-                    removeFragment(curZeroFragment!!)
-                }
-
-                if (nextFragment != null) {
-                    if (nextFragment.isAdded) {
-                        showFragment(nextFragment)
+                if (memberInfo == null) {
+                    if (curZeroFragment?.isAdded == true) {
+                        hideFragment(curZeroFragment!!)
+                    }
+                } else {
+                    if (curZeroFragment == null) {
+                        curZeroFragment = MultiItemFragment.newInstance(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
                     } else {
-                        addFragment(nextFragment, R.id.containerZeroFl)
+                        curZeroFragment!!.updateMember(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
+                    }
+
+                    if (curZeroFragment!!.isAdded) {
+                        showFragment(curZeroFragment!!)
+                    } else {
+                        addFragment(curZeroFragment!!, R.id.containerZeroFl)
                     }
                 }
-                curZeroFragment = nextFragment
                 return true
             }
             1 -> {
-                if(nextFragment == curOneFragment) {
-                    return false
-                }
-
-                if (curOneFragment != null && curOneFragment!!.isAdded) {
-                    removeFragment(curZeroFragment!!)
-                }
-
-                if (nextFragment != null) {
-                    if (nextFragment.isAdded) {
-                        showFragment(nextFragment)
+                if (memberInfo == null) {
+                    if (curOneFragment?.isAdded == true) {
+                        hideFragment(curOneFragment!!)
+                    }
+                } else {
+                    if (curOneFragment == null) {
+                        curOneFragment = MultiItemFragment.newInstance(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
                     } else {
-                        addFragment(nextFragment, R.id.containerOneFl)
+                        curOneFragment!!.updateMember(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
+                    }
+
+                    if (curOneFragment!!.isAdded) {
+                        showFragment(curOneFragment!!)
+                    } else {
+                        addFragment(curOneFragment!!, R.id.containerOneFl)
                     }
                 }
-                curOneFragment = nextFragment
                 return true
             }
             2 -> {
-                if(nextFragment == curTwoFragment) {
-                    return false
-                }
-
-                if (curTwoFragment != null && curTwoFragment!!.isAdded) {
-                    removeFragment(curZeroFragment!!)
-                }
-
-                if (nextFragment != null) {
-                    if (nextFragment.isAdded) {
-                        showFragment(nextFragment)
+                if (memberInfo == null) {
+                    if (curTwoFragment?.isAdded == true) {
+                        hideFragment(curTwoFragment!!)
+                    }
+                } else {
+                    if (curTwoFragment == null) {
+                        curTwoFragment = MultiItemFragment.newInstance(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
                     } else {
-                        addFragment(nextFragment, R.id.containerTwoFl)
+                        curTwoFragment!!.updateMember(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
+                    }
+
+                    if (curTwoFragment!!.isAdded) {
+                        showFragment(curTwoFragment!!)
+                    } else {
+                        addFragment(curTwoFragment!!, R.id.containerTwoFl)
                     }
                 }
-                curTwoFragment = nextFragment
                 return true
             }
             3 -> {
-                if(nextFragment == curThreeFragment) {
-                    return false
-                }
-
-                if (curThreeFragment != null && curThreeFragment!!.isAdded) {
-                    removeFragment(curZeroFragment!!)
-                }
-
-                if (nextFragment != null) {
-                    if (nextFragment.isAdded) {
-                        showFragment(nextFragment)
+                if (memberInfo == null) {
+                    if (curThreeFragment?.isAdded == true) {
+                        hideFragment(curThreeFragment!!)
+                    }
+                } else {
+                    if (curThreeFragment == null) {
+                        curThreeFragment = MultiItemFragment.newInstance(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
                     } else {
-                        addFragment(nextFragment, R.id.containerThreeFl)
+                        curThreeFragment!!.updateMember(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
+                    }
+
+                    if (curThreeFragment!!.isAdded) {
+                        showFragment(curThreeFragment!!)
+                    } else {
+                        addFragment(curThreeFragment!!, R.id.containerThreeFl)
+                        curThreeFragment!!.isAdded
                     }
                 }
-                curThreeFragment = nextFragment
                 return true
             }
         }
@@ -172,6 +252,8 @@ class MultiListFragment : BaseFragment() {
     }
 
     companion object {
+
+        const val totalItemCount = 4
 
         @JvmStatic
         fun newInstance(indexParam: Int) =

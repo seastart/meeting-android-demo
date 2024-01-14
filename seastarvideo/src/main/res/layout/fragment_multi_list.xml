@@ -65,4 +65,16 @@
         android:layout_marginEnd="@dimen/dp_2_5"
         android:layout_marginTop="@dimen/dp_3"/>
 
+    <TextView
+        android:id="@+id/flagTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试flag"
+        android:textSize="@dimen/sp_28"
+        android:textColor="@color/red_ff4b51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

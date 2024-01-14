@@ -36,6 +36,10 @@ class MeetingRoomViewModel():
     // 展示哪一页二级 fragment liveData
     val showSecFragmentLiveData: MutableLiveData<String> = MutableLiveData()
 
+    // todo 这两个应该换成接口回调，因为是一次性的操作，fragment重建会造成重复调用
+    val memberListAddLiveData: MutableLiveData<Int> = MutableLiveData()
+    val memberListRemoveLiveData: MutableLiveData<Int> = MutableLiveData()
+
 
     // 房间 id
     var roomId: String? = null
@@ -67,19 +71,12 @@ class MeetingRoomViewModel():
         this.roomId = roomId
         myMicStatus = false
         myCameraStatus = false
-        memberList.add(MemberInfo("10001", nickName, MemberInfo.MEMBER_ROLE_NORMAL, myMicStatus, myCameraStatus))
-//        memberList.add(MemberInfo("成员一", false, false))
-//        memberList.add(MemberInfo("成员二", true, false))
-//        memberList.add(MemberInfo("成员三", false, true))
-//        memberList.add(MemberInfo("成员四", true, true))
-//        memberList.add(MemberInfo("成员五", false, false))
-//        memberList.add(MemberInfo("成员六", false, false))
-//        memberList.add(MemberInfo("成员七", false, true))
-//        memberList.add(MemberInfo("成员八", false, false))
-//        memberList.add(MemberInfo("成员九", false, true))
-//        memberList.add(MemberInfo("成员十", false, false))
-//        memberList.add(MemberInfo("成员十一", false, true))
-//        memberList.add(MemberInfo("成员十二", false, false))
+        memberList.add(MemberInfo("0", nickName, MemberInfo.MEMBER_ROLE_NORMAL, myMicStatus, myCameraStatus))
+        memberList.add(MemberInfo("1", "成员-1", MemberInfo.MEMBER_ROLE_COMPERE, false, false))
+        memberList.add(MemberInfo("2", "成员-2", MemberInfo.MEMBER_ROLE_NORMAL, true, false))
+        memberList.add(MemberInfo("3", "成员-3", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+        memberList.add(MemberInfo("4", "成员-4", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+
     }
 
     /**
@@ -163,6 +160,7 @@ class MeetingRoomViewModel():
      * 选择二级 fragment
      */
     fun checkSecFragment() {
+        LogUtil.i("checkSecFragment, memberList.size = ${memberList.size}", "wiatt")
         if (memberList.size <= 1) {
             // 如果会议成员列表中只有自己
             if (myCameraStatus) {
@@ -176,6 +174,38 @@ class MeetingRoomViewModel():
             // 如果会议成员列表有多名成员
             showSecFragmentLiveData.value = MeetingRoomFragment.FRAGMENT_SEC_MULTI_MIX
         }
+    }
+
+    var testNum: Int = 0
+    fun addMoreMember() {
+        testNum = memberList.size
+        val list = mutableListOf<MemberInfo>()
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, true, true))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+
+        list.forEach { memberInfo ->
+            memberList.add(memberInfo)
+            memberListAddLiveData.value = memberList.size - 1
+        }
+    }
+
+    fun addOneMember() {
+        testNum = memberList.size
+        val memberInfo = MemberInfo(testNum.toString(), "成员-$testNum" , MemberInfo.MEMBER_ROLE_NORMAL, false, false)
+        memberList.add(memberInfo)
+        memberListAddLiveData.value = memberList.size - 1
+    }
+
+    fun removeOneMember(position: Int) {
+        memberList.removeAt(position)
+        memberListRemoveLiveData.value = position
     }
 
     /**

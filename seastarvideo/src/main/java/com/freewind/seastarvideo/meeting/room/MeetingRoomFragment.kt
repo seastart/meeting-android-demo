@@ -49,6 +49,7 @@ class MeetingRoomFragment : BaseFragment() {
     private var soloVideoFragment: SoloVideoFragment? = null
     private var soloAvatarFragment: SoloAvatarFragment? = null
     private var multiMixFragment: MultiMixFragment? = null
+//    private var multiMixFragment: MultiMixOFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,6 +196,7 @@ class MeetingRoomFragment : BaseFragment() {
     @Synchronized
     private fun showMultiMixPage() {
         if (multiMixFragment == null) {
+//            multiMixFragment = MultiMixOFragment.newInstance()
             multiMixFragment = MultiMixFragment.newInstance()
         }
         switchFragment(multiMixFragment)

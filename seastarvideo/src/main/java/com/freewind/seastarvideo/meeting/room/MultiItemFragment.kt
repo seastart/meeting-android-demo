@@ -10,7 +10,6 @@
 package com.freewind.seastarvideo.meeting.room
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import com.freewind.seastarvideo.databinding.FragmentMultiItemBinding
 /**
  * @author: wiatt
  * @description: 多成员页面，单个成员的fragment
- * todo 功能遇阻，暂不使用
  */
 class MultiItemFragment : BaseFragment() {
 
@@ -74,19 +72,25 @@ class MultiItemFragment : BaseFragment() {
         binding.nickNameTv.text = mNickName
     }
 
-    private fun updateNickName(nickname: String) {
+    fun updateMember(nickname: String, audioStatus: Boolean, videoStatus: Boolean) {
+        updateNickName(nickname)
+        updateAudioStatus(audioStatus)
+        updateVideoStatus(videoStatus)
+    }
+
+    fun updateNickName(nickname: String) {
         mNickName = nickname
         arguments?.putString(ARG_NICKNAME, mNickName)
         binding.nickNameTv.text = mNickName
     }
 
-    private fun updateAudioStatus(audioStatus: Boolean) {
+    fun updateAudioStatus(audioStatus: Boolean) {
         mAudioStatus = audioStatus
         arguments?.putBoolean(ARG_AUDIO_STATUS, audioStatus)
         binding.micSmallIv.isSelected = mAudioStatus
     }
 
-    private fun updateVideoStatus(videoStatus: Boolean) {
+    fun updateVideoStatus(videoStatus: Boolean) {
         mVideoStatus = videoStatus
         arguments?.putBoolean(ARG_VIDEO_STATUS, videoStatus)
         if (mVideoStatus) {
@@ -102,14 +106,12 @@ class MultiItemFragment : BaseFragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(
-            nickNameParam: String, videoStatusParam: Boolean, cameraStatusParam: Boolean
-        ) =
+        fun newInstance(nickname: String, audioStatus: Boolean, videoStatus: Boolean) =
             MultiItemFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_NICKNAME, nickNameParam)
-                    putBoolean(ARG_AUDIO_STATUS, videoStatusParam)
-                    putBoolean(ARG_VIDEO_STATUS, cameraStatusParam)
+                    putString(ARG_NICKNAME, nickname)
+                    putBoolean(ARG_AUDIO_STATUS, audioStatus)
+                    putBoolean(ARG_VIDEO_STATUS, videoStatus)
                 }
             }
     }
