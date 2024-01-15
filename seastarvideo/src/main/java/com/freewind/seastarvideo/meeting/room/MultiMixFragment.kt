@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMultiMixBinding
+import com.freewind.seastarvideo.meeting.MemberInfo
 import com.freewind.seastarvideo.utils.LogUtil
 
 /**
@@ -71,6 +72,10 @@ class MultiMixFragment : BaseFragment() {
         binding.btnRemove.setOnClickListener {
             val removeNum = binding.removeNumEt.text.toString().toInt()
             viewModel.removeOneMember(removeNum)
+        }
+        binding.btnUpdateMember.setOnClickListener {
+            val updateMemberNum = binding.updateMemberEt.text.toString().toInt()
+            viewModel.updateMember(updateMemberNum)
         }
     }
 
@@ -128,6 +133,10 @@ class MultiMixFragment : BaseFragment() {
             if (totalPage < memberMultiAdapter.itemCount) {
                 memberMultiAdapter.removeFragment(memberMultiAdapter.itemCount - 1)
             }
+        }
+
+        override fun onUpdateMember(position: Int, memberInfo: MemberInfo) {
+
         }
     }
 }

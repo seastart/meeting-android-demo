@@ -57,8 +57,7 @@
         app:layout_constraintStart_toStartOf="@id/btnAdd"
         app:layout_constraintEnd_toEndOf="@id/btnAdd"
         app:layout_constraintBottom_toTopOf="@id/btnAdd"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:layout_marginEnd="@dimen/dp_5"/>
+        android:layout_marginBottom="@dimen/dp_10" />
 
     <EditText
         android:id="@+id/removeNumEt"
@@ -68,6 +67,27 @@
         app:layout_constraintStart_toStartOf="@id/btnRemove"
         app:layout_constraintEnd_toEndOf="@id/btnRemove"
         app:layout_constraintBottom_toTopOf="@id/btnRemove"
+        android:layout_marginBottom="@dimen/dp_10"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnUpdateMember"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:text="更新成员"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@id/btnAddMuch"
+        app:layout_constraintEnd_toEndOf="@id/btnAddMuch"
+        app:layout_constraintBottom_toTopOf="@id/btnAddMuch"
+        android:layout_marginBottom="@dimen/dp_10"/>
+
+    <EditText
+        android:id="@+id/updateMemberEt"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red_ff4b51"
+        app:layout_constraintStart_toStartOf="@id/removeNumEt"
+        app:layout_constraintEnd_toEndOf="@id/removeNumEt"
+        app:layout_constraintBottom_toTopOf="@id/removeNumEt"
         android:layout_marginBottom="@dimen/dp_10"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

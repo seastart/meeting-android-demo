@@ -225,6 +225,17 @@ class MeetingRoomViewModel():
         }
     }
 
+    fun updateMember(position: Int) {
+        val memberInfo = memberList[position]
+        memberInfo.micStatus = !memberInfo.micStatus
+        memberInfo.cameraStatus = !memberInfo.cameraStatus
+        memberInfo.nickName = memberInfo.nickName + "改"
+        memberList[position] = memberInfo
+        viewListeners.forEach {
+            it.onUpdateMember(position, memberInfo)
+        }
+    }
+
     /**
      * 离开房间
      */
@@ -238,8 +249,11 @@ class MeetingRoomViewModel():
     }
 
     interface MeetingRoomListener {
+        // 添加一个参会成员
         fun onMemberListAddOne(position: Int)
-
+        //移除一个参会成员
         fun onMemberListRemoveOne(position: Int)
+        // 更新一个参会成员
+        fun onUpdateMember(position: Int, memberInfo: MemberInfo)
     }
 }
