@@ -24,7 +24,7 @@ abstract class BaseFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        StatusBarManager.instance.setStatusBarTextColor(requireActivity(), Color.TRANSPARENT)
+//        StatusBarManager.instance.setStatusBarTextColor(requireActivity(), Color.TRANSPARENT)
     }
 
     override fun onDestroy() {

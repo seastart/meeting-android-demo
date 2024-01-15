@@ -26,9 +26,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        StatusBarManager.instance.immersiveStatusBar(
-            this, Color.TRANSPARENT
-        )
+        StatusBarManager.instance.immersiveStatusBar(this, Color.TRANSPARENT)
     }
 
     override fun onDestroy() {

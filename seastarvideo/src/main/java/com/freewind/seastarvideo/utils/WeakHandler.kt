@@ -33,7 +33,7 @@ abstract class WeakHandler<T>(looper: Looper, owner: T) : Handler(looper) {
                 (mOwner.get() as Activity).isDestroyed
             }
             mOwner.get() is Fragment -> {
-                (mOwner.get() as Fragment).isVisible
+                !(mOwner.get() as Fragment).isVisible
             }
             else -> {
                 false

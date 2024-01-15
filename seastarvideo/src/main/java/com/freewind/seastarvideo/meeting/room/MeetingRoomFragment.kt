@@ -9,20 +9,31 @@
 
 package com.freewind.seastarvideo.meeting.room
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Looper
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.activity.ChatActivity
 import com.freewind.seastarvideo.activity.MemberActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMeetingRoomBinding
+import com.freewind.seastarvideo.ui.ClickFrameLayout
 import com.freewind.seastarvideo.ui.DialogManager
 import com.freewind.seastarvideo.utils.OtherUiManager
+import com.freewind.seastarvideo.utils.WeakHandler
+import com.gyf.immersionbar.BarHide
+import com.gyf.immersionbar.ImmersionBar
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -51,8 +62,12 @@ class MeetingRoomFragment : BaseFragment() {
     private var multiMixFragment: MultiMixFragment? = null
 //    private var multiMixFragment: MultiMixOFragment? = null
 
+    private var handler: MeetingRoomHandler = MeetingRoomHandler(Looper.getMainLooper(), this)
+    private var HANDLER_MSG_HIDE_COVER = 1001
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ImmersionBar.with(requireActivity()).reset().init()
         arguments?.let {
             nickName = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
             roomId = it.getString(ARG_ROOM_ID, resources.getString(R.string.def_room_id))
@@ -72,6 +87,7 @@ class MeetingRoomFragment : BaseFragment() {
         initLiveData()
         initView()
         initListener()
+        handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
 
         return rootView
     }
@@ -164,6 +180,12 @@ class MeetingRoomFragment : BaseFragment() {
                 }
             }
         }
+
+        binding.contentSecFl.mListener = object : ClickFrameLayout.ActionListener {
+            override fun onActionDown() {
+                toggleCoverShow()
+            }
+        }
     }
 
     /**
@@ -202,6 +224,19 @@ class MeetingRoomFragment : BaseFragment() {
         switchFragment(multiMixFragment)
     }
 
+    fun toggleCoverShow() {
+        // 顶部的显示与隐藏
+        if (binding.topBarI.root.translationY == 0f) {
+            // 关闭定时隐藏上下工具栏功能
+            handler.removeMessages(HANDLER_MSG_HIDE_COVER)
+            animCoverHide()
+        } else {
+            animCoverShow()
+            // 开启定时隐藏上下工具栏功能
+            handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
+        }
+    }
+
     /**
      * 用于切换Fragment
      * 当不显示fragment时，nextFragment为空
@@ -226,6 +261,42 @@ class MeetingRoomFragment : BaseFragment() {
         return true
     }
 
+    fun animCoverShow() {
+        if (binding.topBarI.root.translationY == 0f) {
+            return
+        }
+        val animatorSet = AnimatorSet()
+        animatorSet.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                ImmersionBar.with(requireActivity()).hideBar(BarHide.FLAG_SHOW_BAR).init()
+//                ImmersionBar.with(requireActivity()).reset().init()
+            }
+        })
+        val topAnimator = ObjectAnimator.ofFloat(binding.topBarI.root, "translationY", -binding.topBarI.root.height.toFloat(), 0f)
+        val bottomAnimator = ObjectAnimator.ofFloat(binding.bottomToolbarI.root, "translationY", binding.bottomToolbarI.root.height.toFloat(), 0f)
+        animatorSet.play(topAnimator).with(bottomAnimator)
+        animatorSet.duration = 300
+        animatorSet.start()
+    }
+
+    @SuppressLint("NewApi")
+    fun animCoverHide() {
+        if (binding.topBarI.root.translationY < 0) {
+            return
+        }
+        val animatorSet = AnimatorSet()
+        animatorSet.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                ImmersionBar.with(requireActivity()).hideBar(BarHide.FLAG_HIDE_BAR).init()
+            }
+        })
+        val topAnimator = ObjectAnimator.ofFloat(binding.topBarI.root, "translationY", 0f, -binding.topBarI.root.height.toFloat())
+        val bottomAnimator = ObjectAnimator.ofFloat(binding.bottomToolbarI.root, "translationY", 0f, binding.bottomToolbarI.root.height.toFloat())
+        animatorSet.play(topAnimator).with(bottomAnimator)
+        animatorSet.duration = 300
+        animatorSet.start()
+    }
+
     companion object {
         // 标识：单人视频 fragment
         val FRAGMENT_SEC_SOLO_VIDEO = "solo_video_fragment"
@@ -242,5 +313,20 @@ class MeetingRoomFragment : BaseFragment() {
                     putString(ARG_ROOM_ID, roomIdParam)
                 }
             }
+    }
+
+    class MeetingRoomHandler(looper: Looper, owner: MeetingRoomFragment):
+        WeakHandler<MeetingRoomFragment>(looper, owner) {
+
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            getOwner()?.let { owner ->
+                when(msg.what) {
+                    owner.HANDLER_MSG_HIDE_COVER -> {
+                        owner.animCoverHide()
+                    }
+                }
+            }
+        }
     }
 }
