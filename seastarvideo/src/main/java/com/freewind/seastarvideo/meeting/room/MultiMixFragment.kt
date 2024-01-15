@@ -30,6 +30,7 @@ class MultiMixFragment : BaseFragment() {
     private val binding get() = _binding!!
 
     private lateinit var memberMultiAdapter: MemberMultiStatePageAdapter
+    private var viewListenerImpl: MeetingRoomListenerImpl = MeetingRoomListenerImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,35 +45,20 @@ class MultiMixFragment : BaseFragment() {
         val rootView = binding.root
 
         initLiveData()
+        viewModel.addListener(viewListenerImpl)
         initListener()
         initPage()
 
         return rootView
     }
 
-    private fun initLiveData() {
-        viewModel.memberListAddLiveData.observe(viewLifecycleOwner) { position ->
-            val totalPage = calculatePageNum()
-            if (totalPage > memberMultiAdapter.itemCount) {
-                for (index in memberMultiAdapter.itemCount until totalPage) {
-                    memberMultiAdapter.insertFragment(MultiListFragment.newInstance(index))
-                }
-            }
-        }
-        viewModel.memberListRemoveLiveData.observe(viewLifecycleOwner) { position ->
-            if (viewModel.memberList.size == 0) {
-                return@observe
-            }
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.removeListener(viewListenerImpl)
+    }
 
-            val totalPage = calculatePageNum()
-            val targetPageIndex = position / 4
-            val targetItemIndex = position % 4
-            LogUtil.i("memberListRemoveLiveData, totalPage = $totalPage, targetPageIndex = $targetPageIndex, targetItemIndex = $targetItemIndex", "wiatt")
-            memberMultiAdapter.updateMultiListPage(targetPageIndex, targetItemIndex)
-            if (totalPage < memberMultiAdapter.itemCount) {
-                memberMultiAdapter.removeFragment(memberMultiAdapter.itemCount - 1)
-            }
-        }
+    private fun initLiveData() {
+
     }
 
     private fun initListener() {
@@ -117,5 +103,31 @@ class MultiMixFragment : BaseFragment() {
 
         @JvmStatic
         fun newInstance() = MultiMixFragment()
+    }
+
+    inner class MeetingRoomListenerImpl: MeetingRoomViewModel.MeetingRoomListener {
+        override fun onMemberListAddOne(position: Int) {
+            val totalPage = calculatePageNum()
+            if (totalPage > memberMultiAdapter.itemCount) {
+                for (index in memberMultiAdapter.itemCount until totalPage) {
+                    memberMultiAdapter.insertFragment(MultiListFragment.newInstance(index))
+                }
+            }
+        }
+
+        override fun onMemberListRemoveOne(position: Int) {
+            if (viewModel.memberList.size == 0) {
+                return
+            }
+
+            val totalPage = calculatePageNum()
+            val targetPageIndex = position / 4
+            val targetItemIndex = position % 4
+            LogUtil.i("memberListRemoveLiveData, totalPage = $totalPage, targetPageIndex = $targetPageIndex, targetItemIndex = $targetItemIndex", "wiatt")
+            memberMultiAdapter.updateMultiListPage(targetPageIndex, targetItemIndex)
+            if (totalPage < memberMultiAdapter.itemCount) {
+                memberMultiAdapter.removeFragment(memberMultiAdapter.itemCount - 1)
+            }
+        }
     }
 }

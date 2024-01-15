@@ -28,6 +28,7 @@ class MultiListFragment : BaseFragment() {
     private val ARG_INDEX = "index"
 
     private lateinit var viewModel: MeetingRoomViewModel
+    private var viewListenerImpl: MeetingRoomListenerImpl = MeetingRoomListenerImpl()
 
     private var _binding: FragmentMultiListBinding? = null
     private val binding get() = _binding!!
@@ -62,6 +63,7 @@ class MultiListFragment : BaseFragment() {
 
         binding.flagTv.text = "测试Flag，当前页：$mIndex"
         initLiveData()
+        viewModel.addListener(viewListenerImpl)
         initView()
         LogUtil.i("test，onCreateView--mIndex = $mIndex", "wiatt")
         return rootView
@@ -84,14 +86,10 @@ class MultiListFragment : BaseFragment() {
         super.onDestroy()
         LogUtil.i("test，onDestroy--mIndex = $mIndex", "wiatt")
         isCreate = false
-
+        viewModel.removeListener(viewListenerImpl)
     }
 
     private fun initLiveData() {
-        viewModel.memberListAddLiveData.observe(viewLifecycleOwner) { position ->
-            LogUtil.i("memberListAddLiveData, position = $position", "wiatt")
-            addOneItem(position)
-        }
     }
 
     private fun initView() {
@@ -262,5 +260,17 @@ class MultiListFragment : BaseFragment() {
                     putInt(ARG_INDEX, indexParam)
                 }
             }
+    }
+
+    inner class MeetingRoomListenerImpl: MeetingRoomViewModel.MeetingRoomListener {
+        override fun onMemberListAddOne(position: Int) {
+            LogUtil.i("onMemberListAddOne, position = $position", "wiatt")
+            addOneItem(position)
+        }
+
+        override fun onMemberListRemoveOne(position: Int) {
+
+        }
+
     }
 }

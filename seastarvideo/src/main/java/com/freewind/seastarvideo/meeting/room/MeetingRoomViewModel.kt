@@ -36,9 +36,8 @@ class MeetingRoomViewModel():
     // 展示哪一页二级 fragment liveData
     val showSecFragmentLiveData: MutableLiveData<String> = MutableLiveData()
 
-    // todo 这两个应该换成接口回调，因为是一次性的操作，fragment重建会造成重复调用
-    val memberListAddLiveData: MutableLiveData<Int> = MutableLiveData()
-    val memberListRemoveLiveData: MutableLiveData<Int> = MutableLiveData()
+    // 从 ViewModel 回调数据到界面
+    private var viewListeners: MutableList<MeetingRoomListener> = mutableListOf()
 
 
     // 房间 id
@@ -61,6 +60,18 @@ class MeetingRoomViewModel():
 
     override fun getModel(): MeetingRoomModel {
         return MeetingRoomModel(MeetingRoomViewModelImpl())
+    }
+
+    fun addListener(listener: MeetingRoomListener) {
+        if (!viewListeners.contains(listener)) {
+            viewListeners.add(listener)
+        }
+    }
+
+    fun removeListener(listener: MeetingRoomListener) {
+        if (viewListeners.contains(listener)) {
+            viewListeners.remove(listener)
+        }
     }
 
     /**
@@ -192,7 +203,9 @@ class MeetingRoomViewModel():
 
         list.forEach { memberInfo ->
             memberList.add(memberInfo)
-            memberListAddLiveData.value = memberList.size - 1
+            viewListeners.forEach {
+                it.onMemberListAddOne(memberList.size - 1)
+            }
         }
     }
 
@@ -200,12 +213,16 @@ class MeetingRoomViewModel():
         testNum = memberList.size
         val memberInfo = MemberInfo(testNum.toString(), "成员-$testNum" , MemberInfo.MEMBER_ROLE_NORMAL, false, false)
         memberList.add(memberInfo)
-        memberListAddLiveData.value = memberList.size - 1
+        viewListeners.forEach {
+            it.onMemberListAddOne(memberList.size - 1)
+        }
     }
 
     fun removeOneMember(position: Int) {
         memberList.removeAt(position)
-        memberListRemoveLiveData.value = position
+        viewListeners.forEach {
+            it.onMemberListRemoveOne(position)
+        }
     }
 
     /**
@@ -218,5 +235,11 @@ class MeetingRoomViewModel():
 
     inner class MeetingRoomViewModelImpl: MeetingRoomContract.IMeetingRoomViewModel {
 
+    }
+
+    interface MeetingRoomListener {
+        fun onMemberListAddOne(position: Int)
+
+        fun onMemberListRemoveOne(position: Int)
     }
 }
