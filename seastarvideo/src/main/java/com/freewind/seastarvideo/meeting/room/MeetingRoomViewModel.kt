@@ -223,6 +223,9 @@ class MeetingRoomViewModel():
         viewListeners.forEach {
             it.onMemberListRemoveOne(position)
         }
+        if (memberList.size <= 1) {
+            checkSecFragment()
+        }
     }
 
     fun updateMember(position: Int) {

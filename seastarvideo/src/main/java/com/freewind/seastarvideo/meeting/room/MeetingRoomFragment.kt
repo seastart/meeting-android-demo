@@ -87,6 +87,7 @@ class MeetingRoomFragment : BaseFragment() {
         initLiveData()
         initView()
         initListener()
+        handler.removeMessages(HANDLER_MSG_HIDE_COVER)
         handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
 
         return rootView
@@ -183,7 +184,10 @@ class MeetingRoomFragment : BaseFragment() {
 
         binding.contentSecFl.mListener = object : ClickFrameLayout.ActionListener {
             override fun onActionDown() {
-                toggleCoverShow()
+                animCoverShow()
+                // 开启定时隐藏上下工具栏功能
+                handler.removeMessages(HANDLER_MSG_HIDE_COVER)
+                handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
             }
         }
     }
@@ -224,18 +228,18 @@ class MeetingRoomFragment : BaseFragment() {
         switchFragment(multiMixFragment)
     }
 
-    fun toggleCoverShow() {
-        // 顶部的显示与隐藏
-        if (binding.topBarI.root.translationY == 0f) {
-            // 关闭定时隐藏上下工具栏功能
-            handler.removeMessages(HANDLER_MSG_HIDE_COVER)
-            animCoverHide()
-        } else {
-            animCoverShow()
-            // 开启定时隐藏上下工具栏功能
-            handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
-        }
-    }
+//    fun toggleCoverShow() {
+//        // 顶部的显示与隐藏
+//        if (binding.topBarI.root.translationY == 0f) {
+//            // 关闭定时隐藏上下工具栏功能
+//            handler.removeMessages(HANDLER_MSG_HIDE_COVER)
+//            animCoverHide()
+//        } else {
+//            animCoverShow()
+//            // 开启定时隐藏上下工具栏功能
+//            handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
+//        }
+//    }
 
     /**
      * 用于切换Fragment
