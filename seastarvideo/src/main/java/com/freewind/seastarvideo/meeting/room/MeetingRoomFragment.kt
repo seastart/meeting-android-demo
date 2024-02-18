@@ -142,7 +142,21 @@ class MeetingRoomFragment : BaseFragment() {
                     viewModel.switchSpeakerStatus()
                 }
                 binding.topBarI.reportIv -> {
-                    Toast.makeText(requireContext(), "点击投诉按钮", Toast.LENGTH_SHORT).show()
+                    // TODO 数据必须来自网络
+                    val reportTags = arrayListOf<ReportTagBean>(
+                        ReportTagBean("政治敏感", false),
+                        ReportTagBean("低俗色情", false),
+                        ReportTagBean("攻击辱骂", false),
+                        ReportTagBean("血腥暴力", false),
+                        ReportTagBean("不良广告", false),
+                        ReportTagBean("涉嫌诈骗", false),
+                        ReportTagBean("违法信息", false),
+                        ReportTagBean("其他违规", false)
+                    )
+
+                    DialogManager.instance.showReportDialog(requireContext(), reportTags) { reportTypes, reportContent ->
+                        Toast.makeText(context, reportContent, Toast.LENGTH_LONG).show()
+                    }
                 }
                 binding.topBarI.leaveRoomTv -> {
                     DialogManager.instance.showLeaveRoomDialog(requireContext()) {

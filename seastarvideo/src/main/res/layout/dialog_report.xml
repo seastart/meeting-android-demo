@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015-2023 Hangzhou Freewind Technology Co., Ltd.
+  ~ All rights reserved.
+  ~ http://www.seastart.cn
+  ~
+  ~ This product is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_400"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_bg_white_radius_lt_rt_20">
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBarCl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_23"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dp_17">
+        
+        <ImageView
+            android:id="@+id/exitIv"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@mipmap/arrow_exit"
+            android:layout_marginStart="@dimen/dp_16"/>
+        
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/textColor_333333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBarCl"
+        app:layout_constraintBottom_toTopOf="@id/reportSureCl"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tagRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/contentTitleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_content_title"
+                android:textSize="@dimen/sp_13"
+                android:textColor="@color/textColor_999999"
+                android:layout_marginTop="@dimen/dp_20"/>
+
+            <EditText
+                android:id="@+id/contentEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/dp_74"
+                android:background="@drawable/shape_bg_gray_f7f8fa_radius_4"
+                android:inputType="text"
+                android:hint="@string/report_content_hint"
+                android:textSize="@dimen/sp_13"
+                android:textColorHint="@color/textColor_999999"
+                android:textColor="@color/textColor_333333"
+                android:gravity="start|top"
+                android:padding="@dimen/dp_10"
+                android:scrollbars="vertical"
+                android:layout_marginTop="@dimen/dp_8"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/reportSureCl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/white">
+
+        <com.freewind.seastarvideo.ui.StateTextView
+            android:id="@+id/reportSureStv"
+            style="@style/bigBtn"
+            android:text="@string/sure"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

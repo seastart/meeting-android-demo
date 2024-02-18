@@ -87,6 +87,10 @@
     <string name="compere_parenthesis">（主持人）</string>
     <string name="creator_parenthesis">（创建者）</string>
     <string name="remove_someone_member">您确定要移出%s吗</string>
+    <string name="report">举报</string>
+    <string name="report_content_title">举报描述（选填）</string>
+    <string name="report_content_hint">请您描述举报内容，便于平台判断违规情况</string>
+    <string name="report_lack_tag">至少选择一个举报标签</string>
 
     <string name="say_something">聊点什么&#8230;</string>
     <string name="send">发送</string>

@@ -16,9 +16,9 @@ package com.freewind.seastarvideo.meeting.room
  */
 
 // 政治敏感
-const val FLAG_political: Int = 1
+const val FLAG_POLITICAL: Int = 1
 // 低俗色情
-const val FLAG_eroticism: Int = 2
+const val FLAG_EROTICISM: Int = 2
 // 攻击辱骂
 const val FLAG_ATTACK: Int = 3
 // 血腥暴力
@@ -32,4 +32,4 @@ const val FLAG_BREAK_THE_LAW: Int = 7
 // 其他违规
 const val FLAG_OTHER: Int = 8
 
-data class ReportTypeBean(var desc: String, var flag: Int)
+data class ReportTagBean(var desc: String, var isSelected: Boolean)

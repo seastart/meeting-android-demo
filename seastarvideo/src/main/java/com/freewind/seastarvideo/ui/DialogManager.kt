@@ -11,13 +11,21 @@ package com.freewind.seastarvideo.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Rect
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.freewind.seastarvideo.R
-import com.freewind.seastarvideo.meeting.room.ReportTypeBean
+import com.freewind.seastarvideo.meeting.room.ReportTagAdapter
+import com.freewind.seastarvideo.meeting.room.ReportTagBean
 
 
 /**
@@ -182,8 +190,87 @@ class DialogManager {
    /**
     * 展示举报弹框
     */
-   fun showReportDialog(context: Context, reportTypes: ArrayList<ReportTypeBean>, handler: (reportTypes: ArrayList<ReportTypeBean>, reportContent: String) -> Unit) {
-      // 由于举报功能是非常边缘的功能，所以目前暂不实现
+   fun showReportDialog(context: Context, reportTags: ArrayList<ReportTagBean>, handler: (reportTypes: ArrayList<ReportTagBean>, reportContent: String) -> Unit) {
+      val dialog = initView(context, R.layout.dialog_report, Gravity.BOTTOM)
+      val exitIv: ImageView = dialog.findViewById(R.id.exitIv)
+      val tagRv: RecyclerView = dialog.findViewById(R.id.tagRv)
+      val contentEt: EditText = dialog.findViewById(R.id.contentEt)
+      val reportSureStv: StateTextView = dialog.findViewById(R.id.reportSureStv)
+
+      val adapter = ReportTagAdapter(reportTags)
+      dealWithReportTagView(context, tagRv, adapter)
+
+      setOnClickNoRepeat(exitIv, reportSureStv) {
+         when(it) {
+            exitIv -> {
+               dismiss(dialog)
+            }
+            reportSureStv -> {
+               val selectedTags = arrayListOf<ReportTagBean>()
+               adapter.items.forEach { reportTag ->
+                  if (reportTag.isSelected) {
+                     selectedTags.add(reportTag)
+                  }
+               }
+               val content = contentEt.text.toString()
+               if (selectedTags.isEmpty()) {
+                  Toast.makeText(context, context.resources.getText(R.string.report_lack_tag), Toast.LENGTH_SHORT).show()
+               } else {
+                  handler.invoke(selectedTags, content)
+                  dismiss(dialog)
+               }
+            }
+         }
+      }
+
+      show(dialog)
+   }
+
+   /**
+    * 处理举报弹框中的举报标签列表
+    */
+   private fun dealWithReportTagView(context: Context, tagRv: RecyclerView, adapter: ReportTagAdapter) {
+      val layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
+      tagRv.layoutManager = layoutManager
+      tagRv.addItemDecoration(object : ItemDecoration() {
+         override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+         ) {
+            super.getItemOffsets(outRect, view, parent, state)
+            val position = parent.getChildAdapterPosition(view)
+            var left = 0
+            var right = 0
+            var top = 0
+            var bottom = 0
+            when(position % 3) {
+               0 -> {
+                  right = context.resources.getDimension(R.dimen.dp_4).toInt()
+               }
+               1 -> {
+                  left = context.resources.getDimension(R.dimen.dp_4).toInt()
+                  right = context.resources.getDimension(R.dimen.dp_4).toInt()
+               }
+               2 -> {
+                  left = context.resources.getDimension(R.dimen.dp_4).toInt()
+               }
+            }
+            if (position != 0 && position != 1 && position != 2) {
+               top = context.resources.getDimension(R.dimen.dp_8).toInt()
+            }
+            bottom = 0
+            outRect.set(left, top, right, bottom)
+         }
+      })
+
+      tagRv.adapter = adapter
+      adapter.setOnItemClickListener { itemAdapter, view, position ->
+         val curSelectState = !view.isSelected
+         adapter.getItem(position)?.isSelected = curSelectState
+         view.isSelected = curSelectState
+      }
    }
 
    /**
