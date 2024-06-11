@@ -20,6 +20,8 @@ class EnvArgument {
 
     // 上下文环境
     var app: Application? = null
+    // 暂时先在内存中存储，后续需要存入 mmvk 中，并且需要考虑过期时间和meeting层登录情况
+    var token: String? = ""
 
     companion object {
         val instance: EnvArgument by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {

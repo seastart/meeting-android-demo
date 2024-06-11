@@ -1,5 +1,7 @@
 package com.freewind.seastarvideo.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.freewind.seastarvideo.R
@@ -51,5 +53,12 @@ class LoginActivity : BaseActivity() {
         }
         currentFragment = nextFragment
         return true
+    }
+
+    companion object {
+        fun startActivity(activity: Activity) {
+            val intent = Intent(activity, LoginActivity::class.java)
+            activity.startActivity(intent)
+        }
     }
 }

@@ -15,11 +15,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.freewind.seastarvideo.EnvArgument
+import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.activity.HomeActivity
 import com.freewind.seastarvideo.activity.RegisterActivity
+import com.freewind.seastarvideo.authorize.AuthorizeEventBean
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentLoginBinding
+import com.freewind.seastarvideo.utils.DeviceUtil
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.LogUtil
+import com.freewind.seastarvideo.utils.ToastUtil
+import com.shiyuan.meeting.api.Callback
+import com.shiyuan.meeting.bean.Data
+import com.shiyuan.meeting.bean.LoginBean
+import org.greenrobot.eventbus.EventBus
 import java.util.regex.Pattern
 
 /**
@@ -34,12 +45,12 @@ class LoginFragment : BaseFragment() {
 
     private lateinit var viewModel: LoginViewModel
 
-    // 标识：当前的登录方式。密码登录：0； 验证码登录：1
-    private var curLoginType: Int = 0
+    // 标识：当前的登录方式。密码登录：type_login_pwd； 验证码登录：type_login_auth
+    private var curLoginType: String = LOGIN_TYPE_PWD
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
+        initViewModel()
     }
 
     override fun onCreateView(
@@ -68,6 +79,14 @@ class LoginFragment : BaseFragment() {
                 }
                 binding.loginStv -> {
                     // 请求登录接口
+                    when(curLoginType) {
+                        LOGIN_TYPE_PWD -> {
+                            loginWithPwd()
+                        }
+                        LOGIN_TYPE_CODE -> {
+                            loginWithCode()
+                        }
+                    }
                 }
                 binding.registerStv -> {
                     RegisterActivity.startRegisterInfoPage(requireContext())
@@ -78,10 +97,50 @@ class LoginFragment : BaseFragment() {
     }
 
     /**
+     * 初始化 viewModel
+     */
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
+        viewModel.loginWithPwdResult.observe(this) { uiResponse ->
+            uiResponse?.let { response ->
+                if (response.isSuccess && response.mResult != null) {
+                    val phoneNumber = binding.pwdLoginInclude.pwdPhoneSet.text.toString().trim()
+                    val pwd = binding.pwdLoginInclude.pwdSet.text.toString().trim()
+                    val token = response.mResult!!
+                    KvUtil.encode(KvUtil.USER_INFO_PHONE_NUM, phoneNumber)
+                    KvUtil.encode(KvUtil.USER_INFO_PWD, pwd)
+                    KvUtil.encode(KvUtil.USER_INFO_APP_TOKEN, token)
+
+                meetingSdkLogin(phoneNumber, token)
+                } else {
+                    val msg = response.mError?.mErrorMessage
+                    ToastUtil.showLongToast(msg ?: "登录失败")
+                }
+            }
+
+        }
+        viewModel.loginWithCodeResult.observe(this) { uiResponse ->
+            uiResponse?.let { response ->
+                if (response.isSuccess && response.mResult != null) {
+                    val phoneNumber = binding.codeLoginInclude.codePhoneSet.text.toString().trim()
+                    val token = response.mResult!!
+                    KvUtil.encode(KvUtil.USER_INFO_PHONE_NUM, phoneNumber)
+                    KvUtil.encode(KvUtil.USER_INFO_APP_TOKEN, token)
+
+                meetingSdkLogin(phoneNumber, token)
+                } else {
+                    val msg = response.mError?.mErrorMessage
+                    ToastUtil.showLongToast(msg ?: "登录失败")
+                }
+            }
+        }
+    }
+
+    /**
      * 选择使用密码登录
      */
     private fun selectLoginWithPwd() {
-        curLoginType = 0
+        curLoginType = LOGIN_TYPE_PWD
 
         binding.pwdLoginCsb.isSelected = true
         binding.codeLoginCsb.isSelected = false
@@ -98,7 +157,7 @@ class LoginFragment : BaseFragment() {
      * 选择使用验证码登录
      */
     private fun selectLoginWithCode() {
-        curLoginType = 1
+        curLoginType = LOGIN_TYPE_CODE
 
         binding.pwdLoginCsb.isSelected = false
         binding.codeLoginCsb.isSelected = true
@@ -127,6 +186,94 @@ class LoginFragment : BaseFragment() {
         // 光标移动到最后
         val textLen: Int = binding.pwdLoginInclude.pwdSet.text.toString().length
         binding.pwdLoginInclude.pwdSet.setSelection(textLen, textLen)
+    }
+
+    /**
+     * 通过密码登录
+     */
+    private fun loginWithPwd() {
+        val phoneNumber = binding.pwdLoginInclude.pwdPhoneSet.text.toString().trim()
+        if (phoneNumber.isEmpty()) {
+            ToastUtil.showShortToast("手机号不可为空")
+            return
+        }
+        val pwd = binding.pwdLoginInclude.pwdSet.text.toString().trim()
+        if (pwd.isEmpty()) {
+            ToastUtil.showShortToast("密码不可为空")
+            return
+        }
+        val isAgree = binding.selectCb.isChecked
+        if (!isAgree) {
+            ToastUtil.showShortToast("请先阅读并勾选下方协议")
+            return
+        }
+
+        viewModel.loginWithPwd(phoneNumber, pwd)
+    }
+
+    /**
+     * 通过验证码登录
+     */
+    private fun loginWithCode() {
+        val phoneNumber = binding.codeLoginInclude.codePhoneSet.text.toString().trim()
+        if (phoneNumber.isEmpty()) {
+            ToastUtil.showShortToast("手机号不可为空")
+            return
+        }
+        val code = binding.codeLoginInclude.codeSet.text.toString().trim()
+        if (code.isEmpty()) {
+            ToastUtil.showShortToast("验证码不可为空")
+            return
+        }
+        val isAgree = binding.selectCb.isChecked
+        if (!isAgree) {
+            ToastUtil.showShortToast("请先阅读并勾选下方协议")
+            return
+        }
+
+        viewModel.loginWithCode(phoneNumber, code)
+    }
+
+    /**
+     * 登录 sdk
+     */
+    private fun meetingSdkLogin(userId: String, token: String) {
+        val activity = requireActivity()
+        MeetingEngineHelper.instance.init(activity.application, token, null)
+        MeetingEngineHelper.instance.engine?.login(
+            userId, 1, 2, DeviceUtil.getAndroidID(requireContext()),
+            object : Callback<Data<LoginBean>?>() {
+                override fun onSuccess(data: Data<LoginBean>?) {
+                    super.onSuccess(data)
+                    ToastUtil.showShortToast("登陆成功")
+                    cleanEtContent()
+                    EnvArgument.instance.token = token
+                    EventBus.getDefault().post(AuthorizeEventBean.LoginStatusEvent(true))
+                    HomeActivity.startActivity(this@LoginFragment.requireActivity())
+                    HomeActivity.startActivity(requireActivity())
+                    activity.finish()
+                }
+
+                override fun onFailed(code: Int, msg: String?) {
+                    super.onFailed(code, msg)
+                    ToastUtil.showShortToast(msg ?: "登录失败")
+                }
+
+                override fun onCancel() {
+                    super.onCancel()
+                }
+            }
+        )
+    }
+
+    private fun cleanEtContent() {
+        if (binding.pwdLoginInclude.root.visibility == View.VISIBLE) {
+            binding.pwdLoginInclude.pwdPhoneSet.editableText.clear()
+            binding.pwdLoginInclude.pwdSet.editableText.clear()
+        } else if (binding.codeLoginInclude.root.visibility == View.VISIBLE) {
+            binding.codeLoginInclude.codePhoneSet.editableText.clear()
+            binding.codeLoginInclude.codeSet.editableText.clear()
+        }
     }
 
     /**
@@ -186,6 +333,8 @@ class LoginFragment : BaseFragment() {
 
     companion object {
         var TAG: String = LoginFragment::class.java.simpleName
+        private val LOGIN_TYPE_PWD = "type_login_pwd"
+        private val LOGIN_TYPE_CODE = "type_login_code"
         @JvmStatic
         fun newInstance() = LoginFragment()
     }

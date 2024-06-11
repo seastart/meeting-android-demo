@@ -1,5 +1,7 @@
 package com.freewind.seastarvideo.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -9,15 +11,20 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.authorize.AuthorizeEventBean
 import com.freewind.seastarvideo.base.BaseActivity
 import com.freewind.seastarvideo.databinding.ActivityHomeBinding
 import com.freewind.seastarvideo.home.enterpriseService.EnterpriseServiceFragment
 import com.freewind.seastarvideo.home.ModuleFragmentPageAdapter
 import com.freewind.seastarvideo.home.ModuleInfo
 import com.freewind.seastarvideo.home.mine.MineFragment
+import com.freewind.seastarvideo.utils.LogUtil
 import com.freewind.seastarvideo.utils.OtherUiManager
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class HomeActivity : BaseActivity() {
 
@@ -34,6 +41,7 @@ class HomeActivity : BaseActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         val rootView = binding.root
         setContentView(rootView)
+        EventBus.getDefault().register(this)
         OtherUiManager.instance.adaptBottomHeight(binding.homeRl)
         updateViewPage2Sensitivity(binding.contentVp)
         initData()
@@ -41,6 +49,11 @@ class HomeActivity : BaseActivity() {
         TabLayoutMediator(binding.navigationTl, binding.contentVp) { tab, position ->
             initTab(tab, modules[position])
         }.attach()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun initData() {
@@ -98,6 +111,20 @@ class HomeActivity : BaseActivity() {
             touchSlopField[recyclerView] = touchSlop * 4 //6 is empirical value
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEventLoginStatus(event: AuthorizeEventBean.LoginStatusEvent) {
+        LogUtil.i("onEventLoginStatus, event = ${event.isLogin}")
+        enterpriseServiceFragment.loginStatusChange(event.isLogin)
+        mineFragment.loginStatusChange(event.isLogin)
+    }
+
+    companion object {
+        fun startActivity(activity: Activity) {
+            val intent = Intent(activity, HomeActivity::class.java)
+            activity.startActivity(intent)
         }
     }
 }

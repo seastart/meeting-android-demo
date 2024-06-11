@@ -12,7 +12,9 @@ package com.freewind.seastarvideo.base
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -22,9 +24,27 @@ import com.freewind.seastarvideo.ui.StatusBarManager
 
 abstract class BaseFragment: Fragment() {
 
+    // 是否已经构建布局
+    protected var isCreateView: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        StatusBarManager.instance.setStatusBarTextColor(requireActivity(), Color.TRANSPARENT)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        isCreateView = true
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        isCreateView = false
     }
 
     override fun onDestroy() {

@@ -18,7 +18,9 @@
 
         <activity
             android:name=".activity.HomeActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|screenSize|keyboardHidden">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -29,28 +31,40 @@
         </activity>
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.RegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.PreMeetingRoomActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.PrivacyActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.AboutUsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.WebActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.MeetingRoomActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.video.meeting"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.MemberActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".activity.ChatActivity"
             android:exported="false"

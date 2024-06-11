@@ -58,23 +58,23 @@ object LogUtil{
     }
 
     @JvmStatic
-    fun d(msg: String, tag: String = "") {
+    fun d(msg: String, tag: String = TAG) {
         Timber.tag(tag).d(msg)
     }
     @JvmStatic
-    fun i(msg: String, tag: String = "") {
+    fun i(msg: String, tag: String = TAG) {
         Timber.tag(tag).i( msg)
     }
     @JvmStatic
-    fun e(msg: String, tag: String = "") {
+    fun e(msg: String, tag: String = TAG) {
         Timber.tag(tag).e(msg)
     }
     @JvmStatic
-    fun v(msg: String, tag: String = "") {
+    fun v(msg: String, tag: String = TAG) {
         Timber.tag(tag).v( msg)
     }
     @JvmStatic
-    fun w(msg: String, tag: String = "") {
+    fun w(msg: String, tag: String = TAG) {
         Timber.tag(tag).w(msg)
     }
 }

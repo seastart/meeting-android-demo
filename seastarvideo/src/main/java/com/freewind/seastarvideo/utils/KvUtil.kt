@@ -128,6 +128,13 @@ object  KvUtil{
         mv?.clearAll()
     }
 
+    // 用户信息：电话号码
+    val USER_INFO_PHONE_NUM = "userInfoPhoneNum"
+    // 用户信息：密码
+    val USER_INFO_PWD = "userInfoPwd"
+    // 用户信息：应用层 token
+    val USER_INFO_APP_TOKEN = "userInfoAppToken"
+
     // 房间视频状态
     val MEETING_ROOM_VIDEO_STATUS = "meetingRoomVideoStatus"
     // 房间音频状态

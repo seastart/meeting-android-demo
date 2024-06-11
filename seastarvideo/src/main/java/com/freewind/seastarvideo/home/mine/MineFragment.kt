@@ -20,6 +20,7 @@ import com.freewind.seastarvideo.activity.RegisterActivity
 import com.freewind.seastarvideo.activity.WebActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMineBinding
+import com.freewind.seastarvideo.utils.LogUtil
 import com.freewind.seastarvideo.utils.OtherUiManager
 
 /**
@@ -42,12 +43,18 @@ class MineFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentMineBinding.inflate(inflater, container, false)
         val rootView = binding.root
         OtherUiManager.instance.adaptTopHeight(binding.topBarFl)
         initData()
         initListener()
         return rootView
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
     }
 
     private fun initData() {
@@ -70,6 +77,13 @@ class MineFragment : BaseFragment() {
         binding.logoutCei.setOnClickListener {
             // 退出登录，并跳转到首页
         }
+    }
+
+    /**
+     * 登录状态改变
+     */
+    fun loginStatusChange(isLogin: Boolean) {
+        LogUtil.i("我的也页面，登录状态改变， isLogin = $isLogin, isCreateView = $isCreateView")
     }
 
     companion object {
