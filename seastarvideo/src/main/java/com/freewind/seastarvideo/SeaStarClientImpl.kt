@@ -20,7 +20,6 @@ class SeaStarClientImpl: SeaStarClient {
         app = application
         EnvArgument.instance.app = application
         MMKV.initialize(application)
-        LogUtil.initDebug()
     }
 
     override fun SSC_StartHomeActivity(context: Context) {

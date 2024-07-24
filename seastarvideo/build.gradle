@@ -34,9 +34,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
     buildFeatures {
         viewBinding true
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -51,8 +53,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation 'com.seastart.meetingenginekit:meeting:2.0.15'
-
+    // 会议库
+    implementation 'com.seastart.meetingenginekit:meeting:2.0.16-alpha.1'
     // 基于今日头条方案的屏幕适配库
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
     // 权限管理库
@@ -68,7 +70,11 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'
     // RecyclerView 辅助库
     implementation 'io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta14'
-
     // android 4.4以上沉浸式实现
     implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
+    // retrofit + okhttp 网络框架
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }

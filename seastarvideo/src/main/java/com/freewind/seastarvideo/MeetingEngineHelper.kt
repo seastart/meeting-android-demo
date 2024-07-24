@@ -9,13 +9,10 @@
 
 package com.freewind.seastarvideo
 
-import android.app.Application
+import android.app.Activity
 import com.seastart.rtc.RTCMediaOptions
-import com.shiyuan.meeting.MediaInfoManager
 import com.shiyuan.meeting.MeetingEngine
-import com.shiyuan.meeting.MemberInfoManager
-import com.shiyuan.meeting.impl.RoomEvent
-import com.shiyuan.meeting.impl.UserEvent
+import com.shiyuan.meeting.impl.MeetingResultListener
 
 /**
  * @author: wiatt
@@ -35,21 +32,17 @@ class MeetingEngineHelper private constructor(){
     var engine: MeetingEngine? = null
         private set
 
-    fun init(app: Application, meetToken: String, options: RTCMediaOptions?) {
-        engine = MeetingEngine(app, meetToken, options, false)
-    }
+    fun init(activity: Activity, meetToken: String, options: RTCMediaOptions?) {
+        engine = MeetingEngine(activity)
+        engine?.initSdk(meetToken, options, object : MeetingResultListener {
+            override fun onFail(code: Int, message: String) {
+                TODO("Not yet implemented")
+            }
 
-    fun getInfoManager(): MemberInfoManager? {
-        return engine?.memberInfoManager
-    }
+            override fun onSuccess() {
+                TODO("Not yet implemented")
+            }
 
-    fun getMediaInfoManager(): MediaInfoManager? {
-        return engine?.mediaInfoManager
-    }
-
-    fun setEvent(roomEvent: RoomEvent?, userEvent: UserEvent?) {
-        if (engine != null) {
-            engine!!.setEventHandler(roomEvent, userEvent)
-        }
+        })
     }
 }
