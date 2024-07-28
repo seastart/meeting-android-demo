@@ -30,7 +30,9 @@ import com.freewind.seastarvideo.authorize.login.LoginFragment
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentRegisterInfoBinding
 import com.freewind.seastarvideo.ui.StateEditText
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.LogUtil
+import com.freewind.seastarvideo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
 import java.util.regex.Pattern
 
@@ -48,7 +50,7 @@ class RegisterInfoFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[RegisterViewModel::class.java]
+        initViewModel()
     }
 
     override fun onCreateView(
@@ -69,7 +71,12 @@ class RegisterInfoFragment : BaseFragment() {
             when(it) {
                 binding.getCodeStv -> {
                     // 此处要先做获取验证码的请求或者获取图形验证码的请求，然后再开始倒计时
-                    binding.getCodeStv.startCountDown()
+                    val phoneNumber = binding.phoneNumSet.text.toString().trim()
+                    if (phoneNumber.isEmpty()) {
+                        ToastUtil.showShortToast("手机号不可为空")
+                        return@setOnClickNoRepeat
+                    }
+                    viewModel.getSmsCode(phoneNumber)
                 }
                 binding.pwdIv -> {
                     togglePwdVisible(binding.pwdIv, binding.pwdSet)
@@ -80,7 +87,60 @@ class RegisterInfoFragment : BaseFragment() {
                 binding.registerStv -> {
                     // 先进行一次注册操作，返回成功后再跳转到昵称设置页面
                     hideSoftInput()
+                    val phoneNumber = binding.phoneNumSet.text.toString().trim()
+                    if (phoneNumber.isEmpty()) {
+                        ToastUtil.showShortToast("手机号不可为空")
+                        return@setOnClickNoRepeat
+                    }
+                    val code = binding.phoneNumSet.text.toString().trim()
+                    if (code.isEmpty()) {
+                        ToastUtil.showShortToast("手机验证码不可为空")
+                        return@setOnClickNoRepeat
+                    }
+                    val pwd = binding.pwdSet.text.toString().trim()
+                    if (pwd.isEmpty()) {
+                        ToastUtil.showShortToast("密码不可为空")
+                        return@setOnClickNoRepeat
+                    }
+                    val pwdVerify = binding.pwdVerifySet.text.toString().trim()
+                    if (pwdVerify.isEmpty()) {
+                        ToastUtil.showShortToast("请确认密码")
+                        return@setOnClickNoRepeat
+                    }
+                    if (pwd != pwdVerify) {
+                        ToastUtil.showShortToast("密码输入不一致")
+                        return@setOnClickNoRepeat
+                    }
+                    if (!binding.selectCb.isChecked) {
+                        ToastUtil.showShortToast("请阅读并同意用户协议和隐私协议")
+                        return@setOnClickNoRepeat
+                    }
+                    viewModel.register(phoneNumber, code, pwd)
+                }
+            }
+        }
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(requireActivity())[RegisterViewModel::class.java]
+        viewModel.getSmsCodeResult.observe(this) { uiResponse ->
+            uiResponse?.let { result ->
+                if (result.isSuccess) {
+                    ToastUtil.showShortToast("验证码发送成功")
+                    binding.getCodeStv.startCountDown()
+                } else {
+                    ToastUtil.showShortToast("验证码发送失败")
+                }
+            }
+        }
+        viewModel.registerResult.observe(this) { uiResponse ->
+            uiResponse?.let { result ->
+                if (result.isSuccess) {
+                    val pwd = binding.pwdSet.text.toString().trim()
+                    KvUtil.encode(KvUtil.USER_INFO_PWD, pwd)
                     EventBus.getDefault().post(RegisterEventBean.UpdatePageEvent(RegisterActivity.REGISTER_NICKNAME, true))
+                } else {
+                    ToastUtil.showShortToast("注册失败")
                 }
             }
         }

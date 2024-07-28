@@ -14,6 +14,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.authorize.AuthorizeEventBean
 import com.freewind.seastarvideo.authorize.register.RegisterEventBean
 import com.freewind.seastarvideo.authorize.register.RegisterInfoFragment
 import com.freewind.seastarvideo.authorize.register.RegisterNicknameFragment
@@ -70,17 +71,26 @@ class RegisterActivity : BaseActivity() {
         if (fragmentStack.size <= 1) {
             super.onBackPressed()
         } else {
-            fragmentStack.pop()
-            val curFragment = fragmentStack.peek()
-            if (curFragment is RegisterInfoFragment) {
-                binding.topBarCtb.titleContent = resources.getString(R.string.register)
-                binding.topBarCtb.isShowTitle = true
-                binding.topBarCtb.isShowExitArrow = true
-            } else if (curFragment is RegisterNicknameFragment){
-                binding.topBarCtb.isShowTitle = false
-                binding.topBarCtb.isShowExitArrow = true
+            if (fragmentType == REGISTER_NICKNAME) {
+                // 在用户昵称头像页面，直接点返回，跳转到主页，并处于登录状态
+                EventBus.getDefault().post(AuthorizeEventBean.LoginStatusEvent(true))
+                HomeActivity.startActivity(this@RegisterActivity)
+                this@RegisterActivity.finish()
+            } else {
+                fragmentStack.pop()
+                val curFragment = fragmentStack.peek()
+                if (curFragment is RegisterInfoFragment) {
+                    binding.topBarCtb.titleContent = resources.getString(R.string.register)
+                    binding.topBarCtb.isShowTitle = true
+                    binding.topBarCtb.isShowExitArrow = true
+                    fragmentType = REGISTER_INFO
+                } else if (curFragment is RegisterNicknameFragment){
+                    binding.topBarCtb.isShowTitle = false
+                    binding.topBarCtb.isShowExitArrow = true
+                    fragmentType = REGISTER_NICKNAME
+                }
+                switchFragment(curFragment)
             }
-            switchFragment(curFragment)
         }
     }
 

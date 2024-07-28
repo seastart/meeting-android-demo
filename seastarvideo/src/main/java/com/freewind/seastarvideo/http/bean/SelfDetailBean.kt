@@ -7,7 +7,7 @@
  * licenses restricting copying, distribution and decompilation.
  */
 
-package com.freewind.seastarvideo.bean
+package com.freewind.seastarvideo.http.bean
 
 import com.google.gson.annotations.SerializedName
 

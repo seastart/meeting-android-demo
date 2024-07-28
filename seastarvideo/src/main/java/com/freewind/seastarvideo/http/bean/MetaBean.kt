@@ -1,4 +1,4 @@
-package com.freewind.seastarvideo.bean
+package com.freewind.seastarvideo.http.bean
 
 /**
  * @author: wiatt

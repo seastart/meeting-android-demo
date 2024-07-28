@@ -128,12 +128,18 @@ object  KvUtil{
         mv?.clearAll()
     }
 
+    // 用户信息：uid
+    const val USER_INFO_UID = "userInfoUid"
     // 用户信息：电话号码
-    val USER_INFO_PHONE_NUM = "userInfoPhoneNum"
+    const val USER_INFO_MOBILE = "userInfoMobile"
     // 用户信息：密码
-    val USER_INFO_PWD = "userInfoPwd"
+    const val USER_INFO_PWD = "userInfoPwd"
+    // 用户信息：昵称
+    const val USER_INFO_NICK_NAME = "userInfoNickName"
+    // 用户信息：头像
+    const val USER_INFO_AVATAR = "userInfoAvatar"
     // 用户信息：应用层 token
-    val USER_INFO_APP_TOKEN = "userInfoAppToken"
+    val JWT_TOKEN = "jwt_token"
 
     // 房间视频状态
     val MEETING_ROOM_VIDEO_STATUS = "meetingRoomVideoStatus"

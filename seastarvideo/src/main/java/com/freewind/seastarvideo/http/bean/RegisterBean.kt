@@ -7,14 +7,14 @@
  * licenses restricting copying, distribution and decompilation.
  */
 
-package com.freewind.seastarvideo.bean
+package com.freewind.seastarvideo.http.bean
 
 import com.google.gson.annotations.SerializedName
 
 /**
- * 登录信息
+ * 注册信息
  */
-data class LoginBean(
+data class RegisterBean(
     // 用户 ID
     @SerializedName("user_id")
     val userId: String,

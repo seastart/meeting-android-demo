@@ -7,16 +7,16 @@
  * licenses restricting copying, distribution and decompilation.
  */
 
-package com.freewind.seastarvideo.enumerate
+package com.freewind.seastarvideo.http.bean
 
 /**
  * @author: wiatt
- * @date: 2024/7/24 11:33
- * @description:
+ * @date: 2024/4/30 15:15
+ * @description: 带分页信息的实体类
  */
-enum class SceneType(val value: String) {
-    // 注册
-    Register("register"),
-    // 登录
-    LoginByMobile("login-mobile")
-}
+class Data2<T>(
+    // 数据
+    var data: T?,
+    // 分页信息
+    var meta: MetaBean?
+) : BaseBean()

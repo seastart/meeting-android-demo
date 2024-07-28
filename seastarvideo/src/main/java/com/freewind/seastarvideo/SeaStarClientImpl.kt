@@ -4,7 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import com.freewind.seastarvideo.activity.HomeActivity
-import com.freewind.seastarvideo.utils.LogUtil
+import com.freewind.seastarvideo.http.ApiEngine
+import com.freewind.seastarvideo.http.ApiHelper
 import com.tencent.mmkv.MMKV
 
 /**
@@ -20,6 +21,7 @@ class SeaStarClientImpl: SeaStarClient {
         app = application
         EnvArgument.instance.app = application
         MMKV.initialize(application)
+        ApiHelper.instance.init(ApiEngine.BaseUrl)
     }
 
     override fun SSC_StartHomeActivity(context: Context) {

@@ -2,6 +2,7 @@ package com.freewind.seastarvideo.authorize.login
 
 import com.freewind.seastarvideo.base.UiResponse
 import com.freewind.seastarvideo.base.BaseContract
+import com.freewind.seastarvideo.http.bean.LoginBean
 
 /**
  * @author: wiatt
@@ -14,12 +15,12 @@ class LoginContract {
         /**
          * 请求：手机号密码登录
          */
-        fun requestLoginWithPwd(phoneNumber: String, pwd: String)
+        fun requestLoginWithPwd(account: String, pwd: String)
 
         /**
-         * 请求：获取验证码
+         * 请求：获取短信验证码
          */
-        fun requestGetCode()
+        fun requestGetSmsCode(phoneNumber: String)
 
         /**
          * 请求：手机号验证码登录
@@ -32,16 +33,16 @@ class LoginContract {
         /**
          * 返回：手机号密码登录
          */
-        fun responseLoginWithPwd(uiResponse: UiResponse<String>)
+        fun responseLoginWithPwd(uiResponse: UiResponse<LoginBean>)
 
         /**
-         * 返回：获取验证码
+         * 返回：获取短信验证码
          */
-        fun responseGetCode(uiResponse: UiResponse<String>)
+        fun responseGetSmsCode(uiResponse: UiResponse<String>)
 
         /**
          * 返回：手机号验证码登录
          */
-        fun responseLoginWithCode(uiResponse: UiResponse<String>)
+        fun responseLoginWithCode(uiResponse: UiResponse<LoginBean>)
     }
 }

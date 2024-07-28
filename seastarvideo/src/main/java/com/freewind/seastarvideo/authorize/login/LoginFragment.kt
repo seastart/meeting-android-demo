@@ -10,6 +10,7 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.LinkMovementMethod
 import android.text.method.PasswordTransformationMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -45,8 +46,8 @@ class LoginFragment : BaseFragment() {
 
     private lateinit var viewModel: LoginViewModel
 
-    // 标识：当前的登录方式。密码登录：type_login_pwd； 验证码登录：type_login_auth
-    private var curLoginType: String = LOGIN_TYPE_PWD
+    // 标识：当前的登录方式。密码登录：ByPwd； 验证码登录：ByCode
+    private var curLoginType: LoginType = LoginType.LoginByPwd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,14 +77,20 @@ class LoginFragment : BaseFragment() {
                 }
                 binding.codeLoginInclude.getCodeStv -> {
                     // 此处要先做获取验证码的请求或者获取图形验证码的请求，然后再开始倒计时
+                    val phoneNumber = binding.codeLoginInclude.codePhoneSet.text.toString().trim()
+                    if (phoneNumber.isEmpty()) {
+                        ToastUtil.showShortToast("手机号不可为空")
+                        return@setOnClickNoRepeat
+                    }
+                    viewModel.getSmsCode(phoneNumber)
                 }
                 binding.loginStv -> {
                     // 请求登录接口
                     when(curLoginType) {
-                        LOGIN_TYPE_PWD -> {
+                        LoginType.LoginByPwd -> {
                             loginWithPwd()
                         }
-                        LOGIN_TYPE_CODE -> {
+                        LoginType.LoginByCode -> {
                             loginWithCode()
                         }
                     }
@@ -103,15 +110,12 @@ class LoginFragment : BaseFragment() {
         viewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
         viewModel.loginWithPwdResult.observe(this) { uiResponse ->
             uiResponse?.let { response ->
-                if (response.isSuccess && response.mResult != null) {
-                    val phoneNumber = binding.pwdLoginInclude.pwdPhoneSet.text.toString().trim()
+                if (response.isSuccess) {
                     val pwd = binding.pwdLoginInclude.pwdSet.text.toString().trim()
-                    val token = response.mResult!!
-                    KvUtil.encode(KvUtil.USER_INFO_PHONE_NUM, phoneNumber)
                     KvUtil.encode(KvUtil.USER_INFO_PWD, pwd)
-                    KvUtil.encode(KvUtil.USER_INFO_APP_TOKEN, token)
 
-                meetingSdkLogin(phoneNumber, token)
+                    Log.i(TAG, "loginWithPwd-initViewModel: 登录成功")
+//                    meetingSdkLogin(phoneNumber, token)
                 } else {
                     val msg = response.mError?.mErrorMessage
                     ToastUtil.showLongToast(msg ?: "登录失败")
@@ -121,16 +125,23 @@ class LoginFragment : BaseFragment() {
         }
         viewModel.loginWithCodeResult.observe(this) { uiResponse ->
             uiResponse?.let { response ->
-                if (response.isSuccess && response.mResult != null) {
-                    val phoneNumber = binding.codeLoginInclude.codePhoneSet.text.toString().trim()
-                    val token = response.mResult!!
-                    KvUtil.encode(KvUtil.USER_INFO_PHONE_NUM, phoneNumber)
-                    KvUtil.encode(KvUtil.USER_INFO_APP_TOKEN, token)
+                if (response.isSuccess) {
 
-                meetingSdkLogin(phoneNumber, token)
+                    Log.i(TAG, "loginWithCode-initViewModel: 登录成功")
+//                    meetingSdkLogin(phoneNumber, token)
                 } else {
                     val msg = response.mError?.mErrorMessage
                     ToastUtil.showLongToast(msg ?: "登录失败")
+                }
+            }
+        }
+        viewModel.getSmsCodeResult.observe(this) { uiResponse ->
+            uiResponse?.let { result ->
+                if (result.isSuccess) {
+                    ToastUtil.showShortToast("验证码发送成功")
+                    binding.codeLoginInclude.getCodeStv.startCountDown()
+                } else {
+                    ToastUtil.showShortToast("验证码发送失败")
                 }
             }
         }
@@ -140,7 +151,7 @@ class LoginFragment : BaseFragment() {
      * 选择使用密码登录
      */
     private fun selectLoginWithPwd() {
-        curLoginType = LOGIN_TYPE_PWD
+        curLoginType = LoginType.LoginByPwd
 
         binding.pwdLoginCsb.isSelected = true
         binding.codeLoginCsb.isSelected = false
@@ -157,7 +168,7 @@ class LoginFragment : BaseFragment() {
      * 选择使用验证码登录
      */
     private fun selectLoginWithCode() {
-        curLoginType = LOGIN_TYPE_CODE
+        curLoginType = LoginType.LoginByCode
 
         binding.pwdLoginCsb.isSelected = false
         binding.codeLoginCsb.isSelected = true
@@ -239,7 +250,8 @@ class LoginFragment : BaseFragment() {
      */
     private fun meetingSdkLogin(userId: String, token: String) {
         val activity = requireActivity()
-        MeetingEngineHelper.instance.init(activity.application, token, null)
+
+        MeetingEngineHelper.instance.init(activity, token, null)
         MeetingEngineHelper.instance.engine?.login(
             userId, 1, 2, DeviceUtil.getAndroidID(requireContext()),
             object : Callback<Data<LoginBean>?>() {
@@ -333,9 +345,17 @@ class LoginFragment : BaseFragment() {
 
     companion object {
         var TAG: String = LoginFragment::class.java.simpleName
-        private val LOGIN_TYPE_PWD = "type_login_pwd"
-        private val LOGIN_TYPE_CODE = "type_login_code"
         @JvmStatic
         fun newInstance() = LoginFragment()
+    }
+
+    /**
+     * 登录方式
+     */
+    enum class LoginType(val value: String) {
+        // 通过用户名密码登录
+        LoginByPwd("login_by_pwd"),
+        // 通过手机号验证码登录
+        LoginByCode("login_by_code")
     }
 }

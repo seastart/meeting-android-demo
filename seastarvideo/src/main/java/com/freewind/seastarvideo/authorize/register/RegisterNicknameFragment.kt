@@ -14,8 +14,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.freewind.seastarvideo.activity.HomeActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentRegisterNicknameBinding
+import com.freewind.seastarvideo.http.ConstantHttp
+import com.freewind.seastarvideo.utils.ToastUtil
 
 /**
  * @author: wiatt
@@ -28,10 +31,11 @@ class RegisterNicknameFragment : BaseFragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: RegisterViewModel
+    private var avatarType: AvatarType = AvatarType.AvatarMan
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[RegisterViewModel::class.java]
+        initViewModel()
     }
 
     override fun onCreateView(
@@ -50,6 +54,7 @@ class RegisterNicknameFragment : BaseFragment() {
     private fun initView() {
         binding.avatarManIv.isSelected = true
         binding.avatarWomanIv.isSelected = false
+        avatarType = AvatarType.AvatarMan
     }
 
     private fun initListener() {
@@ -59,16 +64,43 @@ class RegisterNicknameFragment : BaseFragment() {
                     if (!binding.avatarManIv.isSelected) {
                         binding.avatarManIv.isSelected = true
                         binding.avatarWomanIv.isSelected = false
+                        avatarType = AvatarType.AvatarMan
                     }
                 }
                 binding.avatarWomanIv -> {
                     if (!binding.avatarWomanIv.isSelected) {
                         binding.avatarWomanIv.isSelected = true
                         binding.avatarManIv.isSelected = false
+                        avatarType = AvatarType.AvatarWoman
                     }
                 }
                 binding.registerSureStv -> {
                     // 注册成功，跳转回主页
+                    val nickName = binding.nickNameCet.text.toString().trim()
+                    if (nickName.isEmpty()) {
+                        ToastUtil.showShortToast("昵称不可为空")
+                        return@setOnClickNoRepeat
+                    }
+                    val avatar = if (avatarType == AvatarType.AvatarMan) {
+                        ConstantHttp.RES_AVATAR_MAN
+                    } else {
+                        ConstantHttp.RES_AVATAR_WOMAN
+                    }
+                    viewModel.updateSelfDetail(nickName, avatar)
+                }
+            }
+        }
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(requireActivity())[RegisterViewModel::class.java]
+        viewModel.updateSelfDetailResult.observe(this) { uiResponse ->
+            uiResponse?.let { result ->
+                if (result.isSuccess) {
+                    HomeActivity.startActivity(requireActivity())
+                    requireActivity().finish()
+                } else {
+                    ToastUtil.showShortToast("更新自身信息失败")
                 }
             }
         }
@@ -78,5 +110,10 @@ class RegisterNicknameFragment : BaseFragment() {
 
         @JvmStatic
         fun newInstance() = RegisterNicknameFragment()
+    }
+
+    enum class AvatarType {
+        AvatarMan,
+        AvatarWoman
     }
 }
