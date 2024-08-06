@@ -16,11 +16,15 @@ class LoginViewModel: BaseViewModel<LoginModel, LoginContract.ILoginViewModel>()
     val loginWithPwdResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
     val loginWithCodeResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
     val getSmsCodeResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
+    val meetingGrantResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
 
     override fun getModel(): LoginModel {
         return LoginModel(LoginViewModelImpl())
     }
 
+    /**
+     * 通过账号密码登录
+     */
     fun loginWithPwd(account: String, pwd: String) {
         mModel.getContract().requestLoginWithPwd(account, pwd)
     }
@@ -32,8 +36,18 @@ class LoginViewModel: BaseViewModel<LoginModel, LoginContract.ILoginViewModel>()
         mModel.getContract().requestGetSmsCode(phoneNumber)
     }
 
+    /**
+     * 通过短信验证码登录
+     */
     fun loginWithCode(phoneNumber: String, code: String) {
         mModel.getContract().requestLoginWithCode(phoneNumber, code)
+    }
+
+    /**
+     * meeting 授权
+     */
+    fun meetingGrant() {
+        mModel.getContract().requestMeetingGrant()
     }
 
     inner class LoginViewModelImpl: LoginContract.ILoginViewModel {
@@ -79,5 +93,8 @@ class LoginViewModel: BaseViewModel<LoginModel, LoginContract.ILoginViewModel>()
             }
         }
 
+        override fun responseMeetingGrant(uiResponse: UiResponse<String>) {
+            meetingGrantResult.value = uiResponse
+        }
     }
 }

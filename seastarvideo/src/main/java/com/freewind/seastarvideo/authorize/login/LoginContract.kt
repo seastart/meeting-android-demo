@@ -26,6 +26,11 @@ class LoginContract {
          * 请求：手机号验证码登录
          */
         fun requestLoginWithCode(phoneNumber: String, code: String)
+
+        /**
+         * 请求：meeting 授权
+         */
+        fun requestMeetingGrant()
     }
 
     interface ILoginViewModel: BaseContract.IViewModel {
@@ -44,5 +49,10 @@ class LoginContract {
          * 返回：手机号验证码登录
          */
         fun responseLoginWithCode(uiResponse: UiResponse<LoginBean>)
+
+        /**
+         * 返回：meeting 授权
+         */
+        fun responseMeetingGrant(uiResponse: UiResponse<String>)
     }
 }

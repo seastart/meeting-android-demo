@@ -15,10 +15,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.activity.HomeActivity
+import com.freewind.seastarvideo.authorize.AuthorizeEventBean
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentRegisterNicknameBinding
 import com.freewind.seastarvideo.http.ConstantHttp
 import com.freewind.seastarvideo.utils.ToastUtil
+import org.greenrobot.eventbus.EventBus
 
 /**
  * @author: wiatt
@@ -97,6 +99,7 @@ class RegisterNicknameFragment : BaseFragment() {
         viewModel.updateSelfDetailResult.observe(this) { uiResponse ->
             uiResponse?.let { result ->
                 if (result.isSuccess) {
+                    EventBus.getDefault().post(AuthorizeEventBean.LoginStatusEvent(true))
                     HomeActivity.startActivity(requireActivity())
                     requireActivity().finish()
                 } else {

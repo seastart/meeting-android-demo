@@ -19,17 +19,27 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.LinkMovementMethod
 import android.text.method.PasswordTransformationMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
+import cn.seastart.meeting.api.Callback
+import cn.seastart.meeting.bean.Data
+import cn.seastart.meeting.bean.LoginBean
+import cn.seastart.meeting.impl.MeetingResultListener
+import cn.seastart.rtc.enumerate.DeviceType
+import com.freewind.seastarvideo.EnvArgument
+import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.R
+import com.freewind.seastarvideo.activity.LoginActivity
 import com.freewind.seastarvideo.activity.RegisterActivity
 import com.freewind.seastarvideo.authorize.login.LoginFragment
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentRegisterInfoBinding
 import com.freewind.seastarvideo.ui.StateEditText
+import com.freewind.seastarvideo.utils.DeviceUtil
 import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.LogUtil
 import com.freewind.seastarvideo.utils.ToastUtil
@@ -138,9 +148,23 @@ class RegisterInfoFragment : BaseFragment() {
                 if (result.isSuccess) {
                     val pwd = binding.pwdSet.text.toString().trim()
                     KvUtil.encode(KvUtil.USER_INFO_PWD, pwd)
-                    EventBus.getDefault().post(RegisterEventBean.UpdatePageEvent(RegisterActivity.REGISTER_NICKNAME, true))
+                    ToastUtil.showShortToast("注册成功")
+
+                    viewModel.meetingGrant()
                 } else {
                     ToastUtil.showShortToast("注册失败")
+                }
+            }
+        }
+        viewModel.meetingGrantResult.observe(this) { uiResponse ->
+            uiResponse?.let { result ->
+                if (result.isSuccess) {
+                    meetingSdkLogin(KvUtil.decodeString(KvUtil.USER_INFO_UID), result.mResult!!)
+                } else {
+                    Log.i(LoginFragment.TAG, "initViewModel: meeting grant fail")
+                    ToastUtil.showShortToast("SDK登录失败")
+                    LoginActivity.startActivity(this@RegisterInfoFragment.requireActivity())
+                    this@RegisterInfoFragment.requireActivity().finish()
                 }
             }
         }
@@ -215,6 +239,41 @@ class RegisterInfoFragment : BaseFragment() {
         // 光标移动到最后
         val textLen: Int = editText.text.toString().length
         editText.setSelection(textLen, textLen)
+    }
+
+    /**
+     * 登录 sdk
+     */
+    private fun meetingSdkLogin(userId: String, token: String) {
+
+        MeetingEngineHelper.instance.init(requireActivity().application, token, null,
+            object : MeetingResultListener {
+                override fun onFail(code: Int, message: String) {
+                    ToastUtil.showShortToast("SDK登录失败")
+                    LoginActivity.startActivity(this@RegisterInfoFragment.requireActivity())
+                    this@RegisterInfoFragment.requireActivity().finish()
+                }
+
+                override fun onSuccess() {
+                    MeetingEngineHelper.instance.engine?.login(
+                        userId, 1, DeviceType.Android.value, DeviceUtil.getAndroidID(requireContext()),
+                        object : Callback<Data<LoginBean>?>() {
+                            override fun onSuccess(data: Data<LoginBean>?) {
+                                super.onSuccess(data)
+                                EnvArgument.instance.token = token
+                                EventBus.getDefault().post(RegisterEventBean.UpdatePageEvent(RegisterActivity.REGISTER_NICKNAME, true))
+                            }
+
+                            override fun onFailed(code: Int, msg: String?) {
+                                super.onFailed(code, msg)
+                                ToastUtil.showShortToast("SDK登录失败")
+                                LoginActivity.startActivity(this@RegisterInfoFragment.requireActivity())
+                                this@RegisterInfoFragment.requireActivity().finish()
+                            }
+                        })
+                }
+            }
+        )
     }
 
     companion object {

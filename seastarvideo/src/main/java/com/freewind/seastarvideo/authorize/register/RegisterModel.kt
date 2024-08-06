@@ -80,6 +80,31 @@ class RegisterModel(viewModelImpl: RegisterViewModel.RegisterViewModelImpl):
             })
         }
 
+        override fun requestMeetingGrant() {
+            apiHelper.meetingGrant(object :Callback<Data<String>>() {
+                override fun onSuccess(data: Data<String>) {
+                    super.onSuccess(data)
+                    val token = data.data
+                    if (token.isNullOrEmpty()) {
+                        UiResponse<String>(
+                            ErrorBean(ApiCode.ERROR_HTTP_RESULT_NULL, ApiCode.ERROR_HTTP_RESULT_NULL_STR, ApiCode.ERROR_HTTP_RESULT_NULL_STR)
+                        )
+                    } else {
+                        listener.responseMeetingGrant(UiResponse(token))
+                    }
+                }
+
+                override fun onFailed(code: Int, msg: String?) {
+                    super.onFailed(code, msg)
+                    listener.responseMeetingGrant(
+                        UiResponse(
+                            ErrorBean(code, msg ?: "", msg ?: "")
+                        )
+                    )
+                }
+            })
+        }
+
         override fun requestUpdateSelfDetail(nickName: String, avatar: String) {
             apiHelper.updateSelfDetail(nickName, avatar, object : Callback<Data<SelfDetailBean>>() {
                 override fun onSuccess(data: Data<SelfDetailBean>) {

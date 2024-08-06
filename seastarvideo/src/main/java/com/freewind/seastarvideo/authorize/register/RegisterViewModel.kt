@@ -26,6 +26,7 @@ class RegisterViewModel(): BaseViewModel<RegisterModel, RegisterContract.IRegist
     val getSmsCodeResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
     val registerResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
     val updateSelfDetailResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
+    val meetingGrantResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
 
     override fun getModel(): RegisterModel {
         return RegisterModel(RegisterViewModelImpl())
@@ -38,10 +39,23 @@ class RegisterViewModel(): BaseViewModel<RegisterModel, RegisterContract.IRegist
         mModel.getContract().requestGetSmsCode(phoneNumber)
     }
 
+    /**
+     * 注册账号
+     */
     fun register(phoneNumber: String, code: String, pwd: String) {
         mModel.getContract().requestRegister(phoneNumber, code, pwd)
     }
 
+    /**
+     * meeting 授权
+     */
+    fun meetingGrant() {
+        mModel.getContract().requestMeetingGrant()
+    }
+
+    /**
+     * 更新自身信息
+     */
     fun updateSelfDetail(nickName: String, avatar: String) {
         mModel.getContract().requestUpdateSelfDetail(nickName, avatar)
     }
@@ -69,6 +83,10 @@ class RegisterViewModel(): BaseViewModel<RegisterModel, RegisterContract.IRegist
             } else {
                 registerResult.value = UiResponse(uiResponse.mError!!)
             }
+        }
+
+        override fun responseMeetingGrant(uiResponse: UiResponse<String>) {
+            meetingGrantResult.value = uiResponse
         }
 
         override fun responseUpdateSelfDetail(uiResponse: UiResponse<SelfDetailBean>) {

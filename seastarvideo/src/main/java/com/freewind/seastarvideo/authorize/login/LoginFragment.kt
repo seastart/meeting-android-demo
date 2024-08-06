@@ -11,11 +11,15 @@ import android.text.method.LinkMovementMethod
 import android.text.method.PasswordTransformationMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import cn.seastart.meeting.api.Callback
+import cn.seastart.meeting.bean.Data
+import cn.seastart.meeting.bean.LoginBean
+import cn.seastart.meeting.impl.MeetingResultListener
+import cn.seastart.rtc.enumerate.DeviceType
 import com.freewind.seastarvideo.EnvArgument
 import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.R
@@ -28,9 +32,6 @@ import com.freewind.seastarvideo.utils.DeviceUtil
 import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.LogUtil
 import com.freewind.seastarvideo.utils.ToastUtil
-import com.shiyuan.meeting.api.Callback
-import com.shiyuan.meeting.bean.Data
-import com.shiyuan.meeting.bean.LoginBean
 import org.greenrobot.eventbus.EventBus
 import java.util.regex.Pattern
 
@@ -113,9 +114,8 @@ class LoginFragment : BaseFragment() {
                 if (response.isSuccess) {
                     val pwd = binding.pwdLoginInclude.pwdSet.text.toString().trim()
                     KvUtil.encode(KvUtil.USER_INFO_PWD, pwd)
-
                     Log.i(TAG, "loginWithPwd-initViewModel: 登录成功")
-//                    meetingSdkLogin(phoneNumber, token)
+                    viewModel.meetingGrant()
                 } else {
                     val msg = response.mError?.mErrorMessage
                     ToastUtil.showLongToast(msg ?: "登录失败")
@@ -126,9 +126,8 @@ class LoginFragment : BaseFragment() {
         viewModel.loginWithCodeResult.observe(this) { uiResponse ->
             uiResponse?.let { response ->
                 if (response.isSuccess) {
-
                     Log.i(TAG, "loginWithCode-initViewModel: 登录成功")
-//                    meetingSdkLogin(phoneNumber, token)
+                    viewModel.meetingGrant()
                 } else {
                     val msg = response.mError?.mErrorMessage
                     ToastUtil.showLongToast(msg ?: "登录失败")
@@ -142,6 +141,16 @@ class LoginFragment : BaseFragment() {
                     binding.codeLoginInclude.getCodeStv.startCountDown()
                 } else {
                     ToastUtil.showShortToast("验证码发送失败")
+                }
+            }
+        }
+        viewModel.meetingGrantResult.observe(this) { uiResponse ->
+            uiResponse?.let { result ->
+                if (result.isSuccess) {
+                    meetingSdkLogin(KvUtil.decodeString(KvUtil.USER_INFO_UID), result.mResult!!)
+                } else {
+                    Log.i(TAG, "initViewModel: meeting grant fail")
+                    ToastUtil.showShortToast("登录失败")
                 }
             }
         }
@@ -249,30 +258,31 @@ class LoginFragment : BaseFragment() {
      * 登录 sdk
      */
     private fun meetingSdkLogin(userId: String, token: String) {
-        val activity = requireActivity()
-
-        MeetingEngineHelper.instance.init(activity, token, null)
-        MeetingEngineHelper.instance.engine?.login(
-            userId, 1, 2, DeviceUtil.getAndroidID(requireContext()),
-            object : Callback<Data<LoginBean>?>() {
-                override fun onSuccess(data: Data<LoginBean>?) {
-                    super.onSuccess(data)
-                    ToastUtil.showShortToast("登陆成功")
-                    cleanEtContent()
-                    EnvArgument.instance.token = token
-                    EventBus.getDefault().post(AuthorizeEventBean.LoginStatusEvent(true))
-                    HomeActivity.startActivity(this@LoginFragment.requireActivity())
-                    HomeActivity.startActivity(requireActivity())
-                    activity.finish()
+        MeetingEngineHelper.instance.init(requireActivity().application, token, null,
+            object : MeetingResultListener {
+                override fun onFail(code: Int, message: String) {
+                    ToastUtil.showShortToast("sdk 初始化失败")
                 }
 
-                override fun onFailed(code: Int, msg: String?) {
-                    super.onFailed(code, msg)
-                    ToastUtil.showShortToast(msg ?: "登录失败")
-                }
+                override fun onSuccess() {
+                    MeetingEngineHelper.instance.engine?.login(
+                        userId, 1, DeviceType.Android.value, DeviceUtil.getAndroidID(requireContext()),
+                        object : Callback<Data<LoginBean>?>() {
+                            override fun onSuccess(data: Data<LoginBean>?) {
+                                super.onSuccess(data)
+                                ToastUtil.showShortToast("登陆成功")
+                                cleanEtContent()
+                                EnvArgument.instance.token = token
+                                EventBus.getDefault().post(AuthorizeEventBean.LoginStatusEvent(true))
+                                HomeActivity.startActivity(this@LoginFragment.requireActivity())
+                                this@LoginFragment.requireActivity().finish()
+                            }
 
-                override fun onCancel() {
-                    super.onCancel()
+                            override fun onFailed(code: Int, msg: String?) {
+                                super.onFailed(code, msg)
+                                ToastUtil.showShortToast(msg ?: "登录失败")
+                            }
+                        })
                 }
             }
         )

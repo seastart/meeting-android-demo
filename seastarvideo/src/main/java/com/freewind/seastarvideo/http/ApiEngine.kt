@@ -4,7 +4,6 @@ import com.freewind.seastarvideo.BuildConfig
 import com.freewind.seastarvideo.http.bean.BaseBean
 import com.freewind.seastarvideo.http.interceptor.HeaderInterceptor
 import com.freewind.seastarvideo.http.interceptor.ResponseInterceptor
-import com.shiyuan.meeting.api.HttpLogCollectorInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -59,7 +58,7 @@ class ApiEngine {
                 .retryOnConnectionFailure(reconnect) //是否自动重连
             okhttpBuilder.addInterceptor(HeaderInterceptor())
             okhttpBuilder.addInterceptor(ResponseInterceptor())
-            okhttpBuilder.addInterceptor(HttpLogCollectorInterceptor())
+//            okhttpBuilder.addInterceptor(HttpLogCollectorInterceptor())
             if (BuildConfig.DEBUG) {
                 val logging = HttpLoggingInterceptor()
                 logging.setLevel(HttpLoggingInterceptor.Level.BODY)

@@ -34,6 +34,11 @@ class RegisterContract {
         fun requestRegister(phoneNumber: String, code: String, pwd: String)
 
         /**
+         * 请求：meeting 授权
+         */
+        fun requestMeetingGrant()
+
+        /**
          * 自身更新
          */
         fun requestUpdateSelfDetail(nickName: String, avatar: String)
@@ -49,6 +54,11 @@ class RegisterContract {
          * 返回：注册
          */
         fun responseRegister(uiResponse: UiResponse<RegisterBean>)
+
+        /**
+         * 返回：meeting 授权
+         */
+        fun responseMeetingGrant(uiResponse: UiResponse<String>)
 
         /**
          * 返回：自身更新

@@ -25,7 +25,6 @@ class LoginModel(viewModelImpl: LoginViewModel.LoginViewModelImpl):
 
     inner class LoginModelImpl: LoginContract.ILoginModel {
         override fun requestLoginWithPwd(account: String, pwd: String) {
-            // todo 此处要做网络请求
             apiHelper.loginByAccount(account, pwd, object : Callback<Data<LoginBean>>() {
                 override fun onSuccess(data: Data<LoginBean>) {
                     super.onSuccess(data)
@@ -86,6 +85,31 @@ class LoginModel(viewModelImpl: LoginViewModel.LoginViewModelImpl):
                     super.onFailed(code, msg)
                     listener.responseLoginWithCode(
                         UiResponse(ErrorBean(code, msg ?: "", msg ?: ""))
+                    )
+                }
+            })
+        }
+
+        override fun requestMeetingGrant() {
+            apiHelper.meetingGrant(object :Callback<Data<String>>() {
+                override fun onSuccess(data: Data<String>) {
+                    super.onSuccess(data)
+                    val token = data.data
+                    if (token.isNullOrEmpty()) {
+                        UiResponse<String>(
+                            ErrorBean(ApiCode.ERROR_HTTP_RESULT_NULL, ApiCode.ERROR_HTTP_RESULT_NULL_STR, ApiCode.ERROR_HTTP_RESULT_NULL_STR)
+                        )
+                    } else {
+                        listener.responseMeetingGrant(UiResponse(token))
+                    }
+                }
+
+                override fun onFailed(code: Int, msg: String?) {
+                    super.onFailed(code, msg)
+                    listener.responseMeetingGrant(
+                        UiResponse(
+                            ErrorBean(code, msg ?: "", msg ?: "")
+                        )
                     )
                 }
             })
