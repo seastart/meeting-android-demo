@@ -10,17 +10,21 @@
 package com.freewind.seastarvideo.home.mine
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.activity.AboutUsActivity
+import com.freewind.seastarvideo.activity.LoginActivity
 import com.freewind.seastarvideo.activity.PrivacyActivity
 import com.freewind.seastarvideo.activity.RegisterActivity
 import com.freewind.seastarvideo.activity.WebActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMineBinding
-import com.freewind.seastarvideo.utils.LogUtil
+import com.freewind.seastarvideo.http.ConstantHttp
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.OtherUiManager
 
 /**
@@ -58,12 +62,33 @@ class MineFragment : BaseFragment() {
     }
 
     private fun initData() {
-        // 应该在此处获取用户信息，并更新界面
+        if (KvUtil.decodeString(KvUtil.JWT_TOKEN).isEmpty()) {
+            // 未登录状态
+            binding.myInfoCmi.avatarIcon = R.mipmap.avatar_woman
+            binding.myInfoCmi.nickNameContent = "未登录"
+            binding.myInfoCmi.idContent = ""
+        } else {
+            // 登录
+            val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
+            if (avatar == ConstantHttp.RES_AVATAR_MAN) {
+                binding.myInfoCmi.avatarIcon = R.mipmap.avatar_man
+            } else {
+                binding.myInfoCmi.avatarIcon = R.mipmap.avatar_woman
+            }
+            binding.myInfoCmi.nickNameContent = KvUtil.decodeString(KvUtil.USER_INFO_NICK_NAME)
+            binding.myInfoCmi.idContent = KvUtil.decodeString(KvUtil.USER_INFO_UID)
+        }
     }
 
     private fun initListener() {
         binding.myInfoCmi.setOnClickListener {
-            RegisterActivity.startRegisterNicknamePage(requireContext())
+            if (KvUtil.decodeString(KvUtil.JWT_TOKEN).isEmpty()) {
+                // 未登录状态
+                LoginActivity.startActivity(requireActivity())
+            } else {
+                // 登录
+                RegisterActivity.startRegisterNicknamePage(requireContext())
+            }
         }
         binding.privacyCei.setOnClickListener {
             PrivacyActivity.startPrivacyListPage(requireContext())
@@ -75,7 +100,13 @@ class MineFragment : BaseFragment() {
             AboutUsActivity.startAboutUsPage(requireContext())
         }
         binding.logoutCei.setOnClickListener {
-            // 退出登录，并跳转到首页
+            KvUtil.encode(KvUtil.USER_INFO_UID, "")
+            KvUtil.encode(KvUtil.USER_INFO_MOBILE, "")
+            KvUtil.encode(KvUtil.USER_INFO_PWD, "")
+            KvUtil.encode(KvUtil.USER_INFO_NICK_NAME, "")
+            KvUtil.encode(KvUtil.USER_INFO_AVATAR, "")
+            KvUtil.encode(KvUtil.JWT_TOKEN, "")
+            LoginActivity.startActivity(this@MineFragment.requireActivity())
         }
     }
 
@@ -83,7 +114,27 @@ class MineFragment : BaseFragment() {
      * 登录状态改变
      */
     fun loginStatusChange(isLogin: Boolean) {
-        LogUtil.i("我的也页面，登录状态改变， isLogin = $isLogin, isCreateView = $isCreateView")
+        Log.i("wiatt", "我的也页面，登录状态改变， isLogin = $isLogin, isCreateView = $isCreateView")
+        if (!isCreateView) {
+            // 页面未创建，下面这些控件可能都没有被初始化
+            return
+        }
+        if (isLogin && KvUtil.decodeString(KvUtil.JWT_TOKEN).isNotEmpty()) {
+            // 登录
+            val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
+            if (avatar == ConstantHttp.RES_AVATAR_MAN) {
+                binding.myInfoCmi.avatarIcon = R.mipmap.avatar_man
+            } else {
+                binding.myInfoCmi.avatarIcon = R.mipmap.avatar_woman
+            }
+            binding.myInfoCmi.nickNameContent = KvUtil.decodeString(KvUtil.USER_INFO_NICK_NAME)
+            binding.myInfoCmi.idContent = KvUtil.decodeString(KvUtil.USER_INFO_UID)
+        } else {
+            // 未登录状态
+            binding.myInfoCmi.avatarIcon = R.mipmap.avatar_woman
+            binding.myInfoCmi.nickNameContent = "未登录"
+            binding.myInfoCmi.idContent = ""
+        }
     }
 
     companion object {

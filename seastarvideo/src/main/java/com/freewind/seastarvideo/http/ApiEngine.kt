@@ -1,6 +1,7 @@
 package com.freewind.seastarvideo.http
 
 import com.freewind.seastarvideo.BuildConfig
+import com.freewind.seastarvideo.EnvArgument
 import com.freewind.seastarvideo.http.bean.BaseBean
 import com.freewind.seastarvideo.http.interceptor.HeaderInterceptor
 import com.freewind.seastarvideo.http.interceptor.ResponseInterceptor
@@ -111,6 +112,12 @@ class ApiEngine {
                 if (t != null) {
                     if (t.code == ApiCode.SUCCESS) {
                         apiCallback?.onSuccess(t)
+                    } else if (t.code == ApiCode.ERROR_AUTH_FAILED ||
+                        t.code == ApiCode.ERROR_TOKEN_INVALID ||
+                        t.code == ApiCode.ERROR_TOKEN_TOKEN_EXPIRED) {
+                        // 如果错误是“未登录”、“token失效”、“token已过期”，则需要跳转到登录页面重新做登录操作
+                        EnvArgument.instance.goToLoginPage()
+                        apiCallback?.onFailed(t.code, t.msg)
                     } else {
                         apiCallback?.onFailed(t.code, t.msg)
                     }

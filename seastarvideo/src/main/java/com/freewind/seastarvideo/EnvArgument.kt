@@ -10,6 +10,8 @@
 package com.freewind.seastarvideo
 
 import android.app.Application
+import android.content.Intent
+import com.freewind.seastarvideo.activity.LoginActivity
 
 /**
  * @author: wiatt
@@ -20,12 +22,21 @@ class EnvArgument {
 
     // 上下文环境
     var app: Application? = null
-    // 暂时先在内存中存储，后续需要存入 mmvk 中，并且需要考虑过期时间和meeting层登录情况
-    var token: String? = ""
 
     companion object {
         val instance: EnvArgument by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             EnvArgument()
+        }
+    }
+
+    /**
+     * 跳转到登录界面
+     */
+    fun goToLoginPage() {
+        app?.let {
+            val intent = Intent(it, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            it.startActivity(intent)
         }
     }
 }

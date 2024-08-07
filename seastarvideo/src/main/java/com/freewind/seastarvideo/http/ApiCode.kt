@@ -19,50 +19,22 @@ object ApiCode {
     const val ERROR_STR = "未指定通用错误码"
 
     /**
-     * 数据库错误、异常
-     */
-    const val ERROR_SQL = 100301
-
-    /**
-     * 数据记录未找到
-     */
-    const val ERROR_DATA_NOT_FOUND = 100302
-
-    /**
-     * 数据记录已存在
-     */
-    const val ERROR_DATA_EXIST = 100303
-
-    /**
-     * 无权限
-     */
-    const val ERROR_NO_PERMISSION = 100304
-
-    /**
      * 未登录
      */
-    const val ERROR_NOT_LOGIN = 100305
+    const val ERROR_AUTH_FAILED = 10041
+    const val ERROR_AUTH_FAILED_STR = "未登录"
 
     /**
-     * token已过期
+     * token 失效
      */
-    const val ERROR_TOKEN_EXPIRE = 100306
+    const val ERROR_TOKEN_INVALID = 10042
+    const val ERROR_TOKEN_INVALID_STR = "token 失效"
 
     /**
-     * token无效
+     * token 已过期
      */
-    const val ERROR_TOKEN_INVALID = 100307
-    const val ERROR_TOKEN_INVALID_STR = "token无效"
-
-    /**
-     * 网络错误、异常
-     */
-    const val ERROR_NET = 100308
-
-    /**
-     * 请求超时
-     */
-    const val ERROR_REQUEST_TIMEOUT = 100309
+    const val ERROR_TOKEN_TOKEN_EXPIRED = 10043
+    const val ERROR_TOKEN_TOKEN_EXPIRED_STR = "token"
 
     /**
      * 请求参数不合法

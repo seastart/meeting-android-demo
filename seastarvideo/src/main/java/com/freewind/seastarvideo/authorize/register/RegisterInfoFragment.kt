@@ -260,7 +260,6 @@ class RegisterInfoFragment : BaseFragment() {
                         object : Callback<Data<LoginBean>?>() {
                             override fun onSuccess(data: Data<LoginBean>?) {
                                 super.onSuccess(data)
-                                EnvArgument.instance.token = token
                                 EventBus.getDefault().post(RegisterEventBean.UpdatePageEvent(RegisterActivity.REGISTER_NICKNAME, true))
                             }
 

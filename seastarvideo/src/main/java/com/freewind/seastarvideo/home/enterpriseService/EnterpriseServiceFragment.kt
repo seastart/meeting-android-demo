@@ -19,13 +19,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.QuickAdapterHelper
-import com.freewind.seastarvideo.EnvArgument
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.activity.LoginActivity
 import com.freewind.seastarvideo.activity.PreMeetingRoomActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentEnterpriseServiceBinding
 import com.freewind.seastarvideo.ui.LinearDividerItemDecoration
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.LogUtil
 import com.freewind.seastarvideo.utils.OtherUiManager
 
@@ -97,7 +97,7 @@ class EnterpriseServiceFragment : BaseFragment() {
         mRoomTypesAdapter!!.isEmptyViewEnable = false
         mRoomTypesAdapter!!.submitList(data)
         mRoomTypesAdapter!!.setOnItemClickListener { adapterClick, view, position ->
-            if (EnvArgument.instance.token.isNullOrEmpty()) {
+            if (KvUtil.decodeString(KvUtil.JWT_TOKEN).isEmpty()) {
                 this@EnterpriseServiceFragment.activity?.let { activity ->
                     LoginActivity.startActivity(activity)
                 }

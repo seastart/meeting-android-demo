@@ -272,7 +272,6 @@ class LoginFragment : BaseFragment() {
                                 super.onSuccess(data)
                                 ToastUtil.showShortToast("登陆成功")
                                 cleanEtContent()
-                                EnvArgument.instance.token = token
                                 EventBus.getDefault().post(AuthorizeEventBean.LoginStatusEvent(true))
                                 HomeActivity.startActivity(this@LoginFragment.requireActivity())
                                 this@LoginFragment.requireActivity().finish()

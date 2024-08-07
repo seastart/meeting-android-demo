@@ -24,7 +24,6 @@ class ResponseInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
-
         // 获取响应头数据
         val headers = response.headers
         val newToken = headers[ConstantHttp.HEAD_NEW_TOKEN]
