@@ -129,6 +129,8 @@ class MeetingRoomActivity : BaseActivity() {
         const val MEETING_ROOM_KEY = "meeting_room_key"
         const val PARAM_NICKNAME = "param_nickname"
         const val PARAM_ROOM_ID = "param_room_id"
+        const val PARAM_CAMERA_STATE = "param_camera_state"
+        const val PARAM_MIC_STATE = "param_mic_state"
 
         // 会议房间详情页
         const val MEETING_ROOM_DETAIL = "meeting_room_detail"
@@ -136,11 +138,13 @@ class MeetingRoomActivity : BaseActivity() {
         /**
          * 启动会议房间页面
          */
-        fun startMeetingRoomPage(context: Context, nickname: String, roomId: String) {
+        fun startMeetingRoomPage(context: Context, nickname: String, roomId: String, isOpenCamera: Boolean, isOpenMic: Boolean) {
             val intent = Intent(context, MeetingRoomActivity::class.java)
             intent.putExtra(MEETING_ROOM_KEY, MEETING_ROOM_DETAIL)
             intent.putExtra(PARAM_NICKNAME, nickname)
             intent.putExtra(PARAM_ROOM_ID, roomId)
+            intent.putExtra(PARAM_CAMERA_STATE, isOpenCamera)
+            intent.putExtra(PARAM_MIC_STATE, isOpenMic)
             context.startActivity(intent)
         }
     }

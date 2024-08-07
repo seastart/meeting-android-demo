@@ -21,7 +21,9 @@ import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentCreateMeetingRoomBinding
 import com.freewind.seastarvideo.ui.CustomKeyValueText
 import com.freewind.seastarvideo.ui.CustomTopBar
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.OtherUiManager
+import com.freewind.seastarvideo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -35,16 +37,20 @@ class CreateMeetingRoomFragment : BaseFragment() {
 
     private lateinit var viewModel: PreMeetingRoomViewModel
 
+    private val ARG_ROOMNO = "roomNo"
     private val ARG_NICKNAME = "nickname"
     private lateinit var nickname: String
-    private var roomId: String = ""
+    private lateinit var roomNo: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             nickname = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
         }
-        viewModel = ViewModelProvider(requireActivity())[PreMeetingRoomViewModel::class.java]
+        arguments?.let {
+            roomNo = it.getString(ARG_ROOMNO, "")
+        }
+        initViewModel()
     }
 
     override fun onCreateView(
@@ -62,12 +68,24 @@ class CreateMeetingRoomFragment : BaseFragment() {
         return rootView
     }
 
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(requireActivity())[PreMeetingRoomViewModel::class.java]
+        viewModel.enterMeetingResult.observe(this) { uiResponse ->
+            uiResponse?.let { response ->
+                if (response.isSuccess) {
+                    val isOpenMic = binding.switchMicSb.isChecked
+                    val isOpenCamera = binding.switchCameraSb.isChecked
+                    MeetingRoomActivity.startMeetingRoomPage(requireContext(), nickname, roomNo, isOpenCamera, isOpenMic)
+                } else {
+                    ToastUtil.showShortToast("加入房间失败")
+                }
+            }
+        }
+    }
+
     private fun initView() {
-        // todo 请求一个房间号，并填入控件
-        roomId = "098 765 543"
-        binding.roomIdCkvt.valueContent = roomId
+        binding.roomIdCkvt.valueContent = roomNo
         binding.nicknameCkvt.valueContent = nickname
-        // todo 获取麦克风、摄像头开关状态，并设置进控件
         binding.switchMicSb.isChecked = false
         binding.switchCameraSb.isChecked = false
     }
@@ -101,23 +119,21 @@ class CreateMeetingRoomFragment : BaseFragment() {
      * 创建房间
      */
     private fun createRoom() {
-        if (roomId.isEmpty()) {
+        if (roomNo.isEmpty()) {
             Toast.makeText(requireContext(), "房间ID为必填项", Toast.LENGTH_LONG).show()
             return
         }
-        val isCheckedMic = binding.switchMicSb.isChecked
-        val isCheckedCamera = binding.switchCameraSb.isChecked
-        // todo 请求加入房间的接口
-        MeetingRoomActivity.startMeetingRoomPage(requireContext(), nickname, roomId)
-        Toast.makeText(requireContext(), "创建房间数据获取完整", Toast.LENGTH_SHORT).show()
+        val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
+        viewModel.enterMeeting(this.requireActivity(), roomNo, null, nickname, avatar)
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance(nicknameParam: String) =
+        fun newInstance(roomNoParam: String, nicknameParam: String) =
             CreateMeetingRoomFragment().apply {
                 arguments = Bundle().apply {
+                    putString(ARG_ROOMNO, roomNoParam)
                     putString(ARG_NICKNAME, nicknameParam)
                 }
             }

@@ -18,7 +18,9 @@ import com.freewind.seastarvideo.activity.PreMeetingRoomActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentPreMeetingRoomBinding
 import com.freewind.seastarvideo.ui.CustomTopBar
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.OtherUiManager
+import com.freewind.seastarvideo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -34,7 +36,7 @@ class PreMeetingRoomFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[PreMeetingRoomViewModel::class.java]
+        initViewModel()
     }
 
     override fun onCreateView(
@@ -66,18 +68,34 @@ class PreMeetingRoomFragment : BaseFragment() {
         setOnClickNoRepeat(binding.createMeetingRoomStv, binding.joinMeetingRoomStv) {
             when(it) {
                 binding.createMeetingRoomStv -> {
-                    EventBus.getDefault().post(
-                        PreMeetingRoomEventBean.UpdatePageEvent(
-                            PreMeetingRoomActivity.PRE_MEETING_ROOM_CREATE, true
-                        )
-                    )
+                    val nickName = KvUtil.decodeString(KvUtil.USER_INFO_NICK_NAME)
+                    viewModel.createMeeting("$nickName 的会议", "普通会议", null)
                 }
                 binding.joinMeetingRoomStv -> {
                     EventBus.getDefault().post(
                         PreMeetingRoomEventBean.UpdatePageEvent(
-                            PreMeetingRoomActivity.PRE_MEETING_ROOM_JOIN, true
+                            PreMeetingRoomActivity.PRE_MEETING_ROOM_JOIN, true, null
                         )
                     )
+                }
+            }
+        }
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(requireActivity())[PreMeetingRoomViewModel::class.java]
+
+        viewModel.createMeetingResult.observe(this) { uiResponse ->
+            uiResponse?.let { uiResponse ->
+                if (uiResponse.isSuccess) {
+                    val roomNo = uiResponse.mResult!!
+                    EventBus.getDefault().post(
+                        PreMeetingRoomEventBean.UpdatePageEvent(
+                            PreMeetingRoomActivity.PRE_MEETING_ROOM_CREATE, true, roomNo
+                        )
+                    )
+                } else {
+                    ToastUtil.showShortToast("创建房间失败")
                 }
             }
         }

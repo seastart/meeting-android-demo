@@ -19,6 +19,7 @@ import com.freewind.seastarvideo.preMeetingRoom.CreateMeetingRoomFragment
 import com.freewind.seastarvideo.preMeetingRoom.JoinMeetingRoomFragment
 import com.freewind.seastarvideo.preMeetingRoom.PreMeetingRoomEventBean
 import com.freewind.seastarvideo.preMeetingRoom.PreMeetingRoomFragment
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.OtherUiManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -39,8 +40,6 @@ class PreMeetingRoomActivity : BaseActivity() {
     private val pmrFragment: PreMeetingRoomFragment by lazy {
         PreMeetingRoomFragment.newInstance()
     }
-    private var jmrFragment: JoinMeetingRoomFragment? = null
-    private var cmrFragment: CreateMeetingRoomFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,10 +83,8 @@ class PreMeetingRoomActivity : BaseActivity() {
      */
     @Synchronized
     private fun showJoinMeetingRoomFragment() {
-        if (jmrFragment == null) {
-            // TODO 此处应该从 MMKV 中获取到用户的昵称
-            jmrFragment = JoinMeetingRoomFragment.newInstance("橘子果酱")
-        }
+        val nickName = KvUtil.decodeString(KvUtil.USER_INFO_NICK_NAME)
+        val jmrFragment = JoinMeetingRoomFragment.newInstance(nickName)
         if (switchFragment(jmrFragment)) {
             fragmentType = PRE_MEETING_ROOM_JOIN
             fragmentStack.push(jmrFragment)
@@ -98,11 +95,9 @@ class PreMeetingRoomActivity : BaseActivity() {
      * 切换到 会议房间的创建页面
      */
     @Synchronized
-    private fun showCreateMeetingRoomFragment() {
-        if (cmrFragment == null) {
-            // TODO 此处应该从 MMKV 中获取到用户的昵称
-            cmrFragment = CreateMeetingRoomFragment.newInstance("橘子果酱")
-        }
+    private fun showCreateMeetingRoomFragment(roomNo: String) {
+        val nickName = KvUtil.decodeString(KvUtil.USER_INFO_NICK_NAME)
+        val cmrFragment = CreateMeetingRoomFragment.newInstance(roomNo, nickName)
         if (switchFragment(cmrFragment)) {
             fragmentType = PRE_MEETING_ROOM_CREATE
             fragmentStack.push(cmrFragment)
@@ -120,7 +115,7 @@ class PreMeetingRoomActivity : BaseActivity() {
         }
 
         if (currentFragment != null && currentFragment!!.isAdded) {
-            hideFragment(currentFragment!!)
+            removeFragment(currentFragment!!)
         }
 
         if (nextFragment != null) {
@@ -156,7 +151,8 @@ class PreMeetingRoomActivity : BaseActivity() {
                 showJoinMeetingRoomFragment()
             }
             PRE_MEETING_ROOM_CREATE -> {
-                showCreateMeetingRoomFragment()
+                val roomNo = event.props as String
+                showCreateMeetingRoomFragment(roomNo)
             }
         }
     }

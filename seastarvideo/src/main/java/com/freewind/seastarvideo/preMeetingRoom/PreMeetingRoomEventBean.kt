@@ -23,7 +23,7 @@ class PreMeetingRoomEventBean {
      * PreMeetingRoomActivity.PRE_MEETING_ROOM_CREATE
      * @param canBack: 按返回键是否能够回到当前页
      */
-    class UpdatePageEvent(var pageType: String, var canBack: Boolean)
+    class UpdatePageEvent(var pageType: String, var canBack: Boolean, var props: Any?)
 
     /**
      * 点击返回按钮
