@@ -24,6 +24,7 @@ class EnvArgument {
     var app: Application? = null
 
     companion object {
+        @JvmStatic
         val instance: EnvArgument by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             EnvArgument()
         }

@@ -13,13 +13,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.ActivityMeetingRoomBinding
 import com.freewind.seastarvideo.meeting.room.MeetingRoomEventBean
 import com.freewind.seastarvideo.meeting.room.MeetingRoomFragment
+import com.freewind.seastarvideo.meeting.room.MeetingRoomViewModel
+import com.freewind.seastarvideo.ui.DialogManager
 import com.freewind.seastarvideo.utils.OtherUiManager
+import com.freewind.seastarvideo.utils.activityManager.ActivityHelp
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,6 +40,10 @@ class MeetingRoomActivity : BaseActivity() {
 
     private var meetingRoomFragment: MeetingRoomFragment? = null
 
+    private lateinit var viewModel: MeetingRoomViewModel
+    // 标识：是否已经执行离开操作
+    private var isLeave: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMeetingRoomBinding.inflate(layoutInflater)
@@ -44,17 +52,25 @@ class MeetingRoomActivity : BaseActivity() {
         setContentView(rootView)
         EventBus.getDefault().register(this)
 
+        isLeave = false
+        viewModel = ViewModelProvider(this)[MeetingRoomViewModel::class.java]
+        ActivityHelp.instance.createTopActivityUtil(this)
+        ActivityHelp.instance.configTopActivityUtil(true)
+
         showMeetingRoomPage()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        if (!isLeave) {
+            leave()
+        }
     }
 
     override fun onBackPressed() {
         if (fragmentStack.size <= 1) {
-            super.onBackPressed()
+            EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent())
         } else {
             fragmentStack.pop()
             val curFragment = fragmentStack.peek()
@@ -68,10 +84,11 @@ class MeetingRoomActivity : BaseActivity() {
     @Synchronized
     private fun showMeetingRoomPage() {
         if (meetingRoomFragment == null) {
-            // TODO 此处如果从 intent 中没有获取到数据，则应该从 MMKV中获取，依然没有则显示异常并退出
             val nickName = intent.getStringExtra(PARAM_NICKNAME) ?: resources.getString(R.string.def_nickname)
             val roomId = intent.getStringExtra(PARAM_ROOM_ID) ?: resources.getString(R.string.def_room_id)
-            meetingRoomFragment = MeetingRoomFragment.newInstance(nickName, roomId)
+            val expectCameraState = intent.getBooleanExtra(PARAM_CAMERA_STATE, false)
+            val expectMicState = intent.getBooleanExtra(PARAM_MIC_STATE, false)
+            meetingRoomFragment = MeetingRoomFragment.newInstance(nickName, roomId, expectCameraState, expectMicState)
         }
 
         if (switchFragment(meetingRoomFragment)) {
@@ -104,9 +121,15 @@ class MeetingRoomActivity : BaseActivity() {
         return true
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onEventUpdatePage(event: MeetingRoomEventBean.goBackPageEvent) {
-        onBackPressed()
+    /**
+     * 离开会议
+     */
+    private fun leave() {
+        isLeave = true
+        viewModel.liveRoom()
+        ActivityHelp.instance.startActivityInHostTask()
+        ActivityHelp.instance.releaseTopActivityUtil()
+        ActivityHelp.instance.releaseCustomBackgroundEvent()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
@@ -125,6 +148,18 @@ class MeetingRoomActivity : BaseActivity() {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEventUpdatePage(event: MeetingRoomEventBean.goBackPageEvent) {
+        onBackPressed()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEventFinishActivity(evnet: MeetingRoomEventBean.finishActivityEvent) {
+        DialogManager.instance.showLeaveRoomDialog(this) {
+            leave()
+        }
+    }
+
     companion object {
         const val MEETING_ROOM_KEY = "meeting_room_key"
         const val PARAM_NICKNAME = "param_nickname"
@@ -138,13 +173,13 @@ class MeetingRoomActivity : BaseActivity() {
         /**
          * 启动会议房间页面
          */
-        fun startMeetingRoomPage(context: Context, nickname: String, roomId: String, isOpenCamera: Boolean, isOpenMic: Boolean) {
+        fun startMeetingRoomPage(context: Context, nickname: String, roomId: String, expectCameraState: Boolean, expectMicState: Boolean) {
             val intent = Intent(context, MeetingRoomActivity::class.java)
             intent.putExtra(MEETING_ROOM_KEY, MEETING_ROOM_DETAIL)
             intent.putExtra(PARAM_NICKNAME, nickname)
             intent.putExtra(PARAM_ROOM_ID, roomId)
-            intent.putExtra(PARAM_CAMERA_STATE, isOpenCamera)
-            intent.putExtra(PARAM_MIC_STATE, isOpenMic)
+            intent.putExtra(PARAM_CAMERA_STATE, expectCameraState)
+            intent.putExtra(PARAM_MIC_STATE, expectMicState)
             context.startActivity(intent)
         }
     }

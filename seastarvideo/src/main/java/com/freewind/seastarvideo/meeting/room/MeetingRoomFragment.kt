@@ -9,11 +9,13 @@
 
 package com.freewind.seastarvideo.meeting.room
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
 import android.os.Message
@@ -21,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
@@ -47,6 +50,8 @@ class MeetingRoomFragment : BaseFragment() {
 
     private val ARG_NICKNAME = "nickname"
     private val ARG_ROOM_ID = "room_id"
+    private val ARG_CAMERA_STATE = "camera_state"
+    private val ARG_MIC_STATE = "mic_state"
 
     private var _binding: FragmentMeetingRoomBinding? = null
     private val binding get() = _binding!!
@@ -56,6 +61,8 @@ class MeetingRoomFragment : BaseFragment() {
 
     private lateinit var nickName: String
     private lateinit var roomId: String
+    private var expectCameraState: Boolean = false
+    private var expectMicState: Boolean = false
 
     private var soloVideoFragment: SoloVideoFragment? = null
     private var soloAvatarFragment: SoloAvatarFragment? = null
@@ -71,9 +78,22 @@ class MeetingRoomFragment : BaseFragment() {
         arguments?.let {
             nickName = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
             roomId = it.getString(ARG_ROOM_ID, resources.getString(R.string.def_room_id))
+            expectCameraState = it.getBoolean(ARG_CAMERA_STATE, false)
+            expectMicState = it.getBoolean(ARG_MIC_STATE, false)
         }
         viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
-        viewModel.updateInitialValue(nickName, roomId)
+
+        //设置默认音视频扬声器状态(需要检查有没有权限)
+        val hasAudioPermission = ContextCompat.checkSelfPermission(
+            requireActivity(), Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
+        expectMicState = expectMicState && hasAudioPermission
+        val hasVideoPermission = ContextCompat.checkSelfPermission(
+            requireActivity(), Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+        expectCameraState = expectCameraState && hasVideoPermission
+
+        viewModel.updateInitialValue(nickName, roomId, expectCameraState, expectMicState)
     }
 
     override fun onCreateView(
@@ -84,7 +104,7 @@ class MeetingRoomFragment : BaseFragment() {
         val rootView = binding.root
         OtherUiManager.instance.adaptTopHeight(binding.topBarI.root)
 
-        initLiveData()
+        initViewModel()
         initView()
         initListener()
         handler.removeMessages(HANDLER_MSG_HIDE_COVER)
@@ -93,7 +113,7 @@ class MeetingRoomFragment : BaseFragment() {
         return rootView
     }
 
-    private fun initLiveData() {
+    private fun initViewModel() {
         viewModel.roomIdLiveData.observe(viewLifecycleOwner) {
             binding.topBarI.roomIdTv.text = it
         }
@@ -159,10 +179,7 @@ class MeetingRoomFragment : BaseFragment() {
                     }
                 }
                 binding.topBarI.leaveRoomTv -> {
-                    DialogManager.instance.showLeaveRoomDialog(requireContext()) {
-                        viewModel.liveRoom()
-                        EventBus.getDefault().post(MeetingRoomEventBean.goBackPageEvent())
-                    }
+                    EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent())
                 }
                 binding.bottomToolbarI.micBigCl -> {
                     DialogManager.instance.showRequestMicPermissionDialog(requireContext()) {
@@ -324,11 +341,13 @@ class MeetingRoomFragment : BaseFragment() {
         val FRAGMENT_SEC_MULTI_MIX = "multi_mix_fragment"
 
         @JvmStatic
-        fun newInstance(nickNameParam: String, roomIdParam: String) =
+        fun newInstance(nickNameParam: String, roomIdParam: String, expectCameraState: Boolean, expectMicState: Boolean) =
             MeetingRoomFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_NICKNAME, nickNameParam)
                     putString(ARG_ROOM_ID, roomIdParam)
+                    putBoolean(ARG_CAMERA_STATE, expectCameraState)
+                    putBoolean(ARG_MIC_STATE, expectMicState)
                 }
             }
     }

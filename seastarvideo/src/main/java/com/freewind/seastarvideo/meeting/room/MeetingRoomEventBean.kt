@@ -27,4 +27,9 @@ class MeetingRoomEventBean {
      * 点击返回按钮
      */
     class goBackPageEvent()
+
+    /**
+     * 结束当前 activity
+     */
+    class finishActivityEvent()
 }

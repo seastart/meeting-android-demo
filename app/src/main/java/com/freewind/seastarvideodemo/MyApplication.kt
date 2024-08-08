@@ -22,5 +22,6 @@ class MyApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         SeaStarClient.instance.SSC_Init(this)
+        registerActivityLifecycleCallbacks(MyLifecycleCallback())
     }
 }

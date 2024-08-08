@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--  允许程序改变Z轴排列任务  -->
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
 
     <application
         android:allowBackup="true"
@@ -42,6 +44,7 @@
         <activity
             android:name=".activity.PreMeetingRoomActivity"
             android:exported="false"
+            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.PrivacyActivity"
@@ -59,7 +62,7 @@
             android:name=".activity.MeetingRoomActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:taskAffinity="com.video.meeting"
+            android:taskAffinity="cn.video.meeting"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.MemberActivity"
@@ -70,7 +73,9 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateVisible|stateHidden"/>
-
+        <activity
+            android:name=".utils.activityManager.AirActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
     </application>
 
 </manifest>

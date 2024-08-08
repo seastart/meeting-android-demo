@@ -10,6 +10,7 @@
 package com.freewind.seastarvideo.meeting.room
 
 import androidx.lifecycle.MutableLiveData
+import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.base.BaseViewModel
 import com.freewind.seastarvideo.meeting.MemberInfo
 import com.freewind.seastarvideo.utils.LogUtil
@@ -77,11 +78,11 @@ class MeetingRoomViewModel():
     /**
      * 更新初始参数
      */
-    fun updateInitialValue(nickName: String, roomId: String) {
+    fun updateInitialValue(nickName: String, roomId: String, isOpenCamera: Boolean, isCloseCamera: Boolean) {
         myNickName = nickName
         this.roomId = roomId
-        myMicStatus = false
-        myCameraStatus = false
+        myMicStatus = isOpenCamera
+        myCameraStatus = isCloseCamera
         memberList.add(MemberInfo("0", nickName, MemberInfo.MEMBER_ROLE_NORMAL, myMicStatus, myCameraStatus))
         memberList.add(MemberInfo("1", "成员-1", MemberInfo.MEMBER_ROLE_COMPERE, false, false))
         memberList.add(MemberInfo("2", "成员-2", MemberInfo.MEMBER_ROLE_NORMAL, true, false))
@@ -244,7 +245,7 @@ class MeetingRoomViewModel():
      */
     fun liveRoom() {
         // 离开房间，回收资源
-
+        MeetingEngineHelper.instance.engine?.exitMeeting()
     }
 
     inner class MeetingRoomViewModelImpl: MeetingRoomContract.IMeetingRoomViewModel {
