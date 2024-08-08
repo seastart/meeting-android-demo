@@ -9,9 +9,12 @@
 
 package com.freewind.seastarvideo.meeting.room
 
+import android.app.Activity
 import androidx.lifecycle.MutableLiveData
 import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.base.BaseViewModel
+import com.freewind.seastarvideo.base.SingleLiveEvent
+import com.freewind.seastarvideo.base.UiResponse
 import com.freewind.seastarvideo.meeting.MemberInfo
 import com.freewind.seastarvideo.utils.LogUtil
 /**
@@ -37,10 +40,19 @@ class MeetingRoomViewModel():
     // 展示哪一页二级 fragment liveData
     val showSecFragmentLiveData: MutableLiveData<String> = MutableLiveData()
 
+    // 摄像头权限申请
+    val cameraPermissionCheck: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    // 打开摄像头操作结果
+    val openCameraResult: SingleLiveEvent<UiResponse<Boolean>> = SingleLiveEvent()
+    // 麦克风权限申请
+    val micPermissionCheck: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    // 打开麦克风操作结果
+    val openMicResult: SingleLiveEvent<UiResponse<Boolean>> = SingleLiveEvent()
+
     // 从 ViewModel 回调数据到界面
     private var viewListeners: MutableList<MeetingRoomListener> = mutableListOf()
 
-
+    var meetingId: String? = null
     // 房间 id
     var roomId: String? = null
     // 房间音频状态
@@ -136,12 +148,31 @@ class MeetingRoomViewModel():
     }
 
     /**
-     * 切换麦克风状态
+     * 请求切换麦克风状态
      */
-    fun switchMyMicStatus() {
-        // 执行开关麦克风的操作
-        myMicStatus = !myMicStatus
-        myMicStatusLiveData.value = myMicStatus
+    fun requestSwitchMicStatus() {
+        if (myMicStatus) {
+            // 当前状态为打开，需要关闭
+            updateMyMicStatus(false)
+        } else {
+            // 当前状态为关闭，需要打开
+            micPermissionCheck.value = true
+        }
+    }
+
+    /**
+     * 更新麦克风状态
+     */
+    fun updateMyMicStatus(isOpen: Boolean) {
+        if (isOpen) {
+            // 执行打开麦克风的操作
+            mModel.getContract().requestOpenMic()
+        } else {
+            // 执行关闭麦克风状态
+            mModel.getContract().requestCloseMic()
+            myMicStatus = false
+            myMicStatusLiveData.value = false
+        }
     }
 
     /**
@@ -152,13 +183,32 @@ class MeetingRoomViewModel():
     }
 
     /**
+     * 请求切换摄像头状态
+     */
+    fun requestSwitchCameraStatus() {
+        if (myCameraStatus) {
+            // 当前状态为打开，需要关闭
+            updateMyCameraStatus(false, null)
+        } else {
+            // 当前状态为关闭，需要打开
+            cameraPermissionCheck.value = true
+        }
+    }
+
+    /**
      * 切换照相机状态
      */
-    fun switchMyCameraStatus() {
-        // 执行开关照相机的操作
-        myCameraStatus = !myCameraStatus
-        myCameraStatusLiveData.value = myCameraStatus
-        checkSecFragment()
+    fun updateMyCameraStatus(isOpen: Boolean, activity: Activity?) {
+        if (isOpen) {
+            // 执行打开摄像头的操作
+            mModel.getContract().requestOpenCamera(activity!!)
+        } else {
+            // 执行关闭摄像头的操作
+            mModel.getContract().requestCloseCamera()
+            myCameraStatus = false
+            myCameraStatusLiveData.value = false
+            checkSecFragment()
+        }
     }
 
     /**
@@ -249,6 +299,22 @@ class MeetingRoomViewModel():
     }
 
     inner class MeetingRoomViewModelImpl: MeetingRoomContract.IMeetingRoomViewModel {
+        override fun responseOpenCamera(uiResponse: UiResponse<Boolean>) {
+            if (uiResponse.isSuccess) {
+                myCameraStatus = true
+                myCameraStatusLiveData.value = true
+                checkSecFragment()
+            }
+            openCameraResult.value = uiResponse
+        }
+
+        override fun responseOpenMic(uiResponse: UiResponse<Boolean>) {
+            if (uiResponse.isSuccess) {
+                myMicStatus = true
+                myMicStatusLiveData.value = true
+            }
+            openMicResult.value = uiResponse
+        }
 
     }
 

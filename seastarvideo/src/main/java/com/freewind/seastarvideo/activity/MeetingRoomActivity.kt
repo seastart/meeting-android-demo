@@ -9,9 +9,12 @@
 
 package com.freewind.seastarvideo.activity
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
@@ -23,7 +26,9 @@ import com.freewind.seastarvideo.meeting.room.MeetingRoomFragment
 import com.freewind.seastarvideo.meeting.room.MeetingRoomViewModel
 import com.freewind.seastarvideo.ui.DialogManager
 import com.freewind.seastarvideo.utils.OtherUiManager
+import com.freewind.seastarvideo.utils.ToastUtil
 import com.freewind.seastarvideo.utils.activityManager.ActivityHelp
+import com.permissionx.guolindev.PermissionX
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -51,9 +56,9 @@ class MeetingRoomActivity : BaseActivity() {
         OtherUiManager.instance.adaptBottomHeight(binding.meetingRoomCl)
         setContentView(rootView)
         EventBus.getDefault().register(this)
+        initViewModel()
 
         isLeave = false
-        viewModel = ViewModelProvider(this)[MeetingRoomViewModel::class.java]
         ActivityHelp.instance.createTopActivityUtil(this)
         ActivityHelp.instance.configTopActivityUtil(true)
 
@@ -75,6 +80,69 @@ class MeetingRoomActivity : BaseActivity() {
             fragmentStack.pop()
             val curFragment = fragmentStack.peek()
             switchFragment(curFragment)
+        }
+    }
+
+    fun initViewModel() {
+        viewModel = ViewModelProvider(this)[MeetingRoomViewModel::class.java]
+        viewModel.cameraPermissionCheck.observe(this) {
+            PermissionX.init(this)
+                .permissions(Manifest.permission.CAMERA)
+                .onForwardToSettings { forwardScope, deniedList ->
+
+                    DialogManager.instance.showRequestPermissionDialog(this,
+                        resources.getString(R.string.unable_use_camera),
+                        resources.getString(R.string.method_grant_camera_permissions)
+                    ) {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            // 创建一个指向当前应用的 URI
+                            data = Uri.fromParts("package", this@MeetingRoomActivity.packageName, null)
+                        }
+                        // 启动设置页面
+                        this@MeetingRoomActivity.startActivity(intent)
+                    }
+                }
+                .request { allGranted, grantedList, deniedList ->
+                    if (allGranted) {
+                        viewModel.updateMyCameraStatus(true, this)
+                    }
+                }
+        }
+        viewModel.micPermissionCheck.observe(this) {
+            PermissionX.init(this)
+                .permissions(Manifest.permission.RECORD_AUDIO)
+                .onForwardToSettings { forwardScope, deniedList ->
+                    DialogManager.instance.showRequestPermissionDialog(this,
+                        resources.getString(R.string.unable_use_mic),
+                        resources.getString(R.string.method_grant_mic_permissions)
+                    ) {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            // 创建一个指向当前应用的 URI
+                            data = Uri.fromParts("package", this@MeetingRoomActivity.packageName, null)
+                        }
+                        // 启动设置页面
+                        this@MeetingRoomActivity.startActivity(intent)
+                    }
+                }
+                .request { allGranted, grantedList, deniedList ->
+                    if (allGranted) {
+                        viewModel.updateMyMicStatus(true)
+                    }
+                }
+        }
+        viewModel.openCameraResult.observe(this) { uiResponse ->
+            uiResponse?.let { response ->
+                if (!response.isSuccess) {
+                    ToastUtil.showShortToast("打开摄像头失败")
+                }
+            }
+        }
+        viewModel.openMicResult.observe(this) { uiResponse ->
+            uiResponse?.let { response ->
+                if (!response.isSuccess) {
+                    ToastUtil.showShortToast("打开麦克风失败")
+                }
+            }
         }
     }
 

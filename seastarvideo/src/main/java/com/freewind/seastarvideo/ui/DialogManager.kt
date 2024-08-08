@@ -12,7 +12,9 @@ package com.freewind.seastarvideo.ui
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Rect
+import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.CheckBox
@@ -26,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.meeting.room.ReportTagAdapter
 import com.freewind.seastarvideo.meeting.room.ReportTagBean
+import com.permissionx.guolindev.dialog.RationaleDialog
 
 
 /**
@@ -47,10 +50,15 @@ class DialogManager {
    /**
     * 展示麦克风权限请求弹框
     */
-   fun showRequestMicPermissionDialog(context: Context, handler: () -> Unit) {
+   fun showRequestPermissionDialog(context: Context, title: String, content: String, handler: () -> Unit) {
       val dialog = initView(context, R.layout.dialog_request_mic_permission)
+      val titleTv: TextView = dialog.findViewById(R.id.titleTv)
+      val contentTv: TextView = dialog.findViewById(R.id.contentTv)
       val cancelStv: StateTextView = dialog.findViewById(R.id.cancelStv)
       val goStv: StateTextView = dialog.findViewById(R.id.goStv)
+
+      titleTv.text = title
+      contentTv.text = content
       setOnClickNoRepeat(cancelStv, goStv) {
          when(it) {
             cancelStv -> {
@@ -467,6 +475,53 @@ class DialogManager {
          }
          layoutParams?.gravity = gravity
          window?.attributes = layoutParams
+      }
+   }
+
+   // 通过继承 RationaleDialog 来实现 PemissionX 的自定义提示框，还是有问题。
+   class PermissionDialog(context: Context, layoutId: Int, var title: String, var content: String, var deniedList: MutableList<String>): RationaleDialog(context, layoutId) {
+
+      private lateinit var cancelStv: StateTextView
+      private lateinit var goStv: StateTextView
+
+      override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+
+         val inflater = LayoutInflater.from(context)
+         val view = inflater.inflate(R.layout.dialog_request_mic_permission, null)
+
+         val titleTv: TextView = view.findViewById(R.id.titleTv)
+         val contentTv: TextView = view.findViewById(R.id.contentTv)
+         cancelStv = view.findViewById(R.id.cancelStv)
+         goStv = view.findViewById(R.id.goStv)
+         titleTv.text = title
+         contentTv.text = content
+         setContentView(view)
+
+         // 设置对话框的宽度和高度
+         val layoutParams = window?.attributes
+         layoutParams?.width = context.resources.getDimension(R.dimen.dp_270).toInt()
+         layoutParams?.height = context.resources.getDimension(R.dimen.dp_142).toInt()
+         window?.attributes = layoutParams
+
+         goStv.setOnClickListener {
+            dismiss()
+         }
+         cancelStv.setOnClickListener {
+            dismiss()
+         }
+      }
+
+      override fun getPositiveButton(): View {
+         return goStv
+      }
+
+      override fun getNegativeButton(): View {
+         return cancelStv
+      }
+
+      override fun getPermissionsToRequest(): MutableList<String> {
+         return deniedList
       }
    }
 }

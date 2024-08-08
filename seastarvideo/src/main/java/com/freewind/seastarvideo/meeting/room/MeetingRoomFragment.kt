@@ -182,16 +182,10 @@ class MeetingRoomFragment : BaseFragment() {
                     EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent())
                 }
                 binding.bottomToolbarI.micBigCl -> {
-                    DialogManager.instance.showRequestMicPermissionDialog(requireContext()) {
-                        Toast.makeText(requireContext(), "跳转到麦克风权限授予页面", Toast.LENGTH_SHORT).show()
-                        viewModel.switchMyMicStatus()
-                    }
+                    viewModel.requestSwitchMicStatus()
                 }
                 binding.bottomToolbarI.cameraBigCl -> {
-                    DialogManager.instance.showRequestOpenCameraDialog(requireContext(), "主持人xxx请求开启视频") {
-                        Toast.makeText(requireContext(), "同意开启视频", Toast.LENGTH_SHORT).show()
-                        viewModel.switchMyCameraStatus()
-                    }
+                    viewModel.requestSwitchCameraStatus()
                 }
                 binding.bottomToolbarI.screenCl -> {
                     DialogManager.instance.showShareScreenDialog(requireContext()) { shareType ->

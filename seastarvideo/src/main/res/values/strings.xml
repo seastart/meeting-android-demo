@@ -63,7 +63,9 @@
     <string name="member_list">参会成员</string>
     <string name="chat">聊天</string>
     <string name="unable_use_mic">无法使用麦克风</string>
-    <string name="method_grant_permissions">请在设备的“设置-隐私-麦克风”中允许SRTC访问您的麦克风</string>
+    <string name="method_grant_mic_permissions">请在设备的“设置-隐私-麦克风”中允许 STM Link 访问您的麦克风</string>
+    <string name="unable_use_camera">无法使用摄像头</string>
+    <string name="method_grant_camera_permissions">请在设备的“设置-隐私-摄像头”中允许 STM Link 访问您的摄像头</string>
     <string name="shared_whiteboard">共享白板</string>
     <string name="sure_leave_room">您确定离开房间吗？</string>
     <string name="all_member_close_mic">所有以及新加入的成员将被静音</string>
