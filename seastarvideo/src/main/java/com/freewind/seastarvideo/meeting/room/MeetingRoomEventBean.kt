@@ -31,5 +31,5 @@ class MeetingRoomEventBean {
     /**
      * 结束当前 activity
      */
-    class finishActivityEvent()
+    class finishActivityEvent(var isPrompt: Boolean)
 }

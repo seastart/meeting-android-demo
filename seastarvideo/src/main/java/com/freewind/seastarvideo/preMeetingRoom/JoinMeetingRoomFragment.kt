@@ -64,18 +64,18 @@ class JoinMeetingRoomFragment : BaseFragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(requireActivity())[PreMeetingRoomViewModel::class.java]
-        viewModel.enterMeetingResult.observe(this) { uiResponse ->
-            uiResponse?.let { response ->
-                if (response.isSuccess) {
-                    val roomNo = binding.valueRoomIdCkve.editContent!!
-                    val isOpenMic = binding.switchMicSb.isChecked
-                    val isOpenCamera = binding.switchCameraSb.isChecked
-                    MeetingRoomActivity.startMeetingRoomPage(requireContext(), nickname, roomNo, isOpenCamera, isOpenMic)
-                } else {
-                    ToastUtil.showShortToast("加入房间失败")
-                }
-            }
-        }
+//        viewModel.enterMeetingResult.observe(this) { uiResponse ->
+//            uiResponse?.let { response ->
+//                if (response.isSuccess) {
+//                    val roomNo = binding.valueRoomIdCkve.editContent!!
+//                    val isOpenMic = binding.switchMicSb.isChecked
+//                    val isOpenCamera = binding.switchCameraSb.isChecked
+//                    MeetingRoomActivity.startMeetingRoomPage(requireContext(), nickname, roomNo, isOpenCamera, isOpenMic)
+//                } else {
+//                    ToastUtil.showShortToast("加入房间失败")
+//                }
+//            }
+//        }
     }
 
     private fun initView() {
@@ -113,8 +113,13 @@ class JoinMeetingRoomFragment : BaseFragment() {
             Toast.makeText(requireContext(), "房间ID为必填项", Toast.LENGTH_LONG).show()
             return
         }
-        val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
-        viewModel.enterMeeting(this.requireActivity(), roomNo, null, nickname, avatar)
+
+        val isOpenMic = binding.switchMicSb.isChecked
+        val isOpenCamera = binding.switchCameraSb.isChecked
+        MeetingRoomActivity.startMeetingRoomPage(requireContext(), nickname, roomNo, isOpenCamera, isOpenMic)
+
+//        val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
+//        viewModel.enterMeeting(this.requireActivity(), roomNo, null, nickname, avatar)
     }
 
     companion object {

@@ -11,7 +11,12 @@ package com.freewind.seastarvideo
 
 import android.app.Application
 import cn.seastart.meeting.MeetingEngine
+import cn.seastart.meeting.MeetingInfoManager
+import cn.seastart.meeting.impl.MediaEvent
 import cn.seastart.meeting.impl.MeetingResultListener
+import cn.seastart.meeting.impl.RoomEvent
+import cn.seastart.meeting.impl.RoomMsgEvent
+import cn.seastart.meeting.impl.UserEvent
 import cn.seastart.rtc.RTCMediaOptions
 
 /**
@@ -35,5 +40,25 @@ class MeetingEngineHelper private constructor(){
     fun init(app: Application, meetToken: String, options: RTCMediaOptions?, listener: MeetingResultListener) {
         engine = MeetingEngine(app)
         engine?.initSdk(meetToken, options, listener)
+    }
+
+    fun getInfoManager(): MeetingInfoManager? {
+        return engine?.meetingInfoManager
+    }
+
+    fun setRoomEvent(roomEvent: RoomEvent) {
+        engine?.roomEvent = roomEvent
+    }
+
+    fun setUserEvent(userEvent: UserEvent) {
+        engine?.userEvent = userEvent
+    }
+
+    fun setRoomMsgEvent(roomMsgEvent: RoomMsgEvent) {
+        engine?.roomMsgEvent = roomMsgEvent
+    }
+
+    fun setMediaEvent(mediaEvent: MediaEvent) {
+        engine?.mediaEvent = mediaEvent
     }
 }

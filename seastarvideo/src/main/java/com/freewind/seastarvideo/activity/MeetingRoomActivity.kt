@@ -15,6 +15,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
@@ -75,7 +76,7 @@ class MeetingRoomActivity : BaseActivity() {
 
     override fun onBackPressed() {
         if (fragmentStack.size <= 1) {
-            EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent())
+            EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent(true))
         } else {
             fragmentStack.pop()
             val curFragment = fragmentStack.peek()
@@ -85,6 +86,20 @@ class MeetingRoomActivity : BaseActivity() {
 
     fun initViewModel() {
         viewModel = ViewModelProvider(this)[MeetingRoomViewModel::class.java]
+        viewModel.onEnterRoomEvent.observe(this) {
+            Log.i("wiatt", "activity-initViewModel-onEnterRoomEvent: ")
+            PermissionX.init(this)
+                .permissions(mutableListOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
+                .request { allGranted, grantedList, deniedList ->
+                    grantedList.forEach {
+                        if (it.equals(Manifest.permission.CAMERA)) {
+                            viewModel.updateMyCameraStatus(true, this)
+                        } else if (it.equals(Manifest.permission.RECORD_AUDIO)) {
+                            viewModel.updateMyMicStatus(true)
+                        }
+                    }
+                }
+        }
         viewModel.cameraPermissionCheck.observe(this) {
             PermissionX.init(this)
                 .permissions(Manifest.permission.CAMERA)
@@ -239,8 +254,12 @@ class MeetingRoomActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onEventFinishActivity(evnet: MeetingRoomEventBean.finishActivityEvent) {
-        DialogManager.instance.showLeaveRoomDialog(this) {
+    fun onEventFinishActivity(event: MeetingRoomEventBean.finishActivityEvent) {
+        if (event.isPrompt) {
+            DialogManager.instance.showLeaveRoomDialog(this) {
+                leave()
+            }
+        } else {
             leave()
         }
     }

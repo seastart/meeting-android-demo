@@ -14,11 +14,22 @@ import android.provider.Settings
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import cn.seastart.meeting.ScreenManager
+import cn.seastart.meeting.enumerate.DeviceState
+import cn.seastart.meeting.enumerate.HandupType
+import cn.seastart.meeting.enumerate.LeaveReason
+import cn.seastart.meeting.enumerate.RoleType
+import cn.seastart.meeting.enumerate.ShareType
+import cn.seastart.meeting.impl.MediaEvent
+import cn.seastart.meeting.impl.RoomEvent
+import cn.seastart.meeting.impl.UserEvent
+import cn.seastart.rtc.info.RTCMediaStatus
+import cn.seastart.rtc.info.SpeakerInfo
 import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.base.BaseViewModel
 import com.freewind.seastarvideo.base.SingleLiveEvent
 import com.freewind.seastarvideo.base.UiResponse
 import com.freewind.seastarvideo.meeting.MemberInfo
+import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.LogUtil
 import com.ook.android.VCS_EVENT_TYPE
 import java.lang.ref.WeakReference
@@ -46,6 +57,8 @@ class MeetingRoomViewModel():
     // 展示哪一页二级 fragment liveData
     val showSecFragmentLiveData: MutableLiveData<String> = MutableLiveData()
 
+    // 加入会议
+    val enterMeetingResult: SingleLiveEvent<UiResponse<String>> = SingleLiveEvent()
     // 摄像头权限申请
     val cameraPermissionCheck: SingleLiveEvent<Boolean> = SingleLiveEvent()
     // 打开摄像头操作结果
@@ -61,14 +74,19 @@ class MeetingRoomViewModel():
     // 开始白板共享操作结果
     val startWhiteBoardShareResult: SingleLiveEvent<UiResponse<Boolean>> = SingleLiveEvent()
 
+    // 接口数据，自己进入房间
+    val onEnterRoomEvent: SingleLiveEvent<Boolean> = SingleLiveEvent()
+
     // 从 ViewModel 回调数据到界面
     private var viewListeners: MutableList<MeetingRoomListener> = mutableListOf()
 
     var meetingId: String? = null
     // 房间 id
-    var roomId: String? = null
+    var roomNo: String? = null
     // 房间音频状态
     var roomVideoStatus: Boolean = false
+    // 自己的 uid
+    var myUid: String? = null
     // 自己的昵称
     var myNickName: String? = null
     // 自己的麦克风状态，可能受各种因素共同作用，也可能不为 boolean 类型
@@ -104,11 +122,9 @@ class MeetingRoomViewModel():
     /**
      * 更新初始参数
      */
-    fun updateInitialValue(nickName: String, roomId: String, isOpenCamera: Boolean, isCloseCamera: Boolean) {
+    fun updateInitialValue(nickName: String, roomNo: String) {
         myNickName = nickName
-        this.roomId = roomId
-        myMicStatus = isOpenCamera
-        myCameraStatus = isCloseCamera
+        this.roomNo = roomNo
         memberList.add(MemberInfo("0", nickName, MemberInfo.MEMBER_ROLE_NORMAL, myMicStatus, myCameraStatus))
         memberList.add(MemberInfo("1", "成员-1", MemberInfo.MEMBER_ROLE_COMPERE, false, false))
         memberList.add(MemberInfo("2", "成员-2", MemberInfo.MEMBER_ROLE_NORMAL, true, false))
@@ -121,7 +137,7 @@ class MeetingRoomViewModel():
      * 获取房间Id
      */
     fun getRoomId() {
-        roomId?.let {
+        roomNo?.let {
             roomIdLiveData.value = it
         }
     }
@@ -152,6 +168,18 @@ class MeetingRoomViewModel():
         // 执行开关扬声器的操作
         mySpeakerStatus = !mySpeakerStatus
         mySpeakerStatusLiveData.value = mySpeakerStatus
+    }
+
+    /**
+     * 进入会议
+     */
+    fun enterMeeting(activity: Activity) {
+        MeetingEngineHelper.instance.setRoomEvent(RoomEventImpl(this))
+        MeetingEngineHelper.instance.setUserEvent(UserEventImpl(this))
+        MeetingEngineHelper.instance.setMediaEvent(MediaEventImpl(this))
+
+        val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
+        mModel.getContract().requestEnterMeeting(activity, roomNo ?: "", null, myNickName ?: "", avatar)
     }
 
     /**
@@ -346,6 +374,10 @@ class MeetingRoomViewModel():
     }
 
     inner class MeetingRoomViewModelImpl: MeetingRoomContract.IMeetingRoomViewModel {
+        override fun responseEnterMeeting(uiResponse: UiResponse<String>) {
+            enterMeetingResult.value = uiResponse
+        }
+
         override fun responseOpenCamera(uiResponse: UiResponse<Boolean>) {
             if (uiResponse.isSuccess) {
                 myCameraStatus = true
@@ -404,6 +436,189 @@ class MeetingRoomViewModel():
                     }
                 }
             }
+        }
+    }
+
+    class RoomEventImpl(owner: MeetingRoomViewModel): RoomEvent {
+
+        private var mOwner: WeakReference<MeetingRoomViewModel> = WeakReference(owner)
+
+        override fun onRoomCameraStateChanged(uid: String?, selfUnMuteCameraDisabled: Boolean, cameraDisabled: Boolean) {
+            
+        }
+
+        override fun onRoomMicStateChanged(uid: String?, selfUnMuteMicDisabled: Boolean, micDisabled: Boolean) {
+            
+        }
+
+        override fun onRoomChatDisabledChanged(uid: String?, enable: Boolean) {
+            
+        }
+
+        override fun onRoomScreenshotDisabledChanged(uid: String?, screenshot: Boolean) {
+            
+        }
+
+        override fun onRoomWatermarkDisabledChanged(uid: String?, enable: Boolean) {
+            
+        }
+
+        override fun onRoomLockedChanged(uid: String?, locked: Boolean) {
+            
+        }
+
+        override fun onRoomHostMove(sourceUid: String?, targetUid: String?) {
+            
+        }
+
+        override fun onRoomShareStart(shareUid: String, shareType: ShareType) {
+            
+        }
+
+        override fun onRoomShareStop(shareUid: String, shareType: ShareType) {
+            
+        }
+
+        override fun onAdminRoomShareStop(shareUid: String, shareType: ShareType) {
+            
+        }
+
+        override fun onRoomHandUpChanged(uid: String?, enable: Boolean?, handupType: HandupType?) {
+            
+        }
+
+        override fun onUserConfirmOpenCamera(approve: Boolean) {
+            
+        }
+
+        override fun onUserConfirmOpenMic(approve: Boolean) {
+            
+        }
+
+        override fun onRoomMCUModeChanged() {
+            
+        }
+
+        override fun onError(errorCode: Int, errMsg: String?) {
+            
+        }
+
+        override fun onReconnecting() {
+            
+        }
+
+        override fun onReconnected() {
+            
+        }
+    }
+
+    class UserEventImpl(owner: MeetingRoomViewModel): UserEvent {
+
+        private var mOwner: WeakReference<MeetingRoomViewModel> = WeakReference(owner)
+
+        override fun onEnterRoom(meetingId: String, uid: String?) {
+            mOwner.get()?.let {
+                it.meetingId = meetingId
+                it.myUid = uid ?: ""
+                it.onEnterRoomEvent.value = true
+            }
+        }
+
+        override fun onExitRoom(reason: LeaveReason) {
+            
+        }
+
+        override fun onUserEnter(uid: String?) {
+            
+        }
+
+        override fun onUserExit(uid: String?) {
+            
+        }
+
+        override fun onUserNameChanged(targetUid: String?, nick: String) {
+            
+        }
+
+        override fun onUserRoleChanged(targetUid: String?, roleType: RoleType) {
+            
+        }
+
+        override fun onUserCameraStateChanged(targetUid: String?, cameraState: DeviceState) {
+            
+        }
+
+        override fun onUserMicStateChanged(targetUid: String?, micState: DeviceState) {
+            
+        }
+
+        override fun onUserChatDisabledChange(targetUid: String?, enable: Boolean) {
+            
+        }
+
+        override fun onHandupConfirm(uid: String?, approve: Boolean, handupType: HandupType) {
+            
+        }
+
+        override fun onRequestUserCameraChange(targetUid: String?, isOpen: Boolean) {
+            
+        }
+
+        override fun onRequestUserMicChange(targetUid: String?, isOpen: Boolean) {
+            
+        }
+    }
+
+    class MediaEventImpl(owner: MeetingRoomViewModel): MediaEvent {
+
+        private var mOwner: WeakReference<MeetingRoomViewModel> = WeakReference(owner)
+
+        override fun onDownBitrateAdaptiveLevel(uid: String, level: RTCMediaStatus.DownLevel) {
+            
+        }
+
+        override fun onDownLossLevel(level: RTCMediaStatus.DownLossLevel) {
+            
+        }
+
+        override fun onDownLossRateAverage(average: Float) {
+            
+        }
+
+        override fun onDownMediaStatus(downInfos: MutableList<RTCMediaStatus.DownInfo>) {
+            
+        }
+
+        override fun onMediaConnected() {
+            
+        }
+
+        override fun onMembersAudioStatus(speakers: MutableList<SpeakerInfo>) {
+            
+        }
+
+        override fun onNetTestResult(result: String) {
+            
+        }
+
+        override fun onSpeakAllow(allow: Boolean) {
+            
+        }
+
+        override fun onUploadBitrateAdaptiveLevel(level: RTCMediaStatus.UploadLevel) {
+            
+        }
+
+        override fun onUploadMediaStatus(uploadInfo: RTCMediaStatus.UploadInfo) {
+            
+        }
+
+        override fun onVideoFrame(
+            y: ByteArray?, u: ByteArray?, v: ByteArray?,
+            width: Int, height: Int, format: Int,
+            uid: String, trackId: Int, angle: Int
+        ) {
+            
         }
     }
 }

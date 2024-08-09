@@ -9,14 +9,12 @@
 
 package com.freewind.seastarvideo.meeting.room
 
-import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
 import android.os.Message
@@ -24,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
@@ -36,6 +33,7 @@ import com.freewind.seastarvideo.service.FloatingButtonService
 import com.freewind.seastarvideo.ui.ClickFrameLayout
 import com.freewind.seastarvideo.ui.DialogManager
 import com.freewind.seastarvideo.utils.OtherUiManager
+import com.freewind.seastarvideo.utils.ToastUtil
 import com.freewind.seastarvideo.utils.WeakHandler
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
@@ -51,7 +49,7 @@ import org.greenrobot.eventbus.EventBus
 class MeetingRoomFragment : BaseFragment() {
 
     private val ARG_NICKNAME = "nickname"
-    private val ARG_ROOM_ID = "room_id"
+    private val ARG_ROOM_NO = "room_no"
     private val ARG_CAMERA_STATE = "camera_state"
     private val ARG_MIC_STATE = "mic_state"
 
@@ -62,7 +60,7 @@ class MeetingRoomFragment : BaseFragment() {
     private lateinit var viewModel: MeetingRoomViewModel
 
     private lateinit var nickName: String
-    private lateinit var roomId: String
+    private lateinit var roomNo: String
     private var expectCameraState: Boolean = false
     private var expectMicState: Boolean = false
 
@@ -82,24 +80,13 @@ class MeetingRoomFragment : BaseFragment() {
         ImmersionBar.with(requireActivity()).reset().init()
         arguments?.let {
             nickName = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
-            roomId = it.getString(ARG_ROOM_ID, resources.getString(R.string.def_room_id))
+            roomNo = it.getString(ARG_ROOM_NO, resources.getString(R.string.def_room_id))
             expectCameraState = it.getBoolean(ARG_CAMERA_STATE, false)
             expectMicState = it.getBoolean(ARG_MIC_STATE, false)
         }
         screenShareFloatIntent = Intent(this.requireActivity(), FloatingButtonService::class.java)
         viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
-
-        //设置默认音视频扬声器状态(需要检查有没有权限)
-        val hasAudioPermission = ContextCompat.checkSelfPermission(
-            requireActivity(), Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
-        expectMicState = expectMicState && hasAudioPermission
-        val hasVideoPermission = ContextCompat.checkSelfPermission(
-            requireActivity(), Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-        expectCameraState = expectCameraState && hasVideoPermission
-
-        viewModel.updateInitialValue(nickName, roomId, expectCameraState, expectMicState)
+        viewModel.updateInitialValue(nickName, roomNo)
     }
 
     override fun onCreateView(
@@ -116,10 +103,23 @@ class MeetingRoomFragment : BaseFragment() {
         handler.removeMessages(HANDLER_MSG_HIDE_COVER)
         handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
 
+        // 先执行加入会议，会议加入失败，会退出当前页面
+        enterMeeting()
+
         return rootView
     }
 
     private fun initViewModel() {
+        viewModel.enterMeetingResult.observe(viewLifecycleOwner) { uiResponse ->
+            uiResponse?.let { response ->
+                if (response.isSuccess) {
+                    ToastUtil.showShortToast("加入房间成功")
+                } else {
+                    ToastUtil.showShortToast("加入房间失败")
+                    EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent(false))
+                }
+            }
+        }
         viewModel.roomIdLiveData.observe(viewLifecycleOwner) {
             binding.topBarI.roomIdTv.text = it
         }
@@ -155,11 +155,12 @@ class MeetingRoomFragment : BaseFragment() {
     }
 
     private fun initView() {
-        viewModel.getRoomId()
-        viewModel.getMySpeakerStatus()
-        viewModel.getMyMicStatus()
-        viewModel.getMyCameraStatus()
-        viewModel.getMyScreenShareStatus()
+        binding.topBarI.roomIdTv.text = viewModel.roomNo ?: ""
+        binding.topBarI.timeTv.text = "00:00:00"
+        binding.topBarI.switchSpeakerIv.isSelected = true
+        binding.bottomToolbarI.micBigIv.isSelected = false
+        binding.bottomToolbarI.cameraBigIv.isSelected = false
+        binding.bottomToolbarI.screenIv.isSelected = false
         viewModel.checkSecFragment()
     }
 
@@ -195,7 +196,7 @@ class MeetingRoomFragment : BaseFragment() {
                     }
                 }
                 binding.topBarI.leaveRoomTv -> {
-                    EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent())
+                    EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent(true))
                 }
                 binding.bottomToolbarI.micBigCl -> {
                     viewModel.requestSwitchMicStatus()
@@ -240,6 +241,15 @@ class MeetingRoomFragment : BaseFragment() {
                 handler.sendHandlerMessage(HANDLER_MSG_HIDE_COVER, null, -1, -1, 5000)
             }
         }
+    }
+
+    /**
+     * 加入会议
+     */
+    private fun enterMeeting() {
+        // todo 此处需要一个圆形进度条，封住页面操作
+        // 先执行加入会议，会议加入失败，会退出当前页面
+        viewModel.enterMeeting(requireActivity())
     }
 
     /**
@@ -364,7 +374,7 @@ class MeetingRoomFragment : BaseFragment() {
             MeetingRoomFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_NICKNAME, nickNameParam)
-                    putString(ARG_ROOM_ID, roomIdParam)
+                    putString(ARG_ROOM_NO, roomIdParam)
                     putBoolean(ARG_CAMERA_STATE, expectCameraState)
                     putBoolean(ARG_MIC_STATE, expectMicState)
                 }

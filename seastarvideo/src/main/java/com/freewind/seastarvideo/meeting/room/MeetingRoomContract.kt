@@ -24,6 +24,11 @@ class MeetingRoomContract {
     interface IMeetingRoomModel: BaseContract.IModel {
 
         /**
+         * 请求：加入会议
+         */
+        fun requestEnterMeeting(activity: Activity, roomNo: String, password: String?, nickName: String, avatar: String)
+
+        /**
          * 请求：打开摄像头
          */
         fun requestOpenCamera(activity: Activity)
@@ -55,6 +60,11 @@ class MeetingRoomContract {
     }
 
     interface IMeetingRoomViewModel: BaseContract.IViewModel {
+
+        /**
+         * 返回：加入会议
+         */
+        fun responseEnterMeeting(uiResponse: UiResponse<String>)
 
         /**
          * 响应：打开摄像头

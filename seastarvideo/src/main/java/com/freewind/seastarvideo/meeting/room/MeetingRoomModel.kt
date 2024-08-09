@@ -33,6 +33,27 @@ class MeetingRoomModel(viewModelImpl: MeetingRoomViewModel.MeetingRoomViewModelI
     }
 
     inner class MeetingRoomModelImpl: MeetingRoomContract.IMeetingRoomModel {
+        override fun requestEnterMeeting(
+            activity: Activity, roomNo: String, password: String?,
+            nickName: String, avatar: String
+        ) {
+            MeetingEngineHelper.instance.engine?.enterMeeting(
+                activity, roomNo, password, nickName, avatar, null,
+                object : Callback<Data<String>>() {
+                    override fun onSuccess(data: Data<String>) {
+                        super.onSuccess(data)
+                        listener.responseEnterMeeting(UiResponse(roomNo))
+                    }
+
+                    override fun onFailed(code: Int, msg: String?) {
+                        super.onFailed(code, msg)
+                        listener.responseEnterMeeting(
+                            UiResponse(ErrorBean(code, msg ?: "", msg ?: ""))
+                        )
+                    }
+                })
+        }
+
         override fun requestOpenCamera(activity: Activity) {
             MeetingEngineHelper.instance.engine?.requestOpenCamera(activity, object : Callback<Data<String?>>() {
                 override fun onSuccess(data: Data<String?>?) {
