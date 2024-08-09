@@ -379,7 +379,9 @@ class MeetingRoomFragment : BaseFragment() {
         val animatorSet = AnimatorSet()
         animatorSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
-                ImmersionBar.with(requireActivity()).hideBar(BarHide.FLAG_HIDE_BAR).init()
+                activity?.let {
+                    ImmersionBar.with(it).hideBar(BarHide.FLAG_HIDE_BAR).init()
+                }
             }
         })
         val topAnimator = ObjectAnimator.ofFloat(binding.topBarI.root, "translationY", 0f, -binding.topBarI.root.height.toFloat())
