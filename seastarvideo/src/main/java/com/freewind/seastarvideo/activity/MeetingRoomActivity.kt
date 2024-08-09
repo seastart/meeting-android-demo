@@ -66,11 +66,11 @@ class MeetingRoomActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         EventBus.getDefault().unregister(this)
         if (!isLeave) {
             leave()
         }
+        super.onDestroy()
     }
 
     override fun onBackPressed() {
@@ -244,9 +244,11 @@ class MeetingRoomActivity : BaseActivity() {
         if (event.isPrompt) {
             DialogManager.instance.showLeaveRoomDialog(this) {
                 leave()
+                finishAndRemoveTask()
             }
         } else {
             leave()
+            finishAndRemoveTask()
         }
     }
 
