@@ -78,6 +78,8 @@ class MeetingRoomViewModel():
 
     // 接口数据，自己进入房间
     val onEnterRoomEvent: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    // 接口数据，自己离开房间
+    val onExitRoomEvent: SingleLiveEvent<LeaveReason> = SingleLiveEvent()
 
     // 从 ViewModel 回调数据到界面
     private var viewListeners: MutableList<MeetingRoomListener> = mutableListOf()
@@ -572,7 +574,9 @@ class MeetingRoomViewModel():
 
         override fun onExitRoom(reason: LeaveReason) {
             Log.i("wiatt", "onExitRoom: ")
-
+            mOwner.get()?.let { viewModel ->
+                viewModel.onExitRoomEvent.value = reason
+            }
         }
 
         override fun onUserEnter(uid: String?) {

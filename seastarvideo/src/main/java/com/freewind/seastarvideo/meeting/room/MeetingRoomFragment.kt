@@ -19,13 +19,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.os.Message
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.seastart.meeting.enumerate.LeaveReason
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.activity.ChatActivity
 import com.freewind.seastarvideo.activity.MemberActivity
@@ -126,28 +126,6 @@ class MeetingRoomFragment : BaseFragment() {
                 }
             }
         }
-        viewModel.onEnterRoomEvent.observe(this) {
-            val permissions = mutableListOf<String>()
-            if (expectCameraState) {
-                permissions.add(Manifest.permission.CAMERA)
-            }
-            if (expectMicState) {
-                permissions.add(Manifest.permission.RECORD_AUDIO)
-            }
-            if (permissions.isNotEmpty()) {
-                PermissionX.init(this)
-                    .permissions(permissions)
-                    .request { allGranted, grantedList, deniedList ->
-                        grantedList.forEach {
-                            if (it.equals(Manifest.permission.CAMERA)) {
-                                viewModel.updateMyCameraStatus(true, requireActivity())
-                            } else if (it.equals(Manifest.permission.RECORD_AUDIO)) {
-                                viewModel.updateMyMicStatus(true)
-                            }
-                        }
-                    }
-            }
-        }
         viewModel.roomIdLiveData.observe(viewLifecycleOwner) {
             binding.topBarI.roomIdTv.text = it
         }
@@ -179,6 +157,39 @@ class MeetingRoomFragment : BaseFragment() {
                 FRAGMENT_SEC_SOLO_AVATAR -> showSoloAvatarPage()
                 FRAGMENT_SEC_MULTI_MIX -> showMultiMixPage()
             }
+        }
+        viewModel.onEnterRoomEvent.observe(this) {
+            val permissions = mutableListOf<String>()
+            if (expectCameraState) {
+                permissions.add(Manifest.permission.CAMERA)
+            }
+            if (expectMicState) {
+                permissions.add(Manifest.permission.RECORD_AUDIO)
+            }
+            if (permissions.isNotEmpty()) {
+                PermissionX.init(this)
+                    .permissions(permissions)
+                    .request { allGranted, grantedList, deniedList ->
+                        grantedList.forEach {
+                            if (it.equals(Manifest.permission.CAMERA)) {
+                                viewModel.updateMyCameraStatus(true, requireActivity())
+                            } else if (it.equals(Manifest.permission.RECORD_AUDIO)) {
+                                viewModel.updateMyMicStatus(true)
+                            }
+                        }
+                    }
+            }
+        }
+        viewModel.onExitRoomEvent.observe(this) { leaveReason ->
+            leaveReason?.let {
+                when(it) {
+                    LeaveReason.KickOut -> ToastUtil.showLongToast("您被踢出房间")
+                    LeaveReason.BeReplaced -> ToastUtil.showLongToast("您被顶号")
+                    LeaveReason.ChannelDestroy -> ToastUtil.showLongToast("会议结束")
+                    else -> null
+                }
+            }
+            EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent(false))
         }
     }
 
