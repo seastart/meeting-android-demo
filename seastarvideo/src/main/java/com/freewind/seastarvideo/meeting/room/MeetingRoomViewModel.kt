@@ -30,7 +30,6 @@ import com.freewind.seastarvideo.base.BaseViewModel
 import com.freewind.seastarvideo.base.SingleLiveEvent
 import com.freewind.seastarvideo.base.UiResponse
 import com.freewind.seastarvideo.meeting.MemberInfo
-import com.freewind.seastarvideo.utils.KvUtil
 import com.freewind.seastarvideo.utils.LogUtil
 import com.ook.android.VCS_EVENT_TYPE
 import java.lang.ref.WeakReference
@@ -548,6 +547,7 @@ class MeetingRoomViewModel():
         private var mOwner: WeakReference<MeetingRoomViewModel> = WeakReference(owner)
 
         override fun onEnterRoom(meetingId: String, uid: String?) {
+            Log.i("wiatt", "onEnterRoom: ")
             mOwner.get()?.let {
                 it.meetingId = meetingId
                 it.myUid = uid ?: ""
@@ -555,14 +555,14 @@ class MeetingRoomViewModel():
                 it.memberList.clear()
                 val meInfo = MeetingEngineHelper.instance.getInfoManager()?.getMeInfo()
                 meInfo?.let { info ->
-                    val memberInfo = MemberInfo(
+                    val member = MemberInfo(
                         info.uid ?: "", info.name ?: "", info.props?.avatar ?: "",
                         info.props?.role ?: RoleType.Normal,
                         info.props?.micState ?: DeviceState.Closed,
                         info.props?.cameraState ?: DeviceState.Closed,
                         info.props?.shareState ?: ShareType.Normal,
                         info.props?.chatDisabled ?: false, true)
-                    it.memberList.add(0, memberInfo)
+                    it.memberList.add(0, member)
                     it.viewListeners.forEach { listener ->
                         listener.onMemberListAddOne(it.memberList.size - 1)
                     }
@@ -571,15 +571,45 @@ class MeetingRoomViewModel():
         }
 
         override fun onExitRoom(reason: LeaveReason) {
-            
+            Log.i("wiatt", "onExitRoom: ")
+
         }
 
         override fun onUserEnter(uid: String?) {
-            
+            Log.i("wiatt", "onUserEnter: uid = $uid")
+            mOwner.get()?.let { viewModel ->
+                val memberInfo = MeetingEngineHelper.instance.getInfoManager()?.getMemberByUid(uid ?: "")
+                memberInfo?.let { info ->
+                    val member = MemberInfo(
+                        info.uid ?: "", info.name ?: "", info.props?.avatar ?: "",
+                        info.props?.role ?: RoleType.Normal,
+                        info.props?.micState ?: DeviceState.Closed,
+                        info.props?.cameraState ?: DeviceState.Closed,
+                        info.props?.shareState ?: ShareType.Normal,
+                        info.props?.chatDisabled ?: false, false)
+                    viewModel.memberList.add(member)
+                    viewModel.checkSecFragment()
+                    viewModel.viewListeners.forEach { listener ->
+                        listener.onMemberListAddOne(viewModel.memberList.size - 1)
+                    }
+                }
+            }
         }
 
         override fun onUserExit(uid: String?) {
-            
+            Log.i("wiatt", "onUserExit: uid = $uid")
+            mOwner.get()?.let { viewModel ->
+                val index = viewModel.memberList.indexOfFirst { memberInfo ->
+                    memberInfo.uid == uid
+                }
+                if (index >= 0 && index < viewModel.memberList.size) {
+                    viewModel.memberList.removeAt(index)
+                    viewModel.checkSecFragment()
+                    viewModel.viewListeners.forEach { listener ->
+                        listener.onMemberListRemoveOne(index)
+                    }
+                }
+            }
         }
 
         override fun onUserNameChanged(targetUid: String?, nick: String) {
