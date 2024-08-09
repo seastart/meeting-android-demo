@@ -130,6 +130,14 @@ class MeetingRoomActivity : BaseActivity() {
                     }
                 }
         }
+        viewModel.screenSharePermissionCheck.observe(this) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
+            )
+            // 此处没必要使用 startActivityForResult，因为开启悬浮窗权限的操作，没有提供返回处理结果的接口
+            startActivity(intent)
+        }
         viewModel.openCameraResult.observe(this) { uiResponse ->
             uiResponse?.let { response ->
                 if (!response.isSuccess) {
@@ -141,6 +149,15 @@ class MeetingRoomActivity : BaseActivity() {
             uiResponse?.let { response ->
                 if (!response.isSuccess) {
                     ToastUtil.showShortToast("打开麦克风失败")
+                }
+            }
+        }
+        viewModel.startScreenShareResult.observe(this) { uiResponse ->
+            uiResponse?.let { response ->
+                if (response.isSuccess) {
+                    ToastUtil.showShortToast("屏幕共享打开成功")
+                } else {
+                    ToastUtil.showShortToast("屏幕共享打开失败")
                 }
             }
         }

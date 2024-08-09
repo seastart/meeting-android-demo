@@ -76,6 +76,12 @@
         <activity
             android:name=".utils.activityManager.AirActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+
+        <!--  按键悬浮框   -->
+        <service
+            android:name=".service.FloatingButtonService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

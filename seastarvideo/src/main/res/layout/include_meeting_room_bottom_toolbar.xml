@@ -96,7 +96,7 @@
             android:id="@+id/screenIv"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
-            android:src="@mipmap/screen_open"
+            android:src="@drawable/selector_screen_open_status"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

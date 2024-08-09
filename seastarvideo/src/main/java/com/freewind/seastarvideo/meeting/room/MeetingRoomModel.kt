@@ -10,8 +10,10 @@
 package com.freewind.seastarvideo.meeting.room
 
 import android.app.Activity
+import cn.seastart.meeting.ScreenManager
 import cn.seastart.meeting.api.Callback
 import cn.seastart.meeting.bean.Data
+import cn.seastart.meeting.impl.MeetingResultListener
 import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.base.BaseModel
 import com.freewind.seastarvideo.base.ErrorBean
@@ -83,6 +85,26 @@ class MeetingRoomModel(viewModelImpl: MeetingRoomViewModel.MeetingRoomViewModelI
         override fun requestCloseMic() {
             // 关闭麦克风不需要等待响应，应该直接执行关闭操作
             MeetingEngineHelper.instance.engine?.closeMic(null)
+        }
+
+        override fun requestStartScreenShare(
+            activity: Activity,
+            param: ScreenManager.NotificationParam?,
+            event: ScreenManager.ScreenShareEvent
+        ) {
+            MeetingEngineHelper.instance.engine?.initScreenShare(activity, param, event)
+            MeetingEngineHelper.instance.engine?.startScreenShare(true, object : MeetingResultListener {
+                override fun onSuccess() {
+                    // 如果成功了，什么也不做，会通过另一个回调通知
+                }
+                override fun onFail(code: Int, message: String) {
+                    listener.responseStartScreenShare(UiResponse(ErrorBean(code, message, message)))
+                }
+            })
+        }
+
+        override fun requestStopScreenShare() {
+            MeetingEngineHelper.instance.engine?.stopScreenShare(null)
         }
 
     }

@@ -15,6 +15,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
@@ -31,6 +32,7 @@ import com.freewind.seastarvideo.activity.ChatActivity
 import com.freewind.seastarvideo.activity.MemberActivity
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMeetingRoomBinding
+import com.freewind.seastarvideo.service.FloatingButtonService
 import com.freewind.seastarvideo.ui.ClickFrameLayout
 import com.freewind.seastarvideo.ui.DialogManager
 import com.freewind.seastarvideo.utils.OtherUiManager
@@ -64,6 +66,9 @@ class MeetingRoomFragment : BaseFragment() {
     private var expectCameraState: Boolean = false
     private var expectMicState: Boolean = false
 
+    // 屏幕共享悬浮窗的 intent
+    private var screenShareFloatIntent: Intent? = null
+
     private var soloVideoFragment: SoloVideoFragment? = null
     private var soloAvatarFragment: SoloAvatarFragment? = null
     private var multiMixFragment: MultiMixFragment? = null
@@ -81,6 +86,7 @@ class MeetingRoomFragment : BaseFragment() {
             expectCameraState = it.getBoolean(ARG_CAMERA_STATE, false)
             expectMicState = it.getBoolean(ARG_MIC_STATE, false)
         }
+        screenShareFloatIntent = Intent(this.requireActivity(), FloatingButtonService::class.java)
         viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
 
         //设置默认音视频扬声器状态(需要检查有没有权限)
@@ -126,8 +132,18 @@ class MeetingRoomFragment : BaseFragment() {
         viewModel.myCameraStatusLiveData.observe(viewLifecycleOwner) {
             binding.bottomToolbarI.cameraBigIv.isSelected = it
         }
-        viewModel.myScreenShareLiveData.observe(viewLifecycleOwner) {
-            binding.bottomToolbarI.screenIv.isSelected = it
+        viewModel.myScreenShareLiveData.observe(viewLifecycleOwner) { isStart ->
+            if (isStart) {
+                if (!binding.bottomToolbarI.screenIv.isSelected) {
+                    activity?.startService(screenShareFloatIntent)
+                    binding.bottomToolbarI.screenIv.isSelected = true
+                }
+            } else {
+                if (binding.bottomToolbarI.screenIv.isSelected) {
+                    activity?.stopService(screenShareFloatIntent)
+                    binding.bottomToolbarI.screenIv.isSelected = false
+                }
+            }
         }
         viewModel.showSecFragmentLiveData.observe(viewLifecycleOwner) {
             when(it) {
@@ -188,11 +204,20 @@ class MeetingRoomFragment : BaseFragment() {
                     viewModel.requestSwitchCameraStatus()
                 }
                 binding.bottomToolbarI.screenCl -> {
-                    DialogManager.instance.showShareScreenDialog(requireContext()) { shareType ->
-                        if (shareType == DialogManager.FLAG_SHARE_TYPE_SCREEN) {
-                            Toast.makeText(requireContext(), "开始共享屏幕", Toast.LENGTH_SHORT).show()
-                        } else if (shareType == DialogManager.FLAG_SHARE_TYPE_WHITE_BOARD) {
-                            Toast.makeText(requireContext(), "开始共享白板", Toast.LENGTH_SHORT).show()
+                    if (viewModel.myScreenShareStatus) {
+                        // 取消屏幕共享
+                        viewModel.updateMyScreenShareStatus(false, null)
+                    } else if (viewModel.myWhiteBoardShareStatus) {
+                        // 取消白板共享
+                        viewModel.updateMyWhiteBoardShareStatus(false)
+                    } else {
+                        // 开始共享
+                        DialogManager.instance.showShareScreenDialog(requireContext()) { shareType ->
+                            if (shareType == DialogManager.FLAG_SHARE_TYPE_SCREEN) {
+                                viewModel.requestStartScreenShare(requireActivity())
+                            } else if (shareType == DialogManager.FLAG_SHARE_TYPE_WHITE_BOARD) {
+                                viewModel.updateMyWhiteBoardShareStatus(true)
+                            }
                         }
                     }
                 }

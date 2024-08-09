@@ -54,7 +54,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     // 会议库
-    implementation 'cn.seastart.meeting:meeting:2.0.16-alpha.2'
+    implementation 'cn.seastart.meeting:meeting:2.0.16-alpha.3'
     // 基于今日头条方案的屏幕适配库
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
     // 权限管理库

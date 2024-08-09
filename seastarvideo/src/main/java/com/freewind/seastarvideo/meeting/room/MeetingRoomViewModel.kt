@@ -10,13 +10,19 @@
 package com.freewind.seastarvideo.meeting.room
 
 import android.app.Activity
+import android.provider.Settings
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import cn.seastart.meeting.ScreenManager
 import com.freewind.seastarvideo.MeetingEngineHelper
 import com.freewind.seastarvideo.base.BaseViewModel
 import com.freewind.seastarvideo.base.SingleLiveEvent
 import com.freewind.seastarvideo.base.UiResponse
 import com.freewind.seastarvideo.meeting.MemberInfo
 import com.freewind.seastarvideo.utils.LogUtil
+import com.ook.android.VCS_EVENT_TYPE
+import java.lang.ref.WeakReference
+
 /**
  * @author: wiatt
  * @date: 2023/12/27 14:23
@@ -48,6 +54,12 @@ class MeetingRoomViewModel():
     val micPermissionCheck: SingleLiveEvent<Boolean> = SingleLiveEvent()
     // 打开麦克风操作结果
     val openMicResult: SingleLiveEvent<UiResponse<Boolean>> = SingleLiveEvent()
+    // 悬浮窗权限申请
+    val screenSharePermissionCheck: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    // 开始屏幕共享操作结果
+    val startScreenShareResult: SingleLiveEvent<UiResponse<Boolean>> = SingleLiveEvent()
+    // 开始白板共享操作结果
+    val startWhiteBoardShareResult: SingleLiveEvent<UiResponse<Boolean>> = SingleLiveEvent()
 
     // 从 ViewModel 回调数据到界面
     private var viewListeners: MutableList<MeetingRoomListener> = mutableListOf()
@@ -64,7 +76,9 @@ class MeetingRoomViewModel():
     // 自己的照相机状态，可能受各种因素共同作用，也可能不为 boolean 类型
     var myCameraStatus: Boolean = false
     // 自己的屏幕共享状态，可能受各种因素共同作用，也可能不为 boolean 类型
-    var myScreenShare: Boolean = false
+    var myScreenShareStatus: Boolean = false
+    // 自己的白板共享状态
+    var myWhiteBoardShareStatus: Boolean = false
     // 自己的扬声器状态，可能受各种因素共同作用，也可能不为 boolean 类型
     var mySpeakerStatus: Boolean = false
 
@@ -197,6 +211,8 @@ class MeetingRoomViewModel():
 
     /**
      * 切换照相机状态
+     * 打开摄像头，需要传 activity
+     * 关闭摄像头，不需要传 activity
      */
     fun updateMyCameraStatus(isOpen: Boolean, activity: Activity?) {
         if (isOpen) {
@@ -215,7 +231,38 @@ class MeetingRoomViewModel():
      * 获取自己的屏幕共享状态
      */
     fun getMyScreenShareStatus() {
-        myScreenShareLiveData.value = myScreenShare
+        myScreenShareLiveData.value = myScreenShareStatus
+    }
+
+    /**
+     * 请求打开屏幕共享
+     */
+    fun requestStartScreenShare(activity: Activity) {
+        if (Settings.canDrawOverlays(activity)) {
+            updateMyScreenShareStatus(true, activity)
+        } else {
+            screenSharePermissionCheck.value = true
+        }
+    }
+
+    /**
+     * 更新自己的屏幕共享状态
+     * 开始共享，需要传 activity
+     * 停止共享，不需要传 activity
+     */
+    fun updateMyScreenShareStatus(isStart: Boolean, activity: Activity?) {
+        if (isStart) {
+            mModel.getContract().requestStartScreenShare(activity!!, null, ScreenShareEvent(this))
+        } else {
+            mModel.getContract().requestStopScreenShare()
+        }
+    }
+
+    /**
+     * 更新自己的白板共享状态
+     */
+    fun updateMyWhiteBoardShareStatus(isStart: Boolean) {
+
     }
 
     /**
@@ -316,6 +363,13 @@ class MeetingRoomViewModel():
             openMicResult.value = uiResponse
         }
 
+        override fun responseStartScreenShare(uiResponse: UiResponse<Boolean>) {
+            if (!uiResponse.isSuccess) {
+                myScreenShareStatus = false
+                myScreenShareLiveData.value = false
+                startScreenShareResult.value = uiResponse
+            }
+        }
     }
 
     interface MeetingRoomListener {
@@ -325,5 +379,31 @@ class MeetingRoomViewModel():
         fun onMemberListRemoveOne(position: Int)
         // 更新一个参会成员
         fun onUpdateMember(position: Int, memberInfo: MemberInfo)
+    }
+
+    /**
+     * 屏幕共享事件
+     */
+    class ScreenShareEvent(owner: MeetingRoomViewModel): ScreenManager.ScreenShareEvent {
+
+        private var mOwner: WeakReference<MeetingRoomViewModel> = WeakReference(owner)
+        override fun onScreenStateChanged(eventId: Int, args: String?) {
+            Log.i("wiatt", "onScreenStateChanged: eventId = $eventId, args = $args")
+            mOwner.get()?.let { viewModel ->
+                when (eventId) {
+                    VCS_EVENT_TYPE.ScreenRecordError -> {
+
+                    }
+                    VCS_EVENT_TYPE.ScreenRecordStart -> {
+                        viewModel.myScreenShareStatus = true
+                        viewModel.myScreenShareLiveData.value = true
+                    }
+                    VCS_EVENT_TYPE.ScreenRecordStop -> {
+                        viewModel.myScreenShareStatus = false
+                        viewModel.myScreenShareLiveData.value = false
+                    }
+                }
+            }
+        }
     }
 }

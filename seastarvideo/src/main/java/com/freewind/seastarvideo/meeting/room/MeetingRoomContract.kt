@@ -10,6 +10,7 @@
 package com.freewind.seastarvideo.meeting.room
 
 import android.app.Activity
+import cn.seastart.meeting.ScreenManager
 import com.freewind.seastarvideo.base.BaseContract
 import com.freewind.seastarvideo.base.UiResponse
 
@@ -41,6 +42,16 @@ class MeetingRoomContract {
          * 请求：关闭麦克风
          */
         fun requestCloseMic()
+
+        /**
+         * 请求：打开屏幕共享
+         */
+        fun requestStartScreenShare(activity: Activity, param: ScreenManager.NotificationParam?, event: ScreenManager.ScreenShareEvent)
+
+        /**
+         * 请求：关闭屏幕共享
+         */
+        fun requestStopScreenShare()
     }
 
     interface IMeetingRoomViewModel: BaseContract.IViewModel {
@@ -54,5 +65,12 @@ class MeetingRoomContract {
          * 响应：打开麦克风
          */
         fun responseOpenMic(uiResponse: UiResponse<Boolean>)
+
+        /**
+         * 响应：打开屏幕共享
+         * 只需要回调打开失败的事件，不需要回调打开成功的，
+         * 如果屏幕共享打开成功，会通过另一个回调被通知到
+         */
+        fun responseStartScreenShare(uiResponse: UiResponse<Boolean>)
     }
 }
