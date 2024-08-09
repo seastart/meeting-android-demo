@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import cn.seastart.meeting.enumerate.DeviceState
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMultiListBinding
@@ -184,9 +185,15 @@ class MultiListFragment : BaseFragment() {
             }
         } else {
             if (fragment == null) {
-                fragment = MultiItemFragment.newInstance(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
+                fragment = MultiItemFragment.newInstance(
+                    memberInfo.nickName,
+                    memberInfo.micStatus == DeviceState.Open,
+                    memberInfo.cameraStatus == DeviceState.Open)
             } else {
-                fragment.updateMember(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
+                fragment.updateMember(
+                    memberInfo.nickName,
+                    memberInfo.micStatus == DeviceState.Open,
+                    memberInfo.cameraStatus == DeviceState.Open)
             }
             if (fragment.isAdded) {
                 showFragment(fragment)
@@ -229,7 +236,10 @@ class MultiListFragment : BaseFragment() {
             if (position >= startMemberIndex && position < startMemberIndex + totalItemCount) {
                 val itemIndex = position % totalItemCount
                 if (itemIndex < fragmentArray.size) {
-                    fragmentArray[itemIndex]?.updateMember(memberInfo.nickName, memberInfo.micStatus, memberInfo.cameraStatus)
+                    fragmentArray[itemIndex]?.updateMember(
+                        memberInfo.nickName,
+                        memberInfo.micStatus == DeviceState.Open,
+                        memberInfo.cameraStatus == DeviceState.Open)
                 }
             }
         }

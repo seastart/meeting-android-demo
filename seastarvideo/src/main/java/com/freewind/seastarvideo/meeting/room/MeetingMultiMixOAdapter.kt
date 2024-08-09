@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import cn.seastart.meeting.enumerate.DeviceState
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.freewind.seastarvideo.databinding.ItemMultiMixOBinding
 import com.freewind.seastarvideo.meeting.MemberInfo
@@ -39,15 +40,15 @@ class MeetingMultiMixOAdapter(): BaseQuickAdapter<MemberInfo, MeetingMultiMixOAd
         holder: MemberMultiMixOViewHolder, position: Int, item: MemberInfo?
     ) {
         item?.let { info ->
-            if (info.cameraStatus) {
+            if (info.cameraStatus == DeviceState.Open) {
                 holder.placeholderIv.visibility = View.VISIBLE
                 holder.avatarIv.visibility = View.GONE
             } else {
                 holder.placeholderIv.visibility = View.GONE
                 holder.avatarIv.visibility = View.VISIBLE
             }
-            holder.videoSmallIv.isSelected = info.cameraStatus
-            holder.micSmallIv.isSelected = info.micStatus
+            holder.videoSmallIv.isSelected = info.cameraStatus == DeviceState.Open
+            holder.micSmallIv.isSelected = info.micStatus == DeviceState.Open
             holder.nickNameTv.text = info.nickName
         }
     }

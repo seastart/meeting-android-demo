@@ -124,9 +124,11 @@ class CreateMeetingRoomFragment : BaseFragment() {
             return
         }
 
+        val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
         val isOpenMic = binding.switchMicSb.isChecked
         val isOpenCamera = binding.switchCameraSb.isChecked
-        MeetingRoomActivity.startMeetingRoomPage(requireContext(), nickname, roomNo, isOpenCamera, isOpenMic)
+
+        MeetingRoomActivity.startMeetingRoomPage(requireContext(), roomNo, nickname, avatar, isOpenCamera, isOpenMic)
 
 //        val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
 //        viewModel.enterMeeting(this.requireActivity(), roomNo, null, nickname, avatar)

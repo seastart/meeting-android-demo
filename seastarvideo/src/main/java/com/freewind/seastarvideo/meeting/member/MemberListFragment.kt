@@ -16,6 +16,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import cn.seastart.meeting.enumerate.DeviceState
+import cn.seastart.meeting.enumerate.RoleType
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentMemberListBinding
@@ -78,7 +80,7 @@ class MemberListFragment : BaseFragment() {
         binding.membersRv.adapter = adapter
         binding.membersRv.layoutManager = layoutManager
 
-        if (meInfo.role == MemberInfo.MEMBER_ROLE_COMPERE) {
+        if (meInfo.role == RoleType.Host) {
             binding.allOptCl.visibility = View.VISIBLE
         } else {
             binding.allOptCl.visibility = View.GONE
@@ -96,24 +98,31 @@ class MemberListFragment : BaseFragment() {
         adapter.isEmptyViewEnable = false
         adapter.addOnItemChildClickListener(R.id.audioStatusIv) {
                 adapterClick, view, position ->
-            val expectStatus = !view.isSelected
-
+            val expectStatus = if (!view.isSelected) {
+                DeviceState.Open
+            } else {
+                DeviceState.Closed
+            }
             adapterClick.getItem(position)?.let {
-                val isSuccess = viewModel.setMemberMicStatus(expectStatus, it.id)
+                val isSuccess = viewModel.setMemberMicStatus(expectStatus, it.uid)
                 if (isSuccess) {
                     it.micStatus = expectStatus
-                    view.isSelected = expectStatus
+                    view.isSelected = expectStatus == DeviceState.Open
                 }
             }
         }
         adapter.addOnItemChildClickListener(R.id.videoStatusIv) {
                 adapterClick, view, position ->
-            val expectStatus = !view.isSelected
+            val expectStatus = if (!view.isSelected) {
+                DeviceState.Open
+            } else {
+                DeviceState.Closed
+            }
             adapterClick.getItem(position)?.let {
-                val isSuccess = viewModel.setMemberCameraStatus(expectStatus, it.id)
+                val isSuccess = viewModel.setMemberCameraStatus(expectStatus, it.uid)
                 if (isSuccess) {
                     it.cameraStatus = expectStatus
-                    view.isSelected = expectStatus
+                    view.isSelected = expectStatus == DeviceState.Open
                 }
             }
         }

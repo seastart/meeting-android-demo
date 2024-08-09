@@ -9,6 +9,10 @@
 
 package com.freewind.seastarvideo.meeting
 
+import cn.seastart.meeting.enumerate.DeviceState
+import cn.seastart.meeting.enumerate.RoleType
+import cn.seastart.meeting.enumerate.ShareType
+
 /**
  * @author: wiatt
  * @date: 2024/1/2 15:13
@@ -17,15 +21,21 @@ package com.freewind.seastarvideo.meeting
 
 data class MemberInfo(
     // 用户id
-    var id: String,
+    var uid: String,
     // 昵称
     var nickName: String,
+    // 头像
+    var avatar: String,
     // 角色
-    var role: Int,
+    var role: RoleType,
     // 麦克风状态
-    var micStatus: Boolean,
+    var micStatus: DeviceState,
     // 摄像头状态
-    var cameraStatus: Boolean,
+    var cameraStatus: DeviceState,
+    // 共享状态
+    var shareState: ShareType,
+    // 是否被禁止聊天
+    var chatDisabled: Boolean,
     // 该成员是否是自己
     var isMe: Boolean = false
     ) {

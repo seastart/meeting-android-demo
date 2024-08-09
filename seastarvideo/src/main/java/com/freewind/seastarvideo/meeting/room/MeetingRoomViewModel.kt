@@ -12,6 +12,7 @@ package com.freewind.seastarvideo.meeting.room
 import android.app.Activity
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import cn.seastart.meeting.ScreenManager
 import cn.seastart.meeting.enumerate.DeviceState
@@ -46,6 +47,8 @@ class MeetingRoomViewModel():
     val roomIdLiveData: MutableLiveData<String> = MutableLiveData()
     // 自己的昵称 liveData
     val myNickNameLiveData: MutableLiveData<String> = MutableLiveData()
+    // 自己的头像 liveData
+    val myAvatarLiveData: MutableLiveData<String> = MutableLiveData()
     // 自己的扬声器状态 liveData
     val mySpeakerStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
     // 自己的麦克风状态 liveData
@@ -89,6 +92,8 @@ class MeetingRoomViewModel():
     var myUid: String? = null
     // 自己的昵称
     var myNickName: String? = null
+    // 自己的头像
+    var myAvatar: String? = null
     // 自己的麦克风状态，可能受各种因素共同作用，也可能不为 boolean 类型
     var myMicStatus: Boolean = false
     // 自己的照相机状态，可能受各种因素共同作用，也可能不为 boolean 类型
@@ -122,15 +127,10 @@ class MeetingRoomViewModel():
     /**
      * 更新初始参数
      */
-    fun updateInitialValue(nickName: String, roomNo: String) {
-        myNickName = nickName
+    fun updateInitialValue(roomNo: String, nickName: String, avatar: String) {
         this.roomNo = roomNo
-        memberList.add(MemberInfo("0", nickName, MemberInfo.MEMBER_ROLE_NORMAL, myMicStatus, myCameraStatus))
-        memberList.add(MemberInfo("1", "成员-1", MemberInfo.MEMBER_ROLE_COMPERE, false, false))
-        memberList.add(MemberInfo("2", "成员-2", MemberInfo.MEMBER_ROLE_NORMAL, true, false))
-        memberList.add(MemberInfo("3", "成员-3", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        memberList.add(MemberInfo("4", "成员-4", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-
+        myNickName = nickName
+        myAvatar = avatar
     }
 
     /**
@@ -151,6 +151,15 @@ class MeetingRoomViewModel():
         myNickName?.let {
             LogUtil.i("获取自己的昵称，nickName = $it", "wiatt")
             myNickNameLiveData.value = it
+        }
+    }
+
+    /**
+     * 获取自己的头像
+     */
+    fun getMyAvatar() {
+        myAvatar?.let {
+            myAvatarLiveData.value = it
         }
     }
 
@@ -178,8 +187,7 @@ class MeetingRoomViewModel():
         MeetingEngineHelper.instance.setUserEvent(UserEventImpl(this))
         MeetingEngineHelper.instance.setMediaEvent(MediaEventImpl(this))
 
-        val avatar = KvUtil.decodeString(KvUtil.USER_INFO_AVATAR)
-        mModel.getContract().requestEnterMeeting(activity, roomNo ?: "", null, myNickName ?: "", avatar)
+        mModel.getContract().requestEnterMeeting(activity, roomNo ?: "", null, myNickName ?: "", myAvatar ?: "")
     }
 
     /**
@@ -294,6 +302,29 @@ class MeetingRoomViewModel():
     }
 
     /**
+     * 添加预览控件
+     */
+    fun addPreview(view: View) {
+        MeetingEngineHelper.instance.engine?.addPreview(view)
+    }
+
+    /**
+     * 移除渲染控件
+     * @param view 如果 view 不为空，则移除指定控件；如果 view 为空，则移除所有控件
+     */
+    fun removePreview(view: View?) {
+        MeetingEngineHelper.instance.engine?.removePreview(view)
+    }
+
+    /**
+     * 替换预览渲染控件
+     * @param mViews
+     */
+    fun replacePreView(mViews: MutableList<View>) {
+        MeetingEngineHelper.instance.engine?.replacePreView(mViews)
+    }
+
+    /**
      * 选择二级 fragment
      */
     fun checkSecFragment() {
@@ -315,54 +346,54 @@ class MeetingRoomViewModel():
 
     var testNum: Int = 0
     fun addMoreMember() {
-        testNum = memberList.size
-        val list = mutableListOf<MemberInfo>()
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, true, true))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-
-        list.forEach { memberInfo ->
-            memberList.add(memberInfo)
-            viewListeners.forEach {
-                it.onMemberListAddOne(memberList.size - 1)
-            }
-        }
+//        testNum = memberList.size
+//        val list = mutableListOf<MemberInfo>()
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, true, true))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+//        list.add(MemberInfo((++testNum).toString(), "成员-$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//
+//        list.forEach { memberInfo ->
+//            memberList.add(memberInfo)
+//            viewListeners.forEach {
+//                it.onMemberListAddOne(memberList.size - 1)
+//            }
+//        }
     }
 
     fun addOneMember() {
-        testNum = memberList.size
-        val memberInfo = MemberInfo(testNum.toString(), "成员-$testNum" , MemberInfo.MEMBER_ROLE_NORMAL, false, false)
-        memberList.add(memberInfo)
-        viewListeners.forEach {
-            it.onMemberListAddOne(memberList.size - 1)
-        }
+//        testNum = memberList.size
+//        val memberInfo = MemberInfo(testNum.toString(), "成员-$testNum" , MemberInfo.MEMBER_ROLE_NORMAL, false, false)
+//        memberList.add(memberInfo)
+//        viewListeners.forEach {
+//            it.onMemberListAddOne(memberList.size - 1)
+//        }
     }
 
     fun removeOneMember(position: Int) {
-        memberList.removeAt(position)
-        viewListeners.forEach {
-            it.onMemberListRemoveOne(position)
-        }
-        if (memberList.size <= 1) {
-            checkSecFragment()
-        }
+//        memberList.removeAt(position)
+//        viewListeners.forEach {
+//            it.onMemberListRemoveOne(position)
+//        }
+//        if (memberList.size <= 1) {
+//            checkSecFragment()
+//        }
     }
 
     fun updateMember(position: Int) {
-        val memberInfo = memberList[position]
-        memberInfo.micStatus = !memberInfo.micStatus
-        memberInfo.cameraStatus = !memberInfo.cameraStatus
-        memberInfo.nickName = memberInfo.nickName + "改"
-        memberList[position] = memberInfo
-        viewListeners.forEach {
-            it.onUpdateMember(position, memberInfo)
-        }
+//        val memberInfo = memberList[position]
+//        memberInfo.micStatus = !memberInfo.micStatus
+//        memberInfo.cameraStatus = !memberInfo.cameraStatus
+//        memberInfo.nickName = memberInfo.nickName + "改"
+//        memberList[position] = memberInfo
+//        viewListeners.forEach {
+//            it.onUpdateMember(position, memberInfo)
+//        }
     }
 
     /**
@@ -521,6 +552,21 @@ class MeetingRoomViewModel():
                 it.meetingId = meetingId
                 it.myUid = uid ?: ""
                 it.onEnterRoomEvent.value = true
+                it.memberList.clear()
+                val meInfo = MeetingEngineHelper.instance.getInfoManager()?.getMeInfo()
+                meInfo?.let { info ->
+                    val memberInfo = MemberInfo(
+                        info.uid ?: "", info.name ?: "", info.props?.avatar ?: "",
+                        info.props?.role ?: RoleType.Normal,
+                        info.props?.micState ?: DeviceState.Closed,
+                        info.props?.cameraState ?: DeviceState.Closed,
+                        info.props?.shareState ?: ShareType.Normal,
+                        info.props?.chatDisabled ?: false, true)
+                    it.memberList.add(0, memberInfo)
+                    it.viewListeners.forEach { listener ->
+                        listener.onMemberListAddOne(it.memberList.size - 1)
+                    }
+                }
             }
         }
 

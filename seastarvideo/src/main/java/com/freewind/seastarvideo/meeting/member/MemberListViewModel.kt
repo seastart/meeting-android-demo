@@ -10,6 +10,8 @@
 package com.freewind.seastarvideo.meeting.member
 
 import androidx.lifecycle.MutableLiveData
+import cn.seastart.meeting.enumerate.DeviceState
+import cn.seastart.meeting.enumerate.RoleType
 import com.freewind.seastarvideo.base.BaseViewModel
 import com.freewind.seastarvideo.meeting.MemberInfo
 import com.freewind.seastarvideo.utils.KvUtil
@@ -38,7 +40,7 @@ class MemberListViewModel():
     }
 
     fun getMembers() {
-        members.add(MemberInfo("10002", "蜡笔小生", MemberInfo.MEMBER_ROLE_NORMAL, true, false, false))
+//        members.add(MemberInfo("10002", "蜡笔小生", MemberInfo.MEMBER_ROLE_NORMAL, true, false, false))
         val tmpMembers = mutableListOf<MemberInfo>().apply {
             this.addAll(members)
         }
@@ -46,8 +48,8 @@ class MemberListViewModel():
     }
 
     fun updateMembers() {
-        members.add(MemberInfo("10003", "宵夜", MemberInfo.MEMBER_ROLE_NORMAL, false, true, false))
-        members.add(MemberInfo("10004", "啊哈哈", MemberInfo.MEMBER_ROLE_NORMAL, false, false, false))
+//        members.add(MemberInfo("10003", "宵夜", MemberInfo.MEMBER_ROLE_NORMAL, false, true, false))
+//        members.add(MemberInfo("10004", "啊哈哈", MemberInfo.MEMBER_ROLE_NORMAL, false, false, false))
         val tmpMembers = mutableListOf<MemberInfo>().apply {
             this.addAll(members)
         }
@@ -58,11 +60,11 @@ class MemberListViewModel():
      * 设置某个成员的麦克风状态
      * todo 此处只做示意使用，实际场景中需要结合接口操作
      */
-    fun setMemberMicStatus(micStatus: Boolean, memberId: String): Boolean {
+    fun setMemberMicStatus(micStatus: DeviceState, memberId: String): Boolean {
         val roomAudioStatus = KvUtil.decodeBooleanTure(KvUtil.MEETING_ROOM_AUDIO_STATUS, true)
-        if (roomAudioStatus || meInfo.role == MemberInfo.MEMBER_ROLE_COMPERE) {
+        if (roomAudioStatus || meInfo.role == RoleType.Host) {
             for (member: MemberInfo in members) {
-                if (member.id == memberId) {
+                if (member.uid == memberId) {
                     member.micStatus = micStatus
                     return true
                 }
@@ -77,11 +79,11 @@ class MemberListViewModel():
      * 设置某个成员的摄像头状态
      * todo 此处只做示意使用，实际场景中需要结合接口操作
      */
-    fun setMemberCameraStatus(cameraStatus: Boolean, memberId: String): Boolean {
+    fun setMemberCameraStatus(cameraStatus: DeviceState, memberId: String): Boolean {
         val roomVideoStatus = KvUtil.decodeBooleanTure(KvUtil.MEETING_ROOM_VIDEO_STATUS, true)
-        if (roomVideoStatus || meInfo.role == MemberInfo.MEMBER_ROLE_COMPERE) {
+        if (roomVideoStatus || meInfo.role == RoleType.Host) {
             for (member: MemberInfo in members) {
-                if (member.id == memberId) {
+                if (member.uid == memberId) {
                     member.cameraStatus = cameraStatus
                     return true
                 }
@@ -96,12 +98,12 @@ class MemberListViewModel():
      * 获取综合计算过的麦克风表现状态
      * todo 此处只做示意使用，实际场景中需要结合接口操作
      */
-    fun getMicStatus(memberInfo: MemberInfo): Boolean {
+    fun getMicStatus(memberInfo: MemberInfo): DeviceState {
         val roomAudioStatus = KvUtil.decodeBooleanTure(KvUtil.MEETING_ROOM_AUDIO_STATUS, true)
         return if (roomAudioStatus) {
             memberInfo.micStatus
         } else {
-            false
+            DeviceState.Closed
         }
     }
 
@@ -109,12 +111,12 @@ class MemberListViewModel():
      * 获取综合计算过的摄像头表现状态
      * todo 此处只做示意使用，实际场景中需要结合接口操作
      */
-    fun getCameraStatus(memberInfo: MemberInfo): Boolean {
+    fun getCameraStatus(memberInfo: MemberInfo): DeviceState {
         val roomVideoStatus = KvUtil.decodeBooleanTure(KvUtil.MEETING_ROOM_VIDEO_STATUS, true)
         return if (roomVideoStatus) {
             memberInfo.cameraStatus
         } else {
-            false
+            DeviceState.Closed
         }
     }
 

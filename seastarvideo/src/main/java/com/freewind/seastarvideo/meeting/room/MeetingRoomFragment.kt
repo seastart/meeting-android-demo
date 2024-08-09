@@ -9,6 +9,7 @@
 
 package com.freewind.seastarvideo.meeting.room
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -18,6 +19,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +39,7 @@ import com.freewind.seastarvideo.utils.ToastUtil
 import com.freewind.seastarvideo.utils.WeakHandler
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
+import com.permissionx.guolindev.PermissionX
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -48,8 +51,9 @@ import org.greenrobot.eventbus.EventBus
 // 房间的id、音频状态、视频状态、房间持续时间
 class MeetingRoomFragment : BaseFragment() {
 
-    private val ARG_NICKNAME = "nickname"
     private val ARG_ROOM_NO = "room_no"
+    private val ARG_NICKNAME = "nickname"
+    private val ARG_AVATAR = "avatar"
     private val ARG_CAMERA_STATE = "camera_state"
     private val ARG_MIC_STATE = "mic_state"
 
@@ -59,8 +63,6 @@ class MeetingRoomFragment : BaseFragment() {
 
     private lateinit var viewModel: MeetingRoomViewModel
 
-    private lateinit var nickName: String
-    private lateinit var roomNo: String
     private var expectCameraState: Boolean = false
     private var expectMicState: Boolean = false
 
@@ -78,15 +80,19 @@ class MeetingRoomFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ImmersionBar.with(requireActivity()).reset().init()
+        var roomNo = resources.getString(R.string.def_room_id)
+        var nickName = resources.getString(R.string.def_nickname)
+        var avatar = ""
         arguments?.let {
-            nickName = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
             roomNo = it.getString(ARG_ROOM_NO, resources.getString(R.string.def_room_id))
+            nickName = it.getString(ARG_NICKNAME, resources.getString(R.string.def_nickname))
+            avatar = it.getString(ARG_AVATAR, "")
             expectCameraState = it.getBoolean(ARG_CAMERA_STATE, false)
             expectMicState = it.getBoolean(ARG_MIC_STATE, false)
         }
         screenShareFloatIntent = Intent(this.requireActivity(), FloatingButtonService::class.java)
         viewModel = ViewModelProvider(requireActivity())[MeetingRoomViewModel::class.java]
-        viewModel.updateInitialValue(nickName, roomNo)
+        viewModel.updateInitialValue(roomNo, nickName, avatar)
     }
 
     override fun onCreateView(
@@ -118,6 +124,28 @@ class MeetingRoomFragment : BaseFragment() {
                     ToastUtil.showShortToast("加入房间失败")
                     EventBus.getDefault().post(MeetingRoomEventBean.finishActivityEvent(false))
                 }
+            }
+        }
+        viewModel.onEnterRoomEvent.observe(this) {
+            val permissions = mutableListOf<String>()
+            if (expectCameraState) {
+                permissions.add(Manifest.permission.CAMERA)
+            }
+            if (expectMicState) {
+                permissions.add(Manifest.permission.RECORD_AUDIO)
+            }
+            if (permissions.isNotEmpty()) {
+                PermissionX.init(this)
+                    .permissions(permissions)
+                    .request { allGranted, grantedList, deniedList ->
+                        grantedList.forEach {
+                            if (it.equals(Manifest.permission.CAMERA)) {
+                                viewModel.updateMyCameraStatus(true, requireActivity())
+                            } else if (it.equals(Manifest.permission.RECORD_AUDIO)) {
+                                viewModel.updateMyMicStatus(true)
+                            }
+                        }
+                    }
             }
         }
         viewModel.roomIdLiveData.observe(viewLifecycleOwner) {
@@ -370,11 +398,12 @@ class MeetingRoomFragment : BaseFragment() {
         val FRAGMENT_SEC_MULTI_MIX = "multi_mix_fragment"
 
         @JvmStatic
-        fun newInstance(nickNameParam: String, roomIdParam: String, expectCameraState: Boolean, expectMicState: Boolean) =
+        fun newInstance(roomNoParam: String, nickNameParam: String, avatarParam: String, expectCameraState: Boolean, expectMicState: Boolean) =
             MeetingRoomFragment().apply {
                 arguments = Bundle().apply {
+                    putString(ARG_ROOM_NO, roomNoParam)
                     putString(ARG_NICKNAME, nickNameParam)
-                    putString(ARG_ROOM_NO, roomIdParam)
+                    putString(ARG_AVATAR, avatarParam)
                     putBoolean(ARG_CAMERA_STATE, expectCameraState)
                     putBoolean(ARG_MIC_STATE, expectMicState)
                 }

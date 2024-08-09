@@ -58,6 +58,12 @@ class SoloVideoFragment : BaseFragment() {
     private fun initView() {
         viewModel.getMyNickName()
         viewModel.getMyMicStatus()
+        viewModel.addPreview(binding.videoVpgt)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.removePreview(binding.videoVpgt)
     }
 
     companion object {

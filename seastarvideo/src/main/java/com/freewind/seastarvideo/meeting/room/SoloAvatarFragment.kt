@@ -14,8 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseFragment
 import com.freewind.seastarvideo.databinding.FragmentSoloAvatarBinding
+import com.freewind.seastarvideo.http.ConstantHttp
 
 /**
  * @author: wiatt
@@ -50,6 +52,13 @@ class SoloAvatarFragment : BaseFragment() {
         viewModel.myNickNameLiveData.observe(viewLifecycleOwner) {
             binding.nickNameTv.text = it
         }
+        viewModel.myAvatarLiveData.observe(viewLifecycleOwner) {
+            if (it == ConstantHttp.RES_AVATAR_MAN) {
+                binding.avatarIv.setImageResource(R.mipmap.avatar_man)
+            } else {
+                binding.avatarIv.setImageResource(R.mipmap.avatar_woman)
+            }
+        }
         viewModel.myMicStatusLiveData.observe(viewLifecycleOwner) {
             binding.micSmallIv.isSelected = it
         }
@@ -57,6 +66,7 @@ class SoloAvatarFragment : BaseFragment() {
 
     private fun initView() {
         viewModel.getMyNickName()
+        viewModel.getMyAvatar()
         viewModel.getMyMicStatus()
     }
 

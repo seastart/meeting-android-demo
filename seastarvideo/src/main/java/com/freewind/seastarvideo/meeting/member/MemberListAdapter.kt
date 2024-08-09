@@ -14,6 +14,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import cn.seastart.meeting.enumerate.DeviceState
+import cn.seastart.meeting.enumerate.RoleType
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.databinding.ItemMemberListBinding
@@ -48,28 +50,24 @@ class MemberListAdapter(var meInfo: MemberInfo, var viewModel: MemberListViewMod
                 holder.roleTv.text = context.resources.getString(R.string.me_parenthesis)
             } else {
                 when(info.role) {
-                    MemberInfo.MEMBER_ROLE_CREATOR -> {
-                        holder.roleTv.visibility = View.VISIBLE
-                        holder.roleTv.text = context.resources.getString(R.string.creator_parenthesis)
-                    }
-                    MemberInfo.MEMBER_ROLE_COMPERE -> {
+                    RoleType.Host -> {
                         holder.roleTv.visibility = View.VISIBLE
                         holder.roleTv.text = context.resources.getString(R.string.compere_parenthesis)
                     }
-                    MemberInfo.MEMBER_ROLE_NORMAL -> {
+                    RoleType.Normal -> {
                         holder.roleTv.visibility = View.GONE
                     }
                 }
             }
-            if (info.isMe || meInfo.role == MemberInfo.MEMBER_ROLE_NORMAL) {
+            if (info.isMe || meInfo.role == RoleType.Normal) {
                 holder.removeMemberIv.visibility = View.GONE
             } else {
                 holder.removeMemberIv.visibility = View.VISIBLE
             }
             LogUtil.i("onBindViewHolder, micStatus = ${viewModel.getMicStatus(info)}")
-            holder.audioStatusIv.isSelected = viewModel.getMicStatus(info)
+            holder.audioStatusIv.isSelected = viewModel.getMicStatus(info) == DeviceState.Open
             LogUtil.i("onBindViewHolder, cameraStatus = ${viewModel.getCameraStatus(info)}")
-            holder.videoStatusIv.isSelected = viewModel.getCameraStatus(info)
+            holder.videoStatusIv.isSelected = viewModel.getCameraStatus(info) == DeviceState.Open
         }
     }
 

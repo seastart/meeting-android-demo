@@ -15,12 +15,10 @@
     android:layout_height="match_parent"
     tools:context=".meeting.room.SoloVideoFragment">
 
-    <!--  todo 此图为占位图，后面接入渲染器后，需要换成自定义的渲染器  -->
-    <ImageView
+    <com.ook.android.ikPlayer.VcsPlayerGlTextureView
+        android:id="@+id/videoVpgt"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0"
-        android:src="@mipmap/placehold_person"
-        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

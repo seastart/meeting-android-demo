@@ -14,6 +14,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.seastart.meeting.enumerate.DeviceState
+import cn.seastart.meeting.enumerate.RoleType
+import cn.seastart.meeting.enumerate.ShareType
 import com.freewind.seastarvideo.R
 import com.freewind.seastarvideo.base.BaseActivity
 import com.freewind.seastarvideo.base.BaseFragment
@@ -53,7 +56,10 @@ class MemberActivity : BaseActivity() {
 
         viewModel = ViewModelProvider(this)[MemberListViewModel::class.java]
         // todo 在这里对本人的信息进行赋值
-        viewModel.init(MemberInfo("10001", "抹茶玛奇朵", MemberInfo.MEMBER_ROLE_COMPERE, true, true, true))
+        viewModel.init(MemberInfo(
+            "10001", "抹茶玛奇朵", "", RoleType.Host,
+            DeviceState.Closed, DeviceState.Closed, ShareType.Normal,
+            false, true))
 
         showMemberListPage()
     }

@@ -15,7 +15,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.freewind.seastarvideo.R
@@ -86,20 +85,6 @@ class MeetingRoomActivity : BaseActivity() {
 
     fun initViewModel() {
         viewModel = ViewModelProvider(this)[MeetingRoomViewModel::class.java]
-        viewModel.onEnterRoomEvent.observe(this) {
-            Log.i("wiatt", "activity-initViewModel-onEnterRoomEvent: ")
-            PermissionX.init(this)
-                .permissions(mutableListOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
-                .request { allGranted, grantedList, deniedList ->
-                    grantedList.forEach {
-                        if (it.equals(Manifest.permission.CAMERA)) {
-                            viewModel.updateMyCameraStatus(true, this)
-                        } else if (it.equals(Manifest.permission.RECORD_AUDIO)) {
-                            viewModel.updateMyMicStatus(true)
-                        }
-                    }
-                }
-        }
         viewModel.cameraPermissionCheck.observe(this) {
             PermissionX.init(this)
                 .permissions(Manifest.permission.CAMERA)
@@ -184,11 +169,12 @@ class MeetingRoomActivity : BaseActivity() {
     @Synchronized
     private fun showMeetingRoomPage() {
         if (meetingRoomFragment == null) {
+            val roomNo = intent.getStringExtra(PARAM_ROOM_NO) ?: resources.getString(R.string.def_room_id)
             val nickName = intent.getStringExtra(PARAM_NICKNAME) ?: resources.getString(R.string.def_nickname)
-            val roomId = intent.getStringExtra(PARAM_ROOM_ID) ?: resources.getString(R.string.def_room_id)
+            val avatar = intent.getStringExtra(PARAM_AVATAR) ?: ""
             val expectCameraState = intent.getBooleanExtra(PARAM_CAMERA_STATE, false)
             val expectMicState = intent.getBooleanExtra(PARAM_MIC_STATE, false)
-            meetingRoomFragment = MeetingRoomFragment.newInstance(nickName, roomId, expectCameraState, expectMicState)
+            meetingRoomFragment = MeetingRoomFragment.newInstance(roomNo, nickName, avatar, expectCameraState, expectMicState)
         }
 
         if (switchFragment(meetingRoomFragment)) {
@@ -266,8 +252,9 @@ class MeetingRoomActivity : BaseActivity() {
 
     companion object {
         const val MEETING_ROOM_KEY = "meeting_room_key"
+        const val PARAM_ROOM_NO = "param_room_no"
         const val PARAM_NICKNAME = "param_nickname"
-        const val PARAM_ROOM_ID = "param_room_id"
+        const val PARAM_AVATAR = "param_avatar"
         const val PARAM_CAMERA_STATE = "param_camera_state"
         const val PARAM_MIC_STATE = "param_mic_state"
 
@@ -277,11 +264,12 @@ class MeetingRoomActivity : BaseActivity() {
         /**
          * 启动会议房间页面
          */
-        fun startMeetingRoomPage(context: Context, nickname: String, roomId: String, expectCameraState: Boolean, expectMicState: Boolean) {
+        fun startMeetingRoomPage(context: Context, roomNo: String, nickname: String, avatar: String, expectCameraState: Boolean, expectMicState: Boolean) {
             val intent = Intent(context, MeetingRoomActivity::class.java)
             intent.putExtra(MEETING_ROOM_KEY, MEETING_ROOM_DETAIL)
+            intent.putExtra(PARAM_ROOM_NO, roomNo)
             intent.putExtra(PARAM_NICKNAME, nickname)
-            intent.putExtra(PARAM_ROOM_ID, roomId)
+            intent.putExtra(PARAM_AVATAR, avatar)
             intent.putExtra(PARAM_CAMERA_STATE, expectCameraState)
             intent.putExtra(PARAM_MIC_STATE, expectMicState)
             context.startActivity(intent)

@@ -90,19 +90,19 @@ class MultiMixOFragment : Fragment() {
         })
 
         val memberList = mutableListOf<MemberInfo>()
-        memberList.add(MemberInfo("10001", "nickName", MemberInfo.MEMBER_ROLE_NORMAL, true, true))
-        memberList.add(MemberInfo("10002", "成员一", MemberInfo.MEMBER_ROLE_COMPERE, false, false))
-        memberList.add(MemberInfo("10003", "成员二", MemberInfo.MEMBER_ROLE_NORMAL, true, false))
-        memberList.add(MemberInfo("10004", "成员三", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        memberList.add(MemberInfo("10005", "成员四", MemberInfo.MEMBER_ROLE_NORMAL, true, true))
-        memberList.add(MemberInfo("10006", "成员五", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        memberList.add(MemberInfo("10007", "成员六", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        memberList.add(MemberInfo("10008", "成员七", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        memberList.add(MemberInfo("10009", "成员八", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        memberList.add(MemberInfo("10010", "成员九", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        memberList.add(MemberInfo("10011", "成员十", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
-        memberList.add(MemberInfo("10012", "成员十一", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
-        memberList.add(MemberInfo("10013", "成员十二", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        memberList.add(MemberInfo("10001", "nickName", MemberInfo.MEMBER_ROLE_NORMAL, true, true))
+//        memberList.add(MemberInfo("10002", "成员一", MemberInfo.MEMBER_ROLE_COMPERE, false, false))
+//        memberList.add(MemberInfo("10003", "成员二", MemberInfo.MEMBER_ROLE_NORMAL, true, false))
+//        memberList.add(MemberInfo("10004", "成员三", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+//        memberList.add(MemberInfo("10005", "成员四", MemberInfo.MEMBER_ROLE_NORMAL, true, true))
+//        memberList.add(MemberInfo("10006", "成员五", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        memberList.add(MemberInfo("10007", "成员六", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        memberList.add(MemberInfo("10008", "成员七", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+//        memberList.add(MemberInfo("10009", "成员八", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        memberList.add(MemberInfo("10010", "成员九", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+//        memberList.add(MemberInfo("10011", "成员十", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
+//        memberList.add(MemberInfo("10012", "成员十一", MemberInfo.MEMBER_ROLE_NORMAL, false, true))
+//        memberList.add(MemberInfo("10013", "成员十二", MemberInfo.MEMBER_ROLE_NORMAL, false, false))
         adapter!!.submitList(memberList)
     }
 
@@ -116,8 +116,8 @@ class MultiMixOFragment : Fragment() {
     var testNum = 0
     private fun initListener() {
         binding.btnAdd.setOnClickListener {
-            testNum++
-            adapter!!.add(MemberInfo("10001", "新增成员$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false, false))
+//            testNum++
+//            adapter!!.add(MemberInfo("10001", "新增成员$testNum", MemberInfo.MEMBER_ROLE_NORMAL, false, false, false))
         }
         binding.btnRemove.setOnClickListener {
             adapter!!.removeAt(9)
